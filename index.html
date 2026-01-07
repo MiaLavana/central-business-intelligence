@@ -12,8 +12,6 @@
       --text:#0b0b0f;
       --muted: rgba(11,11,15,.62);
       --ease: cubic-bezier(.22,.61,.36,1);
-      --hair: rgba(11,11,15,.06);
-      --mapAR: 21 / 9; /* overwritten by JS to match the actual image ratio */
     }
 
     *{ box-sizing:border-box; }
@@ -35,7 +33,7 @@
       z-index: 20;
       background: rgba(255,255,255,.72);
       backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--hair);
+      border-bottom: 1px solid rgba(11,11,15,.06);
     }
     .navInner{
       max-width: 1200px;
@@ -101,47 +99,27 @@
       transform: translateX(-50%);
       padding: 0;
     }
-
     .map{
       position: relative;
       width: 100%;
-      aspect-ratio: var(--mapAR);
-      background:#fff;
-      border-top: 1px solid var(--hair);
-      border-bottom: 1px solid var(--hair);
-      overflow:hidden;
-      touch-action: manipulation;
+      aspect-ratio: 21 / 9;
+      background: #fff url("assets/banner-map.png") center / contain no-repeat;
+      border-top: 1px solid rgba(11,11,15,.06);
+      border-bottom: 1px solid rgba(11,11,15,.06);
       transform: translateZ(0);
+      touch-action: manipulation; /* helps taps */
     }
-
-    /* On mobile: keep the SAME aspect ratio (no letterboxing drift),
-       but ensure it still feels like a hero via min-height. */
     @media (max-width: 860px){
       .hero{ padding-top: 46px; }
-      .map{ min-height: 420px; } /* Apple-like “hero presence” */
+      .map{ aspect-ratio: 4 / 5; }
     }
 
-    /* Map image (we keep it as <img> so we can read naturalWidth/Height precisely) */
-    .mapImg{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      object-fit: contain;     /* safe */
-      object-position: center;
-      display:block;
-      pointer-events:none;
-      user-select:none;
-    }
-
-    /* Layer that exactly matches the rendered image rectangle */
-    .pinLayer{
-      position:absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events:none;
+    /* Subtle Apple motion: gentle parallax on hover devices */
+    @media (hover:hover){
+      .map{
+        will-change: transform;
+        transition: transform .22s var(--ease);
+      }
     }
 
     /* ======= PINS ======= */
@@ -155,24 +133,22 @@
       cursor:pointer;
       box-shadow: 0 10px 22px rgba(0,0,0,.18);
       outline:none;
-      z-index: 2;
-
-      /* Optional micro-adjust per pin (defaults 0) */
-      --dx: 0px;
-      --dy: 0px;
 
       /* Proximity scaling */
       --scale: 1;
-      transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--scale));
-      transition: transform .18s var(--ease), box-shadow .18s var(--ease);
-      pointer-events:auto;
+      transform: translate(-50%, -50%) scale(var(--scale));
+      transition:
+        transform .18s var(--ease),
+        box-shadow .18s var(--ease),
+        filter .18s var(--ease);
+      z-index: 2;
     }
 
-    /* Bigger invisible hit area */
+    /* Bigger invisible hit area (does NOT change visual size) */
     .pin::before{
       content:"";
       position:absolute;
-      inset:-18px;
+      inset:-18px;            /* big click target */
       border-radius:999px;
     }
 
@@ -188,7 +164,7 @@
       pointer-events:none;
     }
 
-    /* tiny stagger */
+    /* tiny stagger (premium rhythm) */
     .pin[data-i="2"]::after{ animation-delay: .25s; }
     .pin[data-i="3"]::after{ animation-delay: .5s; }
     .pin[data-i="4"]::after{ animation-delay: .75s; }
@@ -201,6 +177,7 @@
       100%{ transform: scale(1.65); opacity:0; }
     }
 
+    /* Proximity states (Apple-clean, not gimmicky) */
     .pin.isNear{
       --scale: 1.55;
       z-index: 10;
@@ -210,6 +187,13 @@
       --scale: 1.95;
       z-index: 20;
       box-shadow: 0 18px 44px rgba(0,0,0,.28);
+    }
+
+    .pin:hover{
+      --scale: 1.55; /* hover matches near */
+    }
+    .pin:focus-visible{
+      box-shadow: 0 0 0 4px rgba(11,11,15,.14), 0 18px 44px rgba(0,0,0,.26);
     }
 
     /* ======= MODAL (logo-first) ======= */
@@ -275,9 +259,10 @@
       gap: 22px;
     }
 
+    /* Logo is the HERO */
     .logoHero{
       width: 100%;
-      height: 300px;
+      height: 300px; /* slightly bigger for more “logo hero” */
       display:flex;
       align-items:center;
       justify-content:center;
@@ -344,55 +329,54 @@
 
     <section class="bleed">
       <div class="map" id="map" aria-label="World map with location pins">
-        <img class="mapImg" id="mapImg" src="assets/banner-map.png" alt="" />
-        <div class="pinLayer" id="pinLayer">
-          <!-- Your exact % values (relative to the IMAGE bounds) -->
-          <button class="pin" data-i="1"
-            data-label="California"
-            data-logo="assets/logos/UCR.png"
-            data-caption="UCR School of Business • A. Gary Anderson Graduate School of Management"
-            style="left:36.4%; top:30.4%"></button>
+        <!-- Your exact % values -->
+        <button class="pin" data-i="1"
+          data-label="California"
+          data-logo="assets/logos/UCR.png"
+          data-caption="UCR School of Business • A. Gary Anderson Graduate School of Management"
+          style="left:36.4%; top:30.4%"></button>
 
-          <button class="pin" data-i="2"
-            data-label="Milan"
-            data-logo="assets/logos/Bocconi.png"
-            data-caption="SDA Bocconi School of Management"
-            style="left:49.6%; top:28.1%"></button>
+        <button class="pin" data-i="2"
+          data-label="Milan"
+          data-logo="assets/logos/Bocconi.png"
+          data-caption="SDA Bocconi School of Management"
+          style="left:49.6%; top:28.1%"></button>
 
-          <button class="pin" data-i="3"
-            data-label="Durham"
-            data-logo="assets/logos/Duke.png"
-            data-caption="Duke University"
-            style="left:40.1%; top:29.5%"></button>
+        <button class="pin" data-i="3"
+          data-label="Durham"
+          data-logo="assets/logos/Duke.png"
+          data-caption="Duke University"
+          style="left:40.1%; top:29.5%"></button>
 
-          <button class="pin" data-i="4"
-            data-label="Cambridge"
-            data-logo="assets/logos/HBR.png"
-            data-caption="Harvard Business Review"
-            style="left:40.9%; top:27.9%"></button>
+        <button class="pin" data-i="4"
+          data-label="Cambridge"
+          data-logo="assets/logos/HBR.png"
+          data-caption="Harvard Business Review"
+          style="left:40.9%; top:27.9%"></button>
 
-          <button class="pin" data-i="5"
-            data-label="Hong Kong"
-            data-logo="assets/logos/Hong-Kong.png"
-            data-caption="The Hong Kong University of Science and Technology"
-            style="left:59.8%; top:32.8%"></button>
+        <button class="pin" data-i="5"
+          data-label="Hong Kong"
+          data-logo="assets/logos/Hong-Kong.png"
+          data-caption="The Hong Kong University of Science and Technology"
+          style="left:59.8%; top:32.8%"></button>
 
-          <button class="pin" data-i="2"
-            data-label="New York City"
-            data-logo="assets/logos/NYU.png"
-            data-caption="NYU Tandon School of Engineering"
-            style="left:40.7%; top:28.1%"></button>
+        <button class="pin" data-i="2"
+          data-label="New York City"
+          data-logo="assets/logos/NYU.png"
+          data-caption="NYU Tandon School of Engineering"
+          style="left:40.7%; top:28.1%"></button>
 
-          <button class="pin" data-i="3"
-            data-label="New Haven"
-            data-logo="assets/logos/Yale.png"
-            data-caption="Yale University"
-            style="left:41.3%; top:28.1%"></button>
-        </div>
+        <button class="pin" data-i="3"
+          data-label="New Haven"
+          data-logo="assets/logos/Yale.png"
+          data-caption="Yale University"
+          style="left:41.3%; top:28.1%"></button>
       </div>
     </section>
 
-    <div class="footer">Seamless white. Full-bleed hero.</div>
+    <div class="footer">
+      Seamless white. Full-bleed hero.
+    </div>
   </main>
 
   <!-- Modal -->
@@ -421,8 +405,6 @@
 
   <script>
     const map = document.getElementById('map');
-    const img = document.getElementById('mapImg');
-    const pinLayer = document.getElementById('pinLayer');
     const pins = Array.from(document.querySelectorAll('.pin'));
 
     const modalBack = document.getElementById('modalBack');
@@ -431,60 +413,25 @@
     const modalCaption = document.getElementById('modalCaption');
     const closeBtn = document.getElementById('closeBtn');
 
-    function setMapAspectRatioToImage(){
-      const iw = img.naturalWidth || 0;
-      const ih = img.naturalHeight || 0;
-      if (!iw || !ih) return;
-      // Set CSS variable to "w / h" form
-      map.style.setProperty('--mapAR', `${iw} / ${ih}`);
-    }
-
-    // Size the pinLayer to match the contained image rect (pixel-perfect)
-    function syncPinLayerToContainedImage(){
-      const cw = map.clientWidth;
-      const ch = map.clientHeight;
-
-      const iw = img.naturalWidth || cw;
-      const ih = img.naturalHeight || ch;
-
-      const imageAspect = iw / ih;
-      const containerAspect = cw / ch;
-
-      let w, h;
-      if (imageAspect > containerAspect){
-        w = cw;
-        h = cw / imageAspect;
-      } else {
-        h = ch;
-        w = ch * imageAspect;
-      }
-
-      const left = (cw - w) / 2;
-      const top  = (ch - h) / 2;
-
-      // keep sub-pixel precision
-      pinLayer.style.left = left.toFixed(3) + 'px';
-      pinLayer.style.top = top.toFixed(3) + 'px';
-      pinLayer.style.width = w.toFixed(3) + 'px';
-      pinLayer.style.height = h.toFixed(3) + 'px';
-    }
-
-    function rafSync(){
-      requestAnimationFrame(()=>{
-        setMapAspectRatioToImage();
-        syncPinLayerToContainedImage();
+    // Subtle parallax (hover devices)
+    if (matchMedia('(hover:hover)').matches){
+      map.addEventListener('mousemove', (e)=>{
+        const r = map.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        map.style.transform = `scale(1.008) translate(${px * 6}px, ${py * 6}px)`;
+      });
+      map.addEventListener('mouseleave', ()=>{
+        map.style.transform = '';
       });
     }
-
-    img.addEventListener('load', rafSync);
-    window.addEventListener('resize', rafSync);
-    if (img.complete) rafSync();
 
     function openFromPin(pin){
       modalTitle.textContent = pin.dataset.label || 'Location';
       modalCaption.textContent = pin.dataset.caption || '';
       modalLogo.src = pin.dataset.logo || '';
       modalLogo.alt = pin.dataset.label || 'Logo';
+
       modalBack.classList.add('isOpen');
       document.body.style.overflow = 'hidden';
     }
@@ -499,45 +446,77 @@
     modalBack.addEventListener('click', (e)=>{ if (e.target === modalBack) closeModal(); });
     window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
 
-    // Proximity “alternating”
-    function setProximity(clientX, clientY){
-      pins.forEach(p => p.classList.remove('isNear','isClosest'));
+    // ===== Proximity “Alternating” behavior =====
+    // Pins never move. When you're near a crowded area, the nearest pins scale up
+    // and the closest one gets the highest z-index so it’s easy to click.
 
+    function setProximity(clientX, clientY){
+      // clear states first
+      pins.forEach(p => {
+        p.classList.remove('isNear','isClosest');
+      });
+
+      // compute distances in screen pixels
       const dists = pins.map(p=>{
         const r = p.getBoundingClientRect();
         const cx = r.left + r.width/2;
         const cy = r.top + r.height/2;
-        return { p, d: Math.hypot(clientX - cx, clientY - cy) };
-      }).sort((a,b)=>a.d-b.d);
+        const dx = clientX - cx;
+        const dy = clientY - cy;
+        return { p, d: Math.hypot(dx,dy) };
+      });
 
-      const nearRadius = 56;
-      const closestRadius = 34;
+      dists.sort((a,b)=>a.d-b.d);
 
-      if (!dists[0] || dists[0].d > nearRadius) return;
+      // thresholds tuned for “overlap zones”
+      const nearRadius = 56;     // pins within this grow
+      const closestRadius = 34;  // closest within this grows more
 
-      if (dists[0].d <= closestRadius) dists[0].p.classList.add('isClosest');
-      else dists[0].p.classList.add('isNear');
+      const closest = dists[0];
+      if (!closest) return;
 
-      for (let i=1; i<Math.min(dists.length, 5); i++){
-        if (dists[i].d <= nearRadius) dists[i].p.classList.add('isNear');
+      // Only activate when you're actually near pins
+      if (closest.d > nearRadius) return;
+
+      // Mark the closest
+      if (closest.d <= closestRadius){
+        closest.p.classList.add('isClosest');
+      } else {
+        closest.p.classList.add('isNear');
+      }
+
+      // Mark a few more nearby pins (up to 4) so overlaps become clickable
+      for (let i = 1; i < Math.min(dists.length, 5); i++){
+        if (dists[i].d <= nearRadius){
+          dists[i].p.classList.add('isNear');
+        }
       }
     }
 
+    // Desktop hover proximity
     if (matchMedia('(hover:hover)').matches){
-      map.addEventListener('mousemove', (e)=> setProximity(e.clientX, e.clientY));
-      map.addEventListener('mouseleave', ()=> pins.forEach(p => p.classList.remove('isNear','isClosest')));
-    } else {
-      map.addEventListener('touchstart', (e)=>{
-        const t = e.touches && e.touches[0];
-        if (!t) return;
-        setProximity(t.clientX, t.clientY);
-        clearTimeout(map._clearT);
-        map._clearT = setTimeout(()=>{
-          pins.forEach(p => p.classList.remove('isNear','isClosest'));
-        }, 1800);
-      }, { passive:true });
+      map.addEventListener('mousemove', (e)=>{
+        setProximity(e.clientX, e.clientY);
+      });
+      map.addEventListener('mouseleave', ()=>{
+        pins.forEach(p => p.classList.remove('isNear','isClosest'));
+      });
     }
 
+    // Mobile: tap anywhere on map to "wake" the nearby pins for easy selection
+    map.addEventListener('touchstart', (e)=>{
+      if (!e.touches || !e.touches[0]) return;
+      const t = e.touches[0];
+      setProximity(t.clientX, t.clientY);
+
+      // auto-clear after a moment so it stays clean
+      clearTimeout(map._clearT);
+      map._clearT = setTimeout(()=>{
+        pins.forEach(p => p.classList.remove('isNear','isClosest'));
+      }, 1800);
+    }, { passive:true });
+
+    // Pin click -> modal
     pins.forEach(pin=>{
       pin.addEventListener('click', (e)=>{
         e.stopPropagation();
