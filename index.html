@@ -4,17 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Central Business Intelligence</title>
-  <meta name="description" content="Apple-clean education map with interactive pins." />
+  <meta name="description" content="Education map with interactive pins and logo-first modal." />
 
   <style>
     :root{
       --bg:#ffffff;
       --text:#0b0b0f;
       --muted: rgba(11,11,15,.62);
-      --hair: rgba(11,11,15,.10);
-      --shadow: 0 28px 90px rgba(0,0,0,.14);
       --ease: cubic-bezier(.22,.61,.36,1);
-      --radius: 28px;
     }
 
     *{ box-sizing:border-box; }
@@ -29,7 +26,7 @@
       overflow-x:hidden;
     }
 
-    /* ======= Apple-clean layout ======= */
+    /* ======= Clean top bar (minimal) ======= */
     .nav{
       position: sticky;
       top: 0;
@@ -60,14 +57,6 @@
       background: rgba(11,11,15,.85);
       display:inline-block;
     }
-    .navRight{
-      display:flex;
-      gap: 10px;
-      align-items:center;
-      color: rgba(11,11,15,.55);
-      font-size: 13px;
-      white-space: nowrap;
-    }
 
     /* ======= HERO ======= */
     .hero{
@@ -77,13 +66,11 @@
         radial-gradient(900px 420px at 10% 10%, rgba(11,11,15,.03), transparent 55%),
         #fff;
     }
-
     .heroCopy{
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 18px 22px;
     }
-
     .eyebrow{
       margin:0 0 10px;
       font-size: 12px;
@@ -91,14 +78,12 @@
       text-transform: uppercase;
       color: rgba(11,11,15,.55);
     }
-
     h1{
       margin:0;
       font-size: clamp(40px, 6vw, 84px);
       letter-spacing: -0.04em;
       line-height: 0.98;
     }
-
     .sub{
       margin: 14px 0 0;
       font-size: 16px;
@@ -107,55 +92,22 @@
       max-width: 74ch;
     }
 
-    .hintRow{
-      margin-top: 16px;
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      flex-wrap: wrap;
-      color: rgba(11,11,15,.55);
-      font-size: 13px;
-    }
-
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(11,11,15,.10);
-      background: rgba(11,11,15,.03);
-      user-select:none;
-    }
-    .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 8px;
-      border: 1px solid rgba(11,11,15,.14);
-      background: rgba(255,255,255,.75);
-      color: rgba(11,11,15,.72);
-    }
-
-    /* ======= FULL BLEED MAP (WOW) ======= */
+    /* ======= FULL BLEED MAP ======= */
     .bleed{
       width: 100vw;
       margin-left: 50%;
       transform: translateX(-50%);
       padding: 0;
     }
-
     .map{
       position: relative;
       width: 100%;
-      aspect-ratio: 21 / 9; /* wide + cinematic */
+      aspect-ratio: 21 / 9; /* cinematic */
       background: #fff url("assets/banner-map.png") center / contain no-repeat;
       border-top: 1px solid rgba(11,11,15,.06);
       border-bottom: 1px solid rgba(11,11,15,.06);
       transform: translateZ(0);
     }
-
-    /* Taller on small screens so it still feels like a hero */
     @media (max-width: 860px){
       .hero{ padding-top: 46px; }
       .map{ aspect-ratio: 4 / 5; }
@@ -210,29 +162,7 @@
       100%{ transform: scale(1.65); opacity:0; }
     }
 
-    /* Picker readout (hidden unless picker enabled) */
-    .readout{
-      position:absolute;
-      right: 14px;
-      bottom: 12px;
-      font-size: 12px;
-      color: rgba(11,11,15,.62);
-      background: rgba(255,255,255,.82);
-      border: 1px solid rgba(11,11,15,.10);
-      padding: 6px 8px;
-      border-radius: 10px;
-      backdrop-filter: blur(10px);
-      pointer-events:none;
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity .18s var(--ease), transform .18s var(--ease);
-    }
-    .readout.show{
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ======= MODAL (Apple sheet) ======= */
+    /* ======= MODAL (logo-first) ======= */
     .modalBack{
       position: fixed;
       inset: 0;
@@ -246,7 +176,7 @@
     .modalBack.isOpen{ display:flex; }
 
     .modal{
-      width: min(880px, 100%);
+      width: min(900px, 100%);
       border-radius: 30px;
       background: rgba(255,255,255,.92);
       border: 1px solid rgba(255,255,255,.20);
@@ -288,65 +218,63 @@
     .close:active{ transform: scale(.98); }
 
     .modalBody{
-      padding: 16px 16px 18px;
-      display:grid;
-      gap: 14px;
+      padding: 32px 32px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
     }
-    .logoWrap{
+
+    /* Logo is the HERO */
+    .logoHero{
+      width: 100%;
+      height: 260px;
       display:flex;
-      justify-content:center;
       align-items:center;
-      padding: 22px 18px;
-      background: rgba(11,11,15,.02);
-      border-radius: 18px;
-      border: 1px solid rgba(11,11,15,.08);
+      justify-content:center;
+      background: linear-gradient(180deg, rgba(11,11,15,.04), rgba(11,11,15,.01));
+      border-radius: 26px;
     }
-    .logoWrap img{
-      max-height: 72px;
-      max-width: 260px;
+    .logoHero img{
+      max-width: 520px;
+      max-height: 180px;
+      width: auto;
+      height: auto;
       object-fit: contain;
-      filter: saturate(.95);
+      opacity: 0;
+      transform: scale(.96);
+      transition: opacity .35s ease, transform .35s ease;
     }
+    .modalBack.isOpen .logoHero img{
+      opacity: 1;
+      transform: scale(1);
+    }
+
     .meta{
       text-align:center;
+      margin-top: 2px;
     }
     .meta h2{
       margin:0;
-      font-size: 22px;
+      font-size: 20px;
+      font-weight: 600;
       letter-spacing: -0.02em;
       line-height: 1.15;
     }
     .meta p{
       margin: 8px 0 0;
-      color: rgba(11,11,15,.65);
+      color: rgba(11,11,15,.58);
       font-size: 14px;
       line-height: 1.45;
+      max-width: 72ch;
     }
 
-    /* Toast */
-    .toast{
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      background: rgba(11,11,15,.86);
-      color: #fff;
-      font-size: 13px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      opacity: 0;
-      transition: opacity .18s ease;
-      pointer-events:none;
-      z-index: 80;
-    }
-    .toast.show{ opacity: 1; }
-
-    /* Footer (quiet) */
+    /* Footer */
     .footer{
       max-width: 1200px;
       margin: 0 auto;
-      padding: 22px 18px 44px;
-      color: rgba(11,11,15,.55);
+      padding: 18px 18px 44px;
+      color: rgba(11,11,15,.50);
       font-size: 13px;
     }
   </style>
@@ -356,7 +284,6 @@
   <div class="nav">
     <div class="navInner">
       <div class="brand"><span class="dot"></span> Central Business Intelligence</div>
-      <div class="navRight">Press <span class="kbd">P</span> to place pins</div>
     </div>
   </div>
 
@@ -364,82 +291,75 @@
     <section class="heroCopy">
       <p class="eyebrow">Education Map</p>
       <h1>Places that shaped my path.</h1>
-      <p class="sub">
-        A clean, minimal global view. Tap a pin to open details.
-      </p>
-
-      <div class="hintRow">
-        <span class="chip">Interactive pins • modal details • Apple-clean</span>
-        <span class="chip">Hidden tool: <span class="kbd">P</span> toggles Pin Picker</span>
-      </div>
+      <p class="sub">Tap a pin to open details.</p>
     </section>
 
     <section class="bleed">
       <div class="map" id="map" aria-label="World map with location pins">
-        <!-- NOTE: these % are placeholders. Use Pin Picker (press P) and click your map to copy exact % for each location. -->
+        <!-- Using your exact % values -->
 
-        <!-- California -->
+        <!-- UCR (California) -->
         <button class="pin" data-i="1"
           data-label="California"
           data-logo="assets/logos/UCR.png"
           data-caption="UCR School of Business • A. Gary Anderson Graduate School of Management"
-          style="left:18.7%; top:48.8%"></button>
+          style="left:36.4%; top:30.4%"></button>
 
-        <!-- NYC -->
-        <button class="pin" data-i="2"
-          data-label="New York City"
-          data-logo="assets/logos/NYU.png"
-          data-caption="NYU Tandon School of Engineering"
-          style="left:24.4%; top:42.0%"></button>
-
-        <!-- Cambridge (Harvard) -->
-        <button class="pin" data-i="3"
-          data-label="Cambridge"
-          data-logo="assets/logos/HBR.png"
-          data-caption="Harvard Business Review"
-          style="left:24.2%; top:41.5%"></button>
-
-        <!-- Yale -->
-        <button class="pin" data-i="4"
-          data-label="New Haven"
-          data-logo="assets/logos/Yale.png"
-          data-caption="Yale University"
-          style="left:24.0%; top:42.3%"></button>
-
-        <!-- Duke -->
-        <button class="pin" data-i="5"
-          data-label="Durham"
-          data-logo="assets/logos/Duke.png"
-          data-caption="Duke University"
-          style="left:23.0%; top:46.2%"></button>
-
-        <!-- Johns Hopkins -->
-        <button class="pin" data-i="1"
-          data-label="Baltimore"
-          data-logo="assets/logos/Johns-Hopkins.png"
-          data-caption="Johns Hopkins University"
-          style="left:23.6%; top:44.7%"></button>
-
-        <!-- Italy (Bocconi) -->
+        <!-- Bocconi (Milan / Italy) -->
         <button class="pin" data-i="2"
           data-label="Milan"
           data-logo="assets/logos/Bocconi.png"
           data-caption="SDA Bocconi School of Management"
-          style="left:55.8%; top:40.7%"></button>
+          style="left:49.6%; top:28.1%"></button>
+
+        <!-- Duke (Durham) -->
+        <button class="pin" data-i="3"
+          data-label="Durham"
+          data-logo="assets/logos/Duke.png"
+          data-caption="Duke University"
+          style="left:40.1%; top:29.5%"></button>
+
+        <!-- Harvard -->
+        <button class="pin" data-i="4"
+          data-label="Cambridge"
+          data-logo="assets/logos/HBR.png"
+          data-caption="Harvard Business Review"
+          style="left:40.9%; top:27.9%"></button>
 
         <!-- Hong Kong -->
-        <button class="pin" data-i="3"
+        <button class="pin" data-i="5"
           data-label="Hong Kong"
           data-logo="assets/logos/Hong-Kong.png"
           data-caption="The Hong Kong University of Science and Technology"
-          style="left:78.8%; top:50.0%"></button>
+          style="left:59.8%; top:32.8%"></button>
 
-        <div class="readout" id="readout" aria-hidden="true"></div>
+        <!-- NYU -->
+        <button class="pin" data-i="2"
+          data-label="New York City"
+          data-logo="assets/logos/NYU.png"
+          data-caption="NYU Tandon School of Engineering"
+          style="left:40.7%; top:28.1%"></button>
+
+        <!-- Yale -->
+        <button class="pin" data-i="3"
+          data-label="New Haven"
+          data-logo="assets/logos/Yale.png"
+          data-caption="Yale University"
+          style="left:41.3%; top:28.1%"></button>
+
+        <!-- (Optional later) Johns Hopkins pin if you want it back -->
+        <!--
+        <button class="pin" data-i="4"
+          data-label="Baltimore"
+          data-logo="assets/logos/Johns-Hopkins.png"
+          data-caption="Johns Hopkins University"
+          style="left:__; top:__%"></button>
+        -->
       </div>
     </section>
 
     <div class="footer">
-      Seamless white. Full-bleed hero. Tiles next.
+      Seamless white. Full-bleed hero.
     </div>
   </main>
 
@@ -456,68 +376,25 @@
       </div>
 
       <div class="modalBody">
-        <div class="logoWrap">
+        <div class="logoHero">
           <img id="modalLogo" src="" alt="">
         </div>
         <div class="meta">
-          <h2 id="modalTitle">Location</h2>
+          <h2 id="modalTitle"></h2>
           <p id="modalCaption"></p>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="toast" id="toast">Copied</div>
-
   <script>
     const map = document.getElementById('map');
-    const readout = document.getElementById('readout');
-    const toast = document.getElementById('toast');
 
     const modalBack = document.getElementById('modalBack');
     const modalLogo = document.getElementById('modalLogo');
     const modalTitle = document.getElementById('modalTitle');
     const modalCaption = document.getElementById('modalCaption');
     const closeBtn = document.getElementById('closeBtn');
-
-    let picking = false;
-
-    function showToast(text){
-      toast.textContent = text;
-      toast.classList.add('show');
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(()=> toast.classList.remove('show'), 900);
-    }
-
-    function percentsFromEvent(e){
-      const r = map.getBoundingClientRect();
-      const x = ((e.clientX - r.left) / r.width * 100);
-      const y = ((e.clientY - r.top) / r.height * 100);
-      return { x, y };
-    }
-
-    // Pin Picker toggle (press P)
-    window.addEventListener('keydown', (e)=>{
-      if (e.key.toLowerCase() === 'p'){
-        picking = !picking;
-        showToast(picking ? 'Pin Picker On' : 'Pin Picker Off');
-      }
-      if (e.key === 'Escape' && modalBack.classList.contains('isOpen')){
-        closeModal();
-      }
-    });
-
-    // Live readout only when picking
-    map.addEventListener('mousemove', (e)=>{
-      if (!picking) return;
-      const { x, y } = percentsFromEvent(e);
-      readout.textContent = `${x.toFixed(1)}% , ${y.toFixed(1)}%`;
-      readout.classList.add('show');
-    });
-
-    map.addEventListener('mouseleave', ()=>{
-      readout.classList.remove('show');
-    });
 
     // Subtle parallax (hover devices)
     if (matchMedia('(hover:hover)').matches){
@@ -532,26 +409,10 @@
       });
     }
 
-    // Map click -> copy snippet when picking
-    map.addEventListener('click', async (e)=>{
-      if (!picking) return;
-      const { x, y } = percentsFromEvent(e);
-      const left = x.toFixed(1);
-      const top  = y.toFixed(1);
-      const snippet = `style="left:${left}%; top:${top}%"`;
-      try{
-        await navigator.clipboard.writeText(snippet);
-        showToast(`Copied: ${snippet}`);
-      }catch{
-        showToast(`Pin: ${left}% , ${top}%`);
-      }
-    });
-
-    // Pins -> modal (when not picking)
+    // Pins -> modal
     document.querySelectorAll('.pin').forEach(pin=>{
       pin.addEventListener('click', (e)=>{
         e.stopPropagation();
-        if (picking) return;
 
         modalTitle.textContent = pin.dataset.label || 'Location';
         modalCaption.textContent = pin.dataset.caption || '';
@@ -568,9 +429,10 @@
       document.body.style.overflow = '';
       modalLogo.src = '';
     }
+
     closeBtn.addEventListener('click', closeModal);
     modalBack.addEventListener('click', (e)=>{ if (e.target === modalBack) closeModal(); });
+    window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
   </script>
 </body>
 </html>
-
