@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Central Business Intelligence</title>
-  <meta name="description" content="Education map with interactive pins and logo-first modal." />
+  <meta name="description" content="Education map with interactive pins and a logo-first modal." />
 
   <style>
     :root{
@@ -26,7 +26,7 @@
       overflow-x:hidden;
     }
 
-    /* ======= Clean top bar (minimal) ======= */
+    /* ======= Minimal top bar ======= */
     .nav{
       position: sticky;
       top: 0;
@@ -102,7 +102,7 @@
     .map{
       position: relative;
       width: 100%;
-      aspect-ratio: 21 / 9; /* cinematic */
+      aspect-ratio: 21 / 9;
       background: #fff url("assets/banner-map.png") center / contain no-repeat;
       border-top: 1px solid rgba(11,11,15,.06);
       border-bottom: 1px solid rgba(11,11,15,.06);
@@ -129,11 +129,25 @@
       border-radius: 999px;
       background: rgba(11,11,15,.92);
       border: 2px solid rgba(255,255,255,.98);
-      transform: translate(-50%, -50%);
       cursor:pointer;
       box-shadow: 0 10px 22px rgba(0,0,0,.18);
       outline:none;
+
+      /* Orbit offsets (default zero) */
+      --ox: 0px;
+      --oy: 0px;
+      transform: translate(calc(-50% + var(--ox)), calc(-50% + var(--oy)));
+      transition: transform .22s var(--ease), box-shadow .22s var(--ease);
     }
+
+    /* Bigger invisible hit area (does NOT change visual size) */
+    .pin::before{
+      content:"";
+      position:absolute;
+      inset:-14px;
+      border-radius:999px;
+    }
+
     .pin::after{
       content:"";
       position:absolute;
@@ -144,7 +158,9 @@
       opacity:0;
       animation: pulse 2.2s var(--ease) infinite;
     }
-    .pin:hover{ transform: translate(-50%,-50%) scale(1.06); }
+    .pin:hover{
+      transform: translate(calc(-50% + var(--ox)), calc(-50% + var(--oy))) scale(1.06);
+    }
     .pin:focus-visible{
       box-shadow: 0 0 0 4px rgba(11,11,15,.14), 0 10px 22px rgba(0,0,0,.18);
     }
@@ -160,6 +176,11 @@
       18%{ opacity:.85; }
       55%{ opacity:.25; }
       100%{ transform: scale(1.65); opacity:0; }
+    }
+
+    /* When orbit-expanded */
+    .pin[data-expanded="1"]{
+      box-shadow: 0 14px 28px rgba(0,0,0,.22);
     }
 
     /* ======= MODAL (logo-first) ======= */
@@ -269,7 +290,6 @@
       max-width: 72ch;
     }
 
-    /* Footer */
     .footer{
       max-width: 1200px;
       margin: 0 auto;
@@ -346,15 +366,6 @@
           data-logo="assets/logos/Yale.png"
           data-caption="Yale University"
           style="left:41.3%; top:28.1%"></button>
-
-        <!-- (Optional later) Johns Hopkins pin if you want it back -->
-        <!--
-        <button class="pin" data-i="4"
-          data-label="Baltimore"
-          data-logo="assets/logos/Johns-Hopkins.png"
-          data-caption="Johns Hopkins University"
-          style="left:__; top:__%"></button>
-        -->
       </div>
     </section>
 
@@ -396,6 +407,10 @@
     const modalCaption = document.getElementById('modalCaption');
     const closeBtn = document.getElementById('closeBtn');
 
+    const pins = Array.from(document.querySelectorAll('.pin'));
+    let expandedGroup = null;
+    let collapseTimer = null;
+
     // Subtle parallax (hover devices)
     if (matchMedia('(hover:hover)').matches){
       map.addEventListener('mousemove', (e)=>{
@@ -409,25 +424,100 @@
       });
     }
 
-    // Pins -> modal
-    document.querySelectorAll('.pin').forEach(pin=>{
+    function getCenter(pin){
+      const r = pin.getBoundingClientRect();
+      return { x: r.left + r.width/2, y: r.top + r.height/2 };
+    }
+
+    function distance(a,b){
+      const dx = a.x - b.x;
+      const dy = a.y - b.y;
+      return Math.hypot(dx, dy);
+    }
+
+    function clearOffsets(group){
+      group.forEach(p=>{
+        p.style.setProperty('--ox','0px');
+        p.style.setProperty('--oy','0px');
+        p.dataset.expanded = '';
+      });
+    }
+
+    function collapse(){
+      if(!expandedGroup) return;
+      clearOffsets(expandedGroup);
+      expandedGroup = null;
+      clearTimeout(collapseTimer);
+      collapseTimer = null;
+    }
+
+    function expandAround(clickedPin){
+      collapse();
+
+      const center = getCenter(clickedPin);
+      const nearby = pins.filter(p => distance(center, getCenter(p)) < 28); // threshold
+
+      if(nearby.length <= 1) return null;
+
+      const radius = 18; // px orbit radius
+      nearby.forEach((p, i)=>{
+        const angle = (i / nearby.length) * Math.PI * 2;
+        const ox = Math.cos(angle) * radius;
+        const oy = Math.sin(angle) * radius;
+        p.style.setProperty('--ox', `${ox.toFixed(1)}px`);
+        p.style.setProperty('--oy', `${oy.toFixed(1)}px`);
+        p.dataset.expanded = '1';
+      });
+
+      expandedGroup = nearby;
+      collapseTimer = setTimeout(collapse, 2600);
+
+      return nearby;
+    }
+
+    function openFromPin(pin){
+      modalTitle.textContent = pin.dataset.label || 'Location';
+      modalCaption.textContent = pin.dataset.caption || '';
+      modalLogo.src = pin.dataset.logo || '';
+      modalLogo.alt = pin.dataset.label || 'Logo';
+
+      modalBack.classList.add('isOpen');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Pins click logic:
+    // - If crowded: first tap expands, second tap selects.
+    // - If not crowded: opens immediately.
+    pins.forEach(pin=>{
       pin.addEventListener('click', (e)=>{
         e.stopPropagation();
 
-        modalTitle.textContent = pin.dataset.label || 'Location';
-        modalCaption.textContent = pin.dataset.caption || '';
-        modalLogo.src = pin.dataset.logo || '';
-        modalLogo.alt = pin.dataset.label || 'Logo';
+        if(pin.dataset.expanded === '1'){
+          collapse();
+          openFromPin(pin);
+          return;
+        }
 
-        modalBack.classList.add('isOpen');
-        document.body.style.overflow = 'hidden';
+        const group = expandAround(pin);
+        if(group){
+          // First tap expands; do not open yet.
+          return;
+        }
+
+        openFromPin(pin);
       });
+    });
+
+    // Collapse orbit if you click anywhere else
+    document.addEventListener('click', (e)=>{
+      if(expandedGroup && !e.target.classList.contains('pin')) collapse();
     });
 
     function closeModal(){
       modalBack.classList.remove('isOpen');
       document.body.style.overflow = '';
       modalLogo.src = '';
+      collapse();
     }
 
     closeBtn.addEventListener('click', closeModal);
