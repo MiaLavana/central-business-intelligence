@@ -12,6 +12,8 @@
       --text:#0b0b0f;
       --muted: rgba(11,11,15,.62);
       --ease: cubic-bezier(.22,.61,.36,1);
+      --hair: rgba(11,11,15,.06);
+      --mapAR: 21 / 9; /* overwritten by JS to match the actual image ratio */
     }
 
     *{ box-sizing:border-box; }
@@ -33,7 +35,7 @@
       z-index: 20;
       background: rgba(255,255,255,.72);
       backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(11,11,15,.06);
+      border-bottom: 1px solid var(--hair);
     }
     .navInner{
       max-width: 1200px;
@@ -103,39 +105,43 @@
     .map{
       position: relative;
       width: 100%;
-      aspect-ratio: 21 / 9;
-      border-top: 1px solid rgba(11,11,15,.06);
-      border-bottom: 1px solid rgba(11,11,15,.06);
+      aspect-ratio: var(--mapAR);
       background:#fff;
-      transform: translateZ(0);
+      border-top: 1px solid var(--hair);
+      border-bottom: 1px solid var(--hair);
       overflow:hidden;
       touch-action: manipulation;
+      transform: translateZ(0);
     }
 
+    /* On mobile: keep the SAME aspect ratio (no letterboxing drift),
+       but ensure it still feels like a hero via min-height. */
     @media (max-width: 860px){
       .hero{ padding-top: 46px; }
-      .map{ aspect-ratio: 4 / 5; }
+      .map{ min-height: 420px; } /* Apple-like “hero presence” */
     }
 
-    /* The image itself (contained) */
+    /* Map image (we keep it as <img> so we can read naturalWidth/Height precisely) */
     .mapImg{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
-      object-fit: contain;
+      object-fit: contain;     /* safe */
       object-position: center;
       display:block;
       pointer-events:none;
       user-select:none;
     }
 
-    /* This layer is sized to the EXACT on-screen image bounds */
+    /* Layer that exactly matches the rendered image rectangle */
     .pinLayer{
       position:absolute;
-      /* left/top/width/height are set by JS to match contained image rect */
-      left: 0; top: 0; width: 100%; height: 100%;
-      pointer-events:none; /* layer doesn't block gestures */
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events:none;
     }
 
     /* ======= PINS ======= */
@@ -149,13 +155,16 @@
       cursor:pointer;
       box-shadow: 0 10px 22px rgba(0,0,0,.18);
       outline:none;
-
-      --scale: 1;
-      transform: translate(-50%, -50%) scale(var(--scale));
-      transition: transform .18s var(--ease), box-shadow .18s var(--ease);
       z-index: 2;
 
-      /* IMPORTANT: pins must receive clicks */
+      /* Optional micro-adjust per pin (defaults 0) */
+      --dx: 0px;
+      --dy: 0px;
+
+      /* Proximity scaling */
+      --scale: 1;
+      transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--scale));
+      transition: transform .18s var(--ease), box-shadow .18s var(--ease);
       pointer-events:auto;
     }
 
@@ -179,6 +188,7 @@
       pointer-events:none;
     }
 
+    /* tiny stagger */
     .pin[data-i="2"]::after{ animation-delay: .25s; }
     .pin[data-i="3"]::after{ animation-delay: .5s; }
     .pin[data-i="4"]::after{ animation-delay: .75s; }
@@ -200,10 +210,6 @@
       --scale: 1.95;
       z-index: 20;
       box-shadow: 0 18px 44px rgba(0,0,0,.28);
-    }
-    .pin:hover{ --scale: 1.55; }
-    .pin:focus-visible{
-      box-shadow: 0 0 0 4px rgba(11,11,15,.14), 0 18px 44px rgba(0,0,0,.26);
     }
 
     /* ======= MODAL (logo-first) ======= */
@@ -339,9 +345,8 @@
     <section class="bleed">
       <div class="map" id="map" aria-label="World map with location pins">
         <img class="mapImg" id="mapImg" src="assets/banner-map.png" alt="" />
-
-        <!-- Pins must live inside pinLayer so they align to the true image bounds -->
         <div class="pinLayer" id="pinLayer">
+          <!-- Your exact % values (relative to the IMAGE bounds) -->
           <button class="pin" data-i="1"
             data-label="California"
             data-logo="assets/logos/UCR.png"
@@ -387,9 +392,7 @@
       </div>
     </section>
 
-    <div class="footer">
-      Seamless white. Full-bleed hero.
-    </div>
+    <div class="footer">Seamless white. Full-bleed hero.</div>
   </main>
 
   <!-- Modal -->
@@ -428,24 +431,30 @@
     const modalCaption = document.getElementById('modalCaption');
     const closeBtn = document.getElementById('closeBtn');
 
-    // ---- Critical: size the pinLayer to match the contained image rect ----
+    function setMapAspectRatioToImage(){
+      const iw = img.naturalWidth || 0;
+      const ih = img.naturalHeight || 0;
+      if (!iw || !ih) return;
+      // Set CSS variable to "w / h" form
+      map.style.setProperty('--mapAR', `${iw} / ${ih}`);
+    }
+
+    // Size the pinLayer to match the contained image rect (pixel-perfect)
     function syncPinLayerToContainedImage(){
       const cw = map.clientWidth;
       const ch = map.clientHeight;
 
-      // Natural image aspect ratio
       const iw = img.naturalWidth || cw;
       const ih = img.naturalHeight || ch;
+
       const imageAspect = iw / ih;
       const containerAspect = cw / ch;
 
       let w, h;
       if (imageAspect > containerAspect){
-        // image is wider than container -> constrained by width
         w = cw;
         h = cw / imageAspect;
       } else {
-        // image is taller than container -> constrained by height
         h = ch;
         w = ch * imageAspect;
       }
@@ -453,40 +462,29 @@
       const left = (cw - w) / 2;
       const top  = (ch - h) / 2;
 
-      pinLayer.style.left = left + 'px';
-      pinLayer.style.top = top + 'px';
-      pinLayer.style.width = w + 'px';
-      pinLayer.style.height = h + 'px';
+      // keep sub-pixel precision
+      pinLayer.style.left = left.toFixed(3) + 'px';
+      pinLayer.style.top = top.toFixed(3) + 'px';
+      pinLayer.style.width = w.toFixed(3) + 'px';
+      pinLayer.style.height = h.toFixed(3) + 'px';
     }
 
     function rafSync(){
-      requestAnimationFrame(syncPinLayerToContainedImage);
+      requestAnimationFrame(()=>{
+        setMapAspectRatioToImage();
+        syncPinLayerToContainedImage();
+      });
     }
 
     img.addEventListener('load', rafSync);
     window.addEventListener('resize', rafSync);
-    // also run once in case image is cached and already loaded
     if (img.complete) rafSync();
-
-    // Subtle parallax (hover devices) — applied to the whole map container
-    if (matchMedia('(hover:hover)').matches){
-      map.addEventListener('mousemove', (e)=>{
-        const r = map.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width - 0.5;
-        const py = (e.clientY - r.top) / r.height - 0.5;
-        map.style.transform = `scale(1.008) translate(${px * 6}px, ${py * 6}px)`;
-      });
-      map.addEventListener('mouseleave', ()=>{
-        map.style.transform = '';
-      });
-    }
 
     function openFromPin(pin){
       modalTitle.textContent = pin.dataset.label || 'Location';
       modalCaption.textContent = pin.dataset.caption || '';
       modalLogo.src = pin.dataset.logo || '';
       modalLogo.alt = pin.dataset.label || 'Logo';
-
       modalBack.classList.add('isOpen');
       document.body.style.overflow = 'hidden';
     }
@@ -501,7 +499,7 @@
     modalBack.addEventListener('click', (e)=>{ if (e.target === modalBack) closeModal(); });
     window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
 
-    // Proximity “alternating” helper (now uses the pinLayer coordinates)
+    // Proximity “alternating”
     function setProximity(clientX, clientY){
       pins.forEach(p => p.classList.remove('isNear','isClosest'));
 
@@ -525,24 +523,21 @@
       }
     }
 
-    // Desktop hover proximity
     if (matchMedia('(hover:hover)').matches){
       map.addEventListener('mousemove', (e)=> setProximity(e.clientX, e.clientY));
       map.addEventListener('mouseleave', ()=> pins.forEach(p => p.classList.remove('isNear','isClosest')));
+    } else {
+      map.addEventListener('touchstart', (e)=>{
+        const t = e.touches && e.touches[0];
+        if (!t) return;
+        setProximity(t.clientX, t.clientY);
+        clearTimeout(map._clearT);
+        map._clearT = setTimeout(()=>{
+          pins.forEach(p => p.classList.remove('isNear','isClosest'));
+        }, 1800);
+      }, { passive:true });
     }
 
-    // Mobile: tap wakes nearby pins briefly
-    map.addEventListener('touchstart', (e)=>{
-      const t = e.touches && e.touches[0];
-      if (!t) return;
-      setProximity(t.clientX, t.clientY);
-      clearTimeout(map._clearT);
-      map._clearT = setTimeout(()=>{
-        pins.forEach(p => p.classList.remove('isNear','isClosest'));
-      }, 1800);
-    }, { passive:true });
-
-    // Pin click -> modal
     pins.forEach(pin=>{
       pin.addEventListener('click', (e)=>{
         e.stopPropagation();
