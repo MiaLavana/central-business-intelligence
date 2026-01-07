@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Central Business Intelligence</title>
-  <meta name="description" content="Education map with interactive pins and a logo-first modal." />
+  <meta name="description" content="Education map with interactive pins and logo-first modal." />
 
   <style>
     :root{
@@ -26,7 +26,7 @@
       overflow-x:hidden;
     }
 
-    /* ======= Minimal top bar ======= */
+    /* ======= Clean top bar (minimal) ======= */
     .nav{
       position: sticky;
       top: 0;
@@ -102,12 +102,11 @@
     .map{
       position: relative;
       width: 100%;
-      aspect-ratio: 21 / 9;
+      aspect-ratio: 21 / 9; /* cinematic */
       background: #fff url("assets/banner-map.png") center / contain no-repeat;
       border-top: 1px solid rgba(11,11,15,.06);
       border-bottom: 1px solid rgba(11,11,15,.06);
       transform: translateZ(0);
-      touch-action: manipulation; /* helps taps */
     }
     @media (max-width: 860px){
       .hero{ padding-top: 46px; }
@@ -130,28 +129,11 @@
       border-radius: 999px;
       background: rgba(11,11,15,.92);
       border: 2px solid rgba(255,255,255,.98);
+      transform: translate(-50%, -50%);
       cursor:pointer;
       box-shadow: 0 10px 22px rgba(0,0,0,.18);
       outline:none;
-
-      /* Proximity scaling */
-      --scale: 1;
-      transform: translate(-50%, -50%) scale(var(--scale));
-      transition:
-        transform .18s var(--ease),
-        box-shadow .18s var(--ease),
-        filter .18s var(--ease);
-      z-index: 2;
     }
-
-    /* Bigger invisible hit area (does NOT change visual size) */
-    .pin::before{
-      content:"";
-      position:absolute;
-      inset:-18px;            /* big click target */
-      border-radius:999px;
-    }
-
     .pin::after{
       content:"";
       position:absolute;
@@ -161,7 +143,10 @@
       transform: scale(.55);
       opacity:0;
       animation: pulse 2.2s var(--ease) infinite;
-      pointer-events:none;
+    }
+    .pin:hover{ transform: translate(-50%,-50%) scale(1.06); }
+    .pin:focus-visible{
+      box-shadow: 0 0 0 4px rgba(11,11,15,.14), 0 10px 22px rgba(0,0,0,.18);
     }
 
     /* tiny stagger (premium rhythm) */
@@ -175,25 +160,6 @@
       18%{ opacity:.85; }
       55%{ opacity:.25; }
       100%{ transform: scale(1.65); opacity:0; }
-    }
-
-    /* Proximity states (Apple-clean, not gimmicky) */
-    .pin.isNear{
-      --scale: 1.55;
-      z-index: 10;
-      box-shadow: 0 14px 34px rgba(0,0,0,.24);
-    }
-    .pin.isClosest{
-      --scale: 1.95;
-      z-index: 20;
-      box-shadow: 0 18px 44px rgba(0,0,0,.28);
-    }
-
-    .pin:hover{
-      --scale: 1.55; /* hover matches near */
-    }
-    .pin:focus-visible{
-      box-shadow: 0 0 0 4px rgba(11,11,15,.14), 0 18px 44px rgba(0,0,0,.26);
     }
 
     /* ======= MODAL (logo-first) ======= */
@@ -262,7 +228,7 @@
     /* Logo is the HERO */
     .logoHero{
       width: 100%;
-      height: 300px; /* slightly bigger for more “logo hero” */
+      height: 260px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -270,8 +236,8 @@
       border-radius: 26px;
     }
     .logoHero img{
-      max-width: 620px;
-      max-height: 210px;
+      max-width: 520px;
+      max-height: 180px;
       width: auto;
       height: auto;
       object-fit: contain;
@@ -303,6 +269,7 @@
       max-width: 72ch;
     }
 
+    /* Footer */
     .footer{
       max-width: 1200px;
       margin: 0 auto;
@@ -329,48 +296,65 @@
 
     <section class="bleed">
       <div class="map" id="map" aria-label="World map with location pins">
-        <!-- Your exact % values -->
+        <!-- Using your exact % values -->
+
+        <!-- UCR (California) -->
         <button class="pin" data-i="1"
           data-label="California"
           data-logo="assets/logos/UCR.png"
           data-caption="UCR School of Business • A. Gary Anderson Graduate School of Management"
           style="left:36.4%; top:30.4%"></button>
 
+        <!-- Bocconi (Milan / Italy) -->
         <button class="pin" data-i="2"
           data-label="Milan"
           data-logo="assets/logos/Bocconi.png"
           data-caption="SDA Bocconi School of Management"
           style="left:49.6%; top:28.1%"></button>
 
+        <!-- Duke (Durham) -->
         <button class="pin" data-i="3"
           data-label="Durham"
           data-logo="assets/logos/Duke.png"
           data-caption="Duke University"
           style="left:40.1%; top:29.5%"></button>
 
+        <!-- Harvard -->
         <button class="pin" data-i="4"
           data-label="Cambridge"
           data-logo="assets/logos/HBR.png"
           data-caption="Harvard Business Review"
           style="left:40.9%; top:27.9%"></button>
 
+        <!-- Hong Kong -->
         <button class="pin" data-i="5"
           data-label="Hong Kong"
           data-logo="assets/logos/Hong-Kong.png"
           data-caption="The Hong Kong University of Science and Technology"
           style="left:59.8%; top:32.8%"></button>
 
+        <!-- NYU -->
         <button class="pin" data-i="2"
           data-label="New York City"
           data-logo="assets/logos/NYU.png"
           data-caption="NYU Tandon School of Engineering"
           style="left:40.7%; top:28.1%"></button>
 
+        <!-- Yale -->
         <button class="pin" data-i="3"
           data-label="New Haven"
           data-logo="assets/logos/Yale.png"
           data-caption="Yale University"
           style="left:41.3%; top:28.1%"></button>
+
+        <!-- (Optional later) Johns Hopkins pin if you want it back -->
+        <!--
+        <button class="pin" data-i="4"
+          data-label="Baltimore"
+          data-logo="assets/logos/Johns-Hopkins.png"
+          data-caption="Johns Hopkins University"
+          style="left:__; top:__%"></button>
+        -->
       </div>
     </section>
 
@@ -405,7 +389,6 @@
 
   <script>
     const map = document.getElementById('map');
-    const pins = Array.from(document.querySelectorAll('.pin'));
 
     const modalBack = document.getElementById('modalBack');
     const modalLogo = document.getElementById('modalLogo');
@@ -426,15 +409,20 @@
       });
     }
 
-    function openFromPin(pin){
-      modalTitle.textContent = pin.dataset.label || 'Location';
-      modalCaption.textContent = pin.dataset.caption || '';
-      modalLogo.src = pin.dataset.logo || '';
-      modalLogo.alt = pin.dataset.label || 'Logo';
+    // Pins -> modal
+    document.querySelectorAll('.pin').forEach(pin=>{
+      pin.addEventListener('click', (e)=>{
+        e.stopPropagation();
 
-      modalBack.classList.add('isOpen');
-      document.body.style.overflow = 'hidden';
-    }
+        modalTitle.textContent = pin.dataset.label || 'Location';
+        modalCaption.textContent = pin.dataset.caption || '';
+        modalLogo.src = pin.dataset.logo || '';
+        modalLogo.alt = pin.dataset.label || 'Logo';
+
+        modalBack.classList.add('isOpen');
+        document.body.style.overflow = 'hidden';
+      });
+    });
 
     function closeModal(){
       modalBack.classList.remove('isOpen');
@@ -445,84 +433,6 @@
     closeBtn.addEventListener('click', closeModal);
     modalBack.addEventListener('click', (e)=>{ if (e.target === modalBack) closeModal(); });
     window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
-
-    // ===== Proximity “Alternating” behavior =====
-    // Pins never move. When you're near a crowded area, the nearest pins scale up
-    // and the closest one gets the highest z-index so it’s easy to click.
-
-    function setProximity(clientX, clientY){
-      // clear states first
-      pins.forEach(p => {
-        p.classList.remove('isNear','isClosest');
-      });
-
-      // compute distances in screen pixels
-      const dists = pins.map(p=>{
-        const r = p.getBoundingClientRect();
-        const cx = r.left + r.width/2;
-        const cy = r.top + r.height/2;
-        const dx = clientX - cx;
-        const dy = clientY - cy;
-        return { p, d: Math.hypot(dx,dy) };
-      });
-
-      dists.sort((a,b)=>a.d-b.d);
-
-      // thresholds tuned for “overlap zones”
-      const nearRadius = 56;     // pins within this grow
-      const closestRadius = 34;  // closest within this grows more
-
-      const closest = dists[0];
-      if (!closest) return;
-
-      // Only activate when you're actually near pins
-      if (closest.d > nearRadius) return;
-
-      // Mark the closest
-      if (closest.d <= closestRadius){
-        closest.p.classList.add('isClosest');
-      } else {
-        closest.p.classList.add('isNear');
-      }
-
-      // Mark a few more nearby pins (up to 4) so overlaps become clickable
-      for (let i = 1; i < Math.min(dists.length, 5); i++){
-        if (dists[i].d <= nearRadius){
-          dists[i].p.classList.add('isNear');
-        }
-      }
-    }
-
-    // Desktop hover proximity
-    if (matchMedia('(hover:hover)').matches){
-      map.addEventListener('mousemove', (e)=>{
-        setProximity(e.clientX, e.clientY);
-      });
-      map.addEventListener('mouseleave', ()=>{
-        pins.forEach(p => p.classList.remove('isNear','isClosest'));
-      });
-    }
-
-    // Mobile: tap anywhere on map to "wake" the nearby pins for easy selection
-    map.addEventListener('touchstart', (e)=>{
-      if (!e.touches || !e.touches[0]) return;
-      const t = e.touches[0];
-      setProximity(t.clientX, t.clientY);
-
-      // auto-clear after a moment so it stays clean
-      clearTimeout(map._clearT);
-      map._clearT = setTimeout(()=>{
-        pins.forEach(p => p.classList.remove('isNear','isClosest'));
-      }, 1800);
-    }, { passive:true });
-
-    // Pin click -> modal
-    pins.forEach(pin=>{
-      pin.addEventListener('click', (e)=>{
-        e.stopPropagation();
-        openFromPin(pin);
-      });
-    });
   </script>
 </body>
 </html>
