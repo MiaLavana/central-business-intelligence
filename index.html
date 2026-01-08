@@ -3,212 +3,330 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>About · Mia Lavana</title>
-  <meta name="description" content="About, education map, and portfolio previews — Apple-clean." />
+  <title>Mia Lavana · Central Business Intelligence</title>
+  <meta name="description" content="About + Education Map + Calculators — Apple-clean, JU-polished." />
 
   <style>
     :root{
-      --bg:#ffffff;
-      --text:#0b0b0f;
-      --muted: rgba(11,11,15,.62);
-      --hair: rgba(11,11,15,.08);
-      --ease: cubic-bezier(.22,.61,.36,1);
+      --pageBg:#fff;
+      --pageText:#111;
+      --muted: rgba(17,17,17,.68);
 
-      --radiusXL: 44px;
-      --radiusLG: 30px;
-      --radiusMD: 20px;
+      --cardBg:#ffffff;
+      --cardStroke: rgba(17,17,17,.10);
+      --shadow: 0 22px 70px rgba(0,0,0,.10);
+      --shadowHover: 0 30px 95px rgba(0,0,0,.14);
 
-      --shadowSoft: 0 18px 60px rgba(0,0,0,.10);
-      --shadowCard: 0 18px 44px rgba(0,0,0,.10);
+      --radius: 22px;
+      --tileRadius: 28px;
+
+      --easeOut: cubic-bezier(.2,.8,.2,1);
+      --easeApple: cubic-bezier(.22,.61,.36,1);
+
+      --dot: rgba(17,17,17,.28);
+      --dotOn: rgba(17,17,17,.85);
     }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
       margin:0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--pageText);
+      background:
+        radial-gradient(1200px 700px at 75% 0%, rgba(0,122,255,.06), rgba(255,255,255,0) 55%),
+        radial-gradient(900px 520px at 10% 18%, rgba(124,92,255,.05), rgba(255,255,255,0) 55%),
+        var(--pageBg);
       overflow-x:hidden;
     }
 
-    a{ color: inherit; text-decoration: none; }
+    a{ color:inherit; text-decoration:none; }
+    .wrap{ max-width: 1180px; margin: 0 auto; padding: 0 20px; }
 
-    /* ======= Top bar ======= */
-    .nav{
+    /* ==============================
+       TOP BAR (simple, like JU)
+       ============================== */
+    .topbar{
+      background: rgba(0,0,0,.86);
+      color: rgba(255,255,255,.92);
       position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(255,255,255,.72);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--hair);
+      top:0;
+      z-index: 80;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
-    .navInner{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 14px 18px;
+    .topbar .wrap{
       display:flex;
-      align-items:center;
+      align-items:flex-end;
       justify-content:space-between;
-      gap: 14px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      font-weight: 700;
-      letter-spacing: -.01em;
-      white-space: nowrap;
-    }
-    .dot{
-      width:10px; height:10px;
-      border-radius:999px;
-      background: rgba(11,11,15,.85);
-      display:inline-block;
-    }
-    .navRight{
-      display:flex;
-      gap: 10px;
-      align-items:center;
-      justify-content:flex-end;
-      flex-wrap: wrap;
-    }
-    .btn{
-      border: 1px solid rgba(11,11,15,.12);
-      background: rgba(11,11,15,.04);
-      padding: 9px 12px;
-      border-radius: 999px;
-      font-weight: 650;
-      font-size: 13px;
-      cursor: pointer;
-      transition: transform .18s var(--ease), background .18s var(--ease);
-      user-select:none;
-      white-space: nowrap;
-      color: rgba(11,11,15,.82);
-    }
-    .btn:hover{ background: rgba(11,11,15,.06); }
-    .btn:active{ transform: scale(.98); }
-    .btn:disabled{ opacity:.45; cursor: default; }
-
-    /* ======= Page background ======= */
-    .page{
-      padding: 26px 0 44px;
-      background:
-        radial-gradient(1100px 520px at 50% -10%, rgba(11,11,15,.06), transparent 58%),
-        radial-gradient(900px 420px at 10% 10%, rgba(11,11,15,.03), transparent 55%),
-        #fff;
-    }
-
-    /* ======= Feature tiles (3-up) ======= */
-    .wrap{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 18px;
-    }
-    .tileRow{
-      display:grid;
-      grid-template-columns: 1.25fr .9fr .9fr;
       gap: 18px;
-      align-items: stretch;
+      height: 48px;
     }
-    @media (max-width: 980px){
-      .tileRow{ grid-template-columns: 1fr; }
+    .tabs{
+      display:flex;
+      gap: 18px;
+      height: 100%;
+      align-items:flex-end;
+    }
+    .tab{
+      font-size: 14px;
+      letter-spacing:.2px;
+      padding: 12px 10px 10px;
+      border-bottom: 2px solid transparent;
+      color: rgba(255,255,255,.82);
+      transition: color .18s var(--easeOut), border-color .18s var(--easeOut);
+      white-space: nowrap;
+    }
+    .tab strong{ color:#fff; font-weight: 800; }
+    .tab.isActive{
+      color:#fff;
+      border-color: rgba(255,255,255,.92);
+    }
+
+    /* Pin tools in topbar (JU pill vibe) */
+    .tools{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      padding-bottom: 8px;
+    }
+    .toolBtn{
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.92);
+      font-weight: 850;
+      font-size: 12.5px;
+      cursor:pointer;
+      transition: transform .18s var(--easeOut), opacity .18s var(--easeOut), background .18s var(--easeOut);
+      white-space: nowrap;
+      user-select:none;
+    }
+    .toolBtn:hover{ background: rgba(255,255,255,.14); }
+    .toolBtn:active{ transform: scale(.99); }
+    .toolBtn:disabled{ opacity:.45; cursor: default; }
+
+    /* ==============================
+       HERO RAIL (JU wide tiles)
+       ============================== */
+    .section{ padding: 22px 0; }
+    .sectionTitleRow{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 16px;
+      margin-top: 10px;
+      margin-bottom: 14px;
+    }
+    .kicker{
+      color: rgba(17,17,17,.65);
+      font-size: 13px;
+      letter-spacing: .18px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .heroRail{ position: relative; margin-top: 10px; }
+    .railViewport{ overflow: hidden; border-radius: calc(var(--tileRadius) + 6px); }
+    .rail{
+      display:flex;
+      gap: 18px;
+      padding: 12px 12px 18px;
+      scroll-snap-type: x mandatory;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .rail::-webkit-scrollbar{ display:none; }
+
+    .railFade{
+      pointer-events:none;
+      position:absolute;
+      top:0;
+      bottom:0;
+      width: 64px;
+      z-index: 5;
+    }
+    .railFade.left{
+      left:0;
+      background: linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0));
+    }
+    .railFade.right{
+      right:0;
+      background: linear-gradient(270deg, rgba(255,255,255,1), rgba(255,255,255,0));
     }
 
     .tile{
-      border-radius: var(--radiusXL);
-      border: 1px solid rgba(11,11,15,.08);
-      background: rgba(255,255,255,.86);
-      box-shadow: var(--shadowSoft);
-      overflow:hidden;
+      scroll-snap-align: start;
+      flex: 0 0 auto;
+      width: min(860px, calc(100vw - 64px));
+      border-radius: var(--tileRadius);
+      background: var(--cardBg);
+      border: 1px solid var(--cardStroke);
+      box-shadow: var(--shadow);
+      overflow: hidden;
       position: relative;
+      transform: translateZ(0);
+      transition: transform .22s var(--easeApple), box-shadow .22s var(--easeApple);
+      min-height: 340px;
     }
-    .tileInner{
-      padding: 26px 26px 24px;
-      min-height: 240px;
+    .tile:hover{ transform: translateY(-2px); box-shadow: var(--shadowHover); }
+
+    .tileGrid{ display:grid; grid-template-columns: 1.05fr .95fr; min-height: 340px; }
+    .tileBody{
+      padding: 44px 44px 40px;
       display:flex;
-      flex-direction: column;
-      gap: 12px;
+      flex-direction:column;
+      justify-content:center;
+      gap: 16px;
     }
-    .eyebrow{
-      font-size: 12px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      color: rgba(11,11,15,.55);
-      margin:0;
-    }
-    .title{
-      font-size: clamp(28px, 3.2vw, 44px);
-      letter-spacing: -0.03em;
-      line-height: 1.02;
-      margin:0;
-    }
-    .body{
-      margin: 6px 0 0;
-      color: rgba(11,11,15,.70);
-      font-size: 15.5px;
-      line-height: 1.55;
-      max-width: 78ch;
-    }
-    .ctaRow{
-      margin-top: auto;
+    .tileEyebrow{
       display:flex;
       align-items:center;
       gap: 10px;
-      padding-top: 12px;
+      font-weight: 900;
+      letter-spacing:.25px;
+      text-transform: uppercase;
+      font-size: 12px;
+      opacity: .95;
+    }
+    .tileTitle{
+      font-size: clamp(30px, 3.6vw, 46px);
+      letter-spacing: -.02em;
+      line-height: 1.04;
+      margin: 0;
+      font-weight: 950;
+    }
+    .tileDesc{
+      margin: 0;
+      color: rgba(255,255,255,.86);
+      font-size: 15px;
+      line-height: 1.45;
+      max-width: 54ch;
+    }
+    .tileCtaRow{
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      margin-top: 6px;
+      flex-wrap: wrap;
     }
     .cta{
       display:inline-flex;
       align-items:center;
+      justify-content:center;
       gap:10px;
-      padding: 11px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(11,11,15,.10);
-      background: rgba(11,11,15,.03);
-      font-weight: 700;
-      font-size: 14px;
-      transition: transform .18s var(--ease), background .18s var(--ease);
-      cursor:pointer;
+      height: 44px;
+      padding: 0 16px;
+      border-radius: 12px;
+      font-weight: 900;
+      background: rgba(255,255,255,.92);
+      color: #0b1b12;
+      border: 1px solid rgba(255,255,255,.18);
+      transition: transform .18s var(--easeOut), opacity .18s var(--easeOut);
       user-select:none;
+      cursor:pointer;
+      white-space: nowrap;
     }
-    .cta:hover{ background: rgba(11,11,15,.05); }
-    .cta:active{ transform: scale(.98); }
-    .arrow{
-      width: 18px; height: 18px;
-      display:inline-block;
+    .cta:active{ transform: scale(.99); }
+    .cta svg{ width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.6; fill:none; }
+
+    .tileMedia{
+      position: relative;
+      min-height: 340px;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
     }
 
-    /* ======= Map ======= */
+    /* Tile themes (JU-style gradients, but CBI vibe) */
+    .t1{
+      background:
+        radial-gradient(900px 500px at 60% 40%, rgba(124,92,255,.28), rgba(0,0,0,0) 60%),
+        radial-gradient(680px 420px at 80% 10%, rgba(0,122,255,.28), rgba(0,0,0,0) 55%),
+        #0b1b3c;
+    }
+    .t2{
+      background:
+        radial-gradient(900px 540px at 75% 55%, rgba(0,210,255,.20), rgba(0,0,0,0) 60%),
+        radial-gradient(680px 420px at 35% 20%, rgba(255,255,255,.14), rgba(0,0,0,0) 55%),
+        #0a53cf;
+    }
+    .t3{
+      background:
+        radial-gradient(900px 540px at 75% 50%, rgba(255,0,128,.10), rgba(0,0,0,0) 58%),
+        radial-gradient(720px 420px at 20% 30%, rgba(0,122,255,.12), rgba(0,0,0,0) 58%),
+        #fff;
+      color: #111;
+    }
+    .t3 .tileDesc{ color: rgba(17,17,17,.70); }
+    .t3 .cta{
+      background: rgba(0,122,255,.92);
+      color: #fff;
+      border-color: rgba(0,122,255,.35);
+    }
+    .t3 .tileEyebrow{ color: rgba(17,17,17,.75); }
+
+    /* ==============================
+       Apple dots (carousel)
+       ============================== */
+    .railNav{
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .dots{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(17,17,17,.10);
+      background: rgba(255,255,255,.78);
+      box-shadow: 0 14px 34px rgba(0,0,0,.06);
+    }
+    .dotBtn{
+      width: 6px;
+      height: 6px;
+      border-radius: 99px;
+      background: var(--dot);
+      border: 0;
+      padding:0;
+      cursor:pointer;
+      transition: transform .18s var(--easeOut), background .18s var(--easeOut), opacity .18s var(--easeOut);
+    }
+    .dotBtn:hover{ transform: scale(1.2); }
+    .dotBtn.isActive{ background: var(--dotOn); transform: scale(1.25); }
+
+    /* ==============================
+       MAP (full-bleed)
+       ============================== */
     .bleed{
       width: 100vw;
       margin-left: 50%;
       transform: translateX(-50%);
       padding: 0;
-      margin-top: 18px;
     }
     .map{
       position: relative;
       width: 100%;
       aspect-ratio: 21 / 9;
       background: #fff url("assets/banner-map.png") center / contain no-repeat;
-      border-top: 1px solid var(--hair);
-      border-bottom: 1px solid var(--hair);
+      border-top: 1px solid rgba(17,17,17,.08);
+      border-bottom: 1px solid rgba(17,17,17,.08);
       transform: translateZ(0);
       touch-action: manipulation;
     }
-    @media (max-width: 860px){
-      .map{ aspect-ratio: 4 / 5; }
-    }
+    @media (max-width: 860px){ .map{ aspect-ratio: 4 / 5; } }
     @media (hover:hover){
-      .map{
-        will-change: transform;
-        transition: transform .22s var(--ease);
-      }
+      .map{ will-change: transform; transition: transform .22s var(--easeApple); }
     }
 
-    /* Pins */
     .pin{
       position:absolute;
       width: 14px;
@@ -219,18 +337,12 @@
       cursor:pointer;
       box-shadow: 0 10px 22px rgba(0,0,0,.18);
       outline:none;
-
       --scale: 1;
       transform: translate(-50%, -50%) scale(var(--scale));
-      transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+      transition: transform .18s var(--easeApple), box-shadow .18s var(--easeApple);
       z-index: 2;
     }
-    .pin::before{
-      content:"";
-      position:absolute;
-      inset:-18px;
-      border-radius:999px;
-    }
+    .pin::before{ content:""; position:absolute; inset:-18px; border-radius:999px; }
     .pin::after{
       content:"";
       position:absolute;
@@ -239,7 +351,7 @@
       border: 1px solid rgba(11,11,15,.18);
       transform: scale(.55);
       opacity:0;
-      animation: pulse 2.2s var(--ease) infinite;
+      animation: pulse 2.2s var(--easeApple) infinite;
       pointer-events:none;
     }
     .pin[data-i="2"]::after{ animation-delay:.25s; }
@@ -252,18 +364,9 @@
       55%{ opacity:.25; }
       100%{ transform: scale(1.65); opacity:0; }
     }
-    .pin.isNear{
-      --scale: 1.55;
-      z-index: 10;
-      box-shadow: 0 14px 34px rgba(0,0,0,.24);
-    }
-    .pin.isClosest{
-      --scale: 1.95;
-      z-index: 20;
-      box-shadow: 0 18px 44px rgba(0,0,0,.28);
-    }
+    .pin.isNear{ --scale: 1.55; z-index: 10; box-shadow: 0 14px 34px rgba(0,0,0,.24); }
+    .pin.isClosest{ --scale: 1.95; z-index: 20; box-shadow: 0 18px 44px rgba(0,0,0,.28); }
 
-    /* Picker readout */
     .readout{
       position:absolute;
       right: 14px;
@@ -278,11 +381,13 @@
       pointer-events:none;
       opacity: 0;
       transform: translateY(6px);
-      transition: opacity .18s var(--ease), transform .18s var(--ease);
+      transition: opacity .18s var(--easeApple), transform .18s var(--easeApple);
     }
     .readout.show{ opacity:1; transform: translateY(0); }
 
-    /* ======= Modal ======= */
+    /* ==============================
+       MODAL (logo-first)
+       ============================== */
     .modalBack{
       position: fixed;
       inset: 0;
@@ -291,9 +396,10 @@
       align-items:center;
       justify-content:center;
       padding: 18px;
-      z-index: 90;
+      z-index: 120;
     }
     .modalBack.isOpen{ display:flex; }
+
     .modal{
       width: min(900px, 100%);
       border-radius: 30px;
@@ -303,7 +409,7 @@
       overflow:hidden;
       transform: translateY(10px);
       opacity: 0;
-      transition: transform .22s var(--ease), opacity .22s var(--ease);
+      transition: transform .22s var(--easeApple), opacity .22s var(--easeApple);
       backdrop-filter: blur(18px);
     }
     .modalBack.isOpen .modal{ transform: translateY(0); opacity: 1; }
@@ -330,7 +436,7 @@
       display:grid;
       place-items:center;
       cursor:pointer;
-      transition: transform .18s var(--ease), background .18s var(--ease);
+      transition: transform .18s var(--easeApple), background .18s var(--easeApple);
     }
     .close:hover{ background: rgba(11,11,15,.08); }
     .close:active{ transform: scale(.98); }
@@ -349,6 +455,7 @@
       justify-content:center;
       background: linear-gradient(180deg, rgba(11,11,15,.04), rgba(11,11,15,.01));
       border-radius: 26px;
+      border: 1px solid rgba(11,11,15,.08);
     }
     .logoHero img{
       max-width: 620px;
@@ -368,7 +475,7 @@
     .meta h2{
       margin:0;
       font-size: 20px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: -0.02em;
       line-height: 1.15;
     }
@@ -378,6 +485,94 @@
       font-size: 14px;
       line-height: 1.45;
       max-width: 72ch;
+    }
+
+    /* ==============================
+       HOT NEW RELEASES (JU exact feel)
+       ============================== */
+    .hotWrap{
+      border-radius: 34px;
+      background: linear-gradient(90deg, #1d66ff, #36b6ff, #43d7b4);
+      padding: 18px;
+      box-shadow: 0 26px 90px rgba(0,0,0,.12);
+    }
+    .hotTitle{
+      color: rgba(255,255,255,.95);
+      font-weight: 950;
+      letter-spacing: -.01em;
+      margin: 0 0 12px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-size: 18px;
+    }
+    .hotTitle svg{ width: 18px; height: 18px; stroke:#fff; stroke-width:2.6; fill:none; }
+
+    .hotRail{
+      display:flex;
+      gap: 18px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width:none;
+    }
+    .hotRail::-webkit-scrollbar{ display:none; }
+
+    .hotCard{
+      scroll-snap-align: start;
+      flex: 0 0 auto;
+      width: min(320px, calc(100vw - 96px));
+      border-radius: 22px;
+      background: rgba(255,255,255,.96);
+      border: 1px solid rgba(0,0,0,.10);
+      box-shadow: 0 18px 55px rgba(0,0,0,.12);
+      overflow:hidden;
+      transition: transform .22s var(--easeApple), box-shadow .22s var(--easeApple);
+    }
+    .hotCard:hover{ transform: translateY(-2px); box-shadow: 0 26px 85px rgba(0,0,0,.16); }
+
+    .hotImg{
+      height: 170px;
+      background: linear-gradient(135deg, rgba(0,0,0,.08), rgba(0,0,0,.02));
+    }
+    .hotBody{ padding: 14px 14px 16px; }
+
+    .hotBrand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      color: rgba(17,17,17,.68);
+      font-weight: 900;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .hotBrand .miniLogo{
+      width: 22px; height: 22px;
+      border-radius: 6px;
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.8);
+      display:grid; place-items:center;
+      font-weight: 950;
+      font-size: 12px;
+      color: rgba(17,17,17,.62);
+    }
+
+    .hotName{
+      margin: 0 0 10px;
+      font-weight: 950;
+      letter-spacing: -.01em;
+      line-height: 1.15;
+      font-size: 18px;
+    }
+    .hotMeta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color: rgba(17,17,17,.60);
+      font-weight: 800;
+      font-size: 13px;
+      margin-top: 6px;
     }
 
     /* Toast */
@@ -394,165 +589,26 @@
       opacity: 0;
       transition: opacity .18s ease;
       pointer-events:none;
-      z-index: 110;
+      z-index: 140;
     }
     .toast.show{ opacity: 1; }
 
-    /* ======= Hot New Releases (rail) ======= */
-    .railSection{
-      padding: 22px 18px 34px;
-    }
-
-    .railShell{
-      border-radius: var(--radiusXL);
-      padding: 22px 22px 22px;
-      background: linear-gradient(90deg, #1b61ff 0%, #2aa7ff 44%, #39d2a2 100%);
-      box-shadow: 0 18px 60px rgba(0,0,0,.10);
-      overflow:hidden;
-    }
-
-    .railHeader{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 14px;
-      padding: 2px 6px 18px;
-      color: rgba(255,255,255,.96);
-    }
-    .railHeader h3{
-      margin:0;
-      font-size: 24px;
-      letter-spacing: -0.02em;
-      display:flex;
-      align-items:center;
-      gap: 10px;
-    }
-    .railHeader .miniArrow{
-      opacity:.9;
-      font-weight: 900;
-    }
-
-    .rail{
-      display:flex;
-      gap: 20px;
-      overflow-x:auto;
-      padding: 6px 8px 6px;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-    }
-    .rail::-webkit-scrollbar{ height: 10px; }
-    .rail::-webkit-scrollbar-thumb{
-      background: rgba(255,255,255,.35);
-      border-radius: 999px;
-    }
-    .rail::-webkit-scrollbar-track{
-      background: rgba(255,255,255,.18);
-      border-radius: 999px;
-    }
-
-    .courseCard{
-      scroll-snap-align: start;
-      flex: 0 0 420px;
-      background: rgba(255,255,255,.86);
-      border: 1px solid rgba(11,11,15,.10);
-      border-radius: 28px;
-      box-shadow: var(--shadowCard);
-      overflow:hidden;
-      position: relative;
-    }
-    @media (max-width: 520px){
-      .courseCard{ flex-basis: 82vw; }
-    }
-
-    .courseMedia{
-      height: 210px;
-      background: rgba(11,11,15,.06);
-    }
-    .courseBody{
-      padding: 16px 16px 14px;
-    }
-
-    .courseTopline{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-      color: rgba(11,11,15,.62);
-      font-weight: 650;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      min-width: 0;
-    }
-    .pill{
-      width: 28px;
-      height: 28px;
-      border-radius: 9px;
-      border: 1px solid rgba(11,11,15,.12);
-      background: rgba(255,255,255,.85);
-      display:grid;
-      place-items:center;
-      font-size: 12px;
-      font-weight: 900;
-      color: rgba(11,11,15,.65);
-      flex: 0 0 auto;
-    }
-    .cat{
-      font-size: 15px;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-
-    .courseTitle{
-      margin: 2px 0 10px;
-      font-size: 26px;
-      letter-spacing: -0.02em;
-      line-height: 1.08;
-    }
-
-    .courseMeta{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      color: rgba(11,11,15,.55);
-      font-weight: 650;
-    }
-    .free{
-      font-size: 16px;
-    }
-    .rating{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      font-size: 16px;
-    }
-    .star{
-      font-size: 16px;
-      opacity:.85;
-    }
-
-    /* ======= Placeholder portfolio anchor ======= */
-    .placeholder{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 22px 18px 0;
-      color: rgba(11,11,15,.55);
-      font-size: 13px;
-    }
+    /* Footer */
     .footer{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 28px 18px 44px;
-      color: rgba(11,11,15,.55);
+      padding: 18px 0 44px;
+      color: rgba(17,17,17,.55);
       font-size: 13px;
     }
 
-    /* Reduce motion */
+    /* Responsive */
+    @media (max-width: 980px){
+      .tileGrid{ grid-template-columns: 1fr; }
+      .tileMedia{ min-height: 240px; }
+      .tile{ min-height: unset; }
+      .tileBody{ padding: 34px 28px 26px; }
+      .tools{ display:none; } /* keep topbar clean on small screens */
+    }
+
     @media (prefers-reduced-motion: reduce){
       *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     }
@@ -560,221 +616,216 @@
 </head>
 
 <body>
-  <div class="nav">
-    <div class="navInner">
-      <div class="brand"><span class="dot"></span> About</div>
-      <div class="navRight">
-        <button class="btn" id="pickerBtn" type="button">Pin Picker: Off</button>
-        <button class="btn" id="modeBtn" type="button" disabled>Mode: Mobile</button>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="wrap">
+      <nav class="tabs" aria-label="Page">
+        <a class="tab isActive" href="#"><span><strong>About</strong></span></a>
+      </nav>
+
+      <div class="tools" aria-label="Pin tools">
+        <button class="toolBtn" id="pickerBtn" type="button">Pin Picker: Off</button>
+        <button class="toolBtn" id="modeBtn" type="button" disabled>Mode: Mobile</button>
       </div>
     </div>
   </div>
 
-  <main class="page">
-    <div class="wrap">
-      <!-- 3 feature tiles -->
-      <section class="tileRow" aria-label="About tiles">
-        <!-- Tile 1: no button -->
-        <article class="tile">
-          <div class="tileInner">
-            <p class="eyebrow">About</p>
-            <h1 class="title">How I Work</h1>
-            <p class="body">
-              I’m deeply passionate about technology, the arts, and humanitarian work because all three shape how people live, express themselves, and move through the world. My work in software has given me a front-row seat to decision-making at scale, and I’ve learned how to translate technical choices into outcomes that people actually feel.
-            </p>
-          </div>
-        </article>
+  <main class="wrap">
 
-        <!-- Tile 2 -->
-        <article class="tile">
-          <div class="tileInner">
-            <p class="eyebrow">Experience</p>
-            <h2 class="title" style="font-size:clamp(26px,2.4vw,40px);">Trained Worldwide</h2>
-            <p class="body">
-              My education spans institutions across the United States, Europe, and Asia. Each experience sharpened how I think about systems, leadership, and execution—shaping a global perspective grounded in real-world application rather than theory alone.
-            </p>
-            <div class="ctaRow">
-              <a class="cta" href="#education-map">
-                Let’s Take a Trip
-                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </article>
-
-        <!-- Tile 3 -->
-        <article class="tile">
-          <div class="tileInner">
-            <p class="eyebrow">Work</p>
-            <h2 class="title" style="font-size:clamp(26px,2.4vw,40px);">Start Exploring My Portfolio</h2>
-            <p class="body">
-              From analytics and software to design-forward systems, my work focuses on clarity, scalability, and intention. Every project reflects an obsession with structure, usability, and outcomes that hold up in the real world.
-            </p>
-            <div class="ctaRow">
-              <a class="cta" href="#portfolio">
-                Explore Portfolio
-                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </article>
-      </section>
-    </div>
-
-    <!-- Education map -->
-    <section class="bleed" id="education-map" aria-label="Education map section">
-      <div class="map" id="map" aria-label="World map with location pins">
-        <!-- Desktop + Mobile coordinates stored per pin -->
-        <button class="pin" data-i="1"
-          data-label="California"
-          data-logo="assets/logos/UCR.png"
-          data-caption="UCR School of Business • A. Gary Anderson Graduate School of Management"
-          data-d-left="36.4" data-d-top="30.4"
-          data-m-left="31.8" data-m-top="41.0"></button>
-
-        <button class="pin" data-i="2"
-          data-label="Milan"
-          data-logo="assets/logos/Bocconi.png"
-          data-caption="SDA Bocconi School of Management"
-          data-d-left="49.6" data-d-top="28.1"
-          data-m-left="49.3" data-m-top="39.8"></button>
-
-        <button class="pin" data-i="3"
-          data-label="Durham"
-          data-logo="assets/logos/Duke.png"
-          data-caption="Duke University"
-          data-d-left="40.1" data-d-top="29.5"
-          data-m-left="37.1" data-m-top="40.8"></button>
-
-        <button class="pin" data-i="4"
-          data-label="Cambridge"
-          data-logo="assets/logos/HBR.png"
-          data-caption="Harvard Business Review"
-          data-d-left="40.9" data-d-top="27.9"
-          data-m-left="39.1" data-m-top="39.8"></button>
-
-        <button class="pin" data-i="5"
-          data-label="Hong Kong"
-          data-logo="assets/logos/Hong-Kong.png"
-          data-caption="The Hong Kong University of Science and Technology"
-          data-d-left="59.8" data-d-top="32.8"
-          data-m-left="63.4" data-m-top="41.6"></button>
-
-        <button class="pin" data-i="2"
-          data-label="New York City"
-          data-logo="assets/logos/NYU.png"
-          data-caption="NYU Tandon School of Engineering"
-          data-d-left="40.7" data-d-top="28.1"
-          data-m-left="38.1" data-m-top="40.2"></button>
-
-        <button class="pin" data-i="3"
-          data-label="New Haven"
-          data-logo="assets/logos/Yale.png"
-          data-caption="Yale University"
-          data-d-left="41.3" data-d-top="28.1"
-          data-m-left="37.6" data-m-top="40.2"></button>
-
-        <div class="readout" id="readout" aria-hidden="true"></div>
+    <!-- Wide tiles (JU rail) -->
+    <section class="section" aria-label="About tiles">
+      <div class="sectionTitleRow">
+        <div class="kicker">Central Business Intelligence</div>
+        <div class="railNav" aria-label="Carousel dots">
+          <div class="dots" id="dots"></div>
+        </div>
       </div>
-    </section>
 
-    <!-- Hot New Releases (Portfolio preview rail) -->
-    <section class="railSection" aria-label="Hot New Releases section">
-      <div class="wrap">
-        <div class="railShell">
-          <div class="railHeader">
-            <h3>Hot New Releases <span class="miniArrow">→</span></h3>
-          </div>
+      <div class="heroRail">
+        <div class="railFade left"></div>
+        <div class="railFade right"></div>
 
-          <div class="rail" aria-label="Portfolio cards rail">
-            <!-- Card 1 -->
-            <article class="courseCard">
-              <div class="courseMedia"></div>
-              <div class="courseBody">
-                <div class="courseTopline">
-                  <div class="badge">
-                    <span class="pill">★</span>
-                    <span class="cat">Sales</span>
-                  </div>
+        <div class="railViewport">
+          <div class="rail" id="rail">
+
+            <!-- Tile 1 (no button) -->
+            <article class="tile t1" aria-label="How I Work">
+              <div class="tileGrid">
+                <div class="tileBody" style="color: rgba(255,255,255,.92);">
+                  <div class="tileEyebrow">About</div>
+                  <h3 class="tileTitle">How I Work</h3>
+                  <p class="tileDesc">
+                    I’m deeply passionate about technology, the arts, and humanitarian work because all three shape how people live, express themselves, and move through the world. My work in software has given me a front-row seat to decision-making at scale, and I’ve learned how to translate technical choices into outcomes that people actually feel.
+                  </p>
                 </div>
-                <div class="courseTitle">ROI &amp; Forecast Calculators</div>
-                <div class="courseMeta">
-                  <span class="free">FREE</span>
-                  <span class="rating"><span class="star">★</span> 4.8</span>
-                </div>
+                <div class="tileMedia"></div>
               </div>
             </article>
 
-            <!-- Card 2 -->
-            <article class="courseCard">
-              <div class="courseMedia"></div>
-              <div class="courseBody">
-                <div class="courseTopline">
-                  <div class="badge">
-                    <span class="pill">★</span>
-                    <span class="cat">Sales</span>
+            <!-- Tile 2 -->
+            <article class="tile t2" aria-label="Trained Worldwide">
+              <div class="tileGrid">
+                <div class="tileBody" style="color: rgba(255,255,255,.92);">
+                  <div class="tileEyebrow">Experience</div>
+                  <h3 class="tileTitle">Trained Worldwide</h3>
+                  <p class="tileDesc">
+                    My education spans institutions across the United States, Europe, and Asia. Each experience sharpened how I think about systems, leadership, and execution—shaping a global perspective grounded in real-world application rather than theory alone.
+                  </p>
+                  <div class="tileCtaRow">
+                    <a class="cta" href="#education-map">
+                      Let’s Take a Trip
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
+                    </a>
                   </div>
                 </div>
-                <div class="courseTitle">Retail Sales Forecast Calculator</div>
-                <div class="courseMeta">
-                  <span class="free">FREE</span>
-                  <span class="rating"><span class="star">★</span> 4.7</span>
-                </div>
+                <div class="tileMedia"></div>
               </div>
             </article>
 
-            <!-- Card 3 -->
-            <article class="courseCard">
-              <div class="courseMedia"></div>
-              <div class="courseBody">
-                <div class="courseTopline">
-                  <div class="badge">
-                    <span class="pill">★</span>
-                    <span class="cat">Operations</span>
+            <!-- Tile 3 -->
+            <article class="tile t3" aria-label="Portfolio">
+              <div class="tileGrid">
+                <div class="tileBody">
+                  <div class="tileEyebrow">Work</div>
+                  <h3 class="tileTitle">Start Exploring My Portfolio</h3>
+                  <p class="tileDesc">
+                    From analytics and software to design-forward systems, my work focuses on clarity, scalability, and intention. Every project reflects an obsession with structure, usability, and outcomes that hold up in the real world.
+                  </p>
+                  <div class="tileCtaRow">
+                    <a class="cta" href="#portfolio">
+                      Explore Portfolio
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
+                    </a>
                   </div>
                 </div>
-                <div class="courseTitle">Time Estimation: Three-Point (PERT)</div>
-                <div class="courseMeta">
-                  <span class="free">FREE</span>
-                  <span class="rating"><span class="star">★</span> 4.9</span>
-                </div>
+                <div class="tileMedia"></div>
               </div>
             </article>
 
-            <!-- Card 4 -->
-            <article class="courseCard">
-              <div class="courseMedia"></div>
-              <div class="courseBody">
-                <div class="courseTopline">
-                  <div class="badge">
-                    <span class="pill">★</span>
-                    <span class="cat">Marketing</span>
-                  </div>
-                </div>
-                <div class="courseTitle">Marketing Impact Calculator</div>
-                <div class="courseMeta">
-                  <span class="free">FREE</span>
-                  <span class="rating"><span class="star">★</span> 4.8</span>
-                </div>
-              </div>
-            </article>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Portfolio placeholder (we build next) -->
-    <div class="placeholder wrap" id="portfolio">
-      Portfolio section next (anchor ready: #portfolio).
-    </div>
+  </main>
 
-    <div class="footer wrap">
-      Built clean. Built to scale.
+  <!-- Education map (full bleed) -->
+  <section class="bleed" id="education-map" aria-label="Education map section">
+    <div class="map" id="map" aria-label="World map with location pins">
+
+      <!-- Desktop + Mobile coordinates -->
+      <button class="pin" data-i="1"
+        data-label="California"
+        data-logo="assets/logos/UCR.png"
+        data-caption="UCR School of Business • A. Gary Anderson Graduate School of Management"
+        data-d-left="36.4" data-d-top="30.4"
+        data-m-left="31.8" data-m-top="41.0"></button>
+
+      <button class="pin" data-i="2"
+        data-label="Milan"
+        data-logo="assets/logos/Bocconi.png"
+        data-caption="SDA Bocconi School of Management"
+        data-d-left="49.6" data-d-top="28.1"
+        data-m-left="49.3" data-m-top="39.8"></button>
+
+      <button class="pin" data-i="3"
+        data-label="Durham"
+        data-logo="assets/logos/Duke.png"
+        data-caption="Duke University"
+        data-d-left="40.1" data-d-top="29.5"
+        data-m-left="37.1" data-m-top="40.8"></button>
+
+      <button class="pin" data-i="4"
+        data-label="Cambridge"
+        data-logo="assets/logos/HBR.png"
+        data-caption="Harvard Business Review"
+        data-d-left="40.9" data-d-top="27.9"
+        data-m-left="39.1" data-m-top="39.8"></button>
+
+      <button class="pin" data-i="5"
+        data-label="Hong Kong"
+        data-logo="assets/logos/Hong-Kong.png"
+        data-caption="The Hong Kong University of Science and Technology"
+        data-d-left="59.8" data-d-top="32.8"
+        data-m-left="63.4" data-m-top="41.6"></button>
+
+      <button class="pin" data-i="2"
+        data-label="New York City"
+        data-logo="assets/logos/NYU.png"
+        data-caption="NYU Tandon School of Engineering"
+        data-d-left="40.7" data-d-top="28.1"
+        data-m-left="38.1" data-m-top="40.2"></button>
+
+      <button class="pin" data-i="3"
+        data-label="New Haven"
+        data-logo="assets/logos/Yale.png"
+        data-caption="Yale University"
+        data-d-left="41.3" data-d-top="28.1"
+        data-m-left="37.6" data-m-top="40.2"></button>
+
+      <div class="readout" id="readout" aria-hidden="true"></div>
     </div>
+  </section>
+
+  <!-- Hot New Releases (after map) -->
+  <main class="wrap">
+    <section class="section" aria-label="Hot new releases">
+      <div class="hotWrap">
+        <h2 class="hotTitle">
+          <span>Hot New Releases</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
+        </h2>
+
+        <div class="hotRail" id="hotRail">
+          <article class="hotCard">
+            <div class="hotImg"></div>
+            <div class="hotBody">
+              <div class="hotBrand"><span class="miniLogo">S</span> Sales</div>
+              <h3 class="hotName">ROI &amp; Forecast Calculators</h3>
+              <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
+            </div>
+          </article>
+
+          <article class="hotCard">
+            <div class="hotImg"></div>
+            <div class="hotBody">
+              <div class="hotBrand"><span class="miniLogo">S</span> Sales</div>
+              <h3 class="hotName">Retail Sales Forecast Calculator</h3>
+              <div class="hotMeta"><span>FREE</span><span>★ 4.7</span></div>
+            </div>
+          </article>
+
+          <article class="hotCard">
+            <div class="hotImg"></div>
+            <div class="hotBody">
+              <div class="hotBrand"><span class="miniLogo">O</span> Operations</div>
+              <h3 class="hotName">Time Estimation: Three-Point (PERT)</h3>
+              <div class="hotMeta"><span>FREE</span><span>★ 4.9</span></div>
+            </div>
+          </article>
+
+          <article class="hotCard">
+            <div class="hotImg"></div>
+            <div class="hotBody">
+              <div class="hotBrand"><span class="miniLogo">M</span> Marketing</div>
+              <h3 class="hotName">Marketing Impact Calculator</h3>
+              <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio placeholder (next build) -->
+    <section class="section" id="portfolio" aria-label="Portfolio placeholder">
+      <div class="kicker">Portfolio</div>
+      <p style="margin:10px 0 0; color: rgba(17,17,17,.65); font-weight:700;">
+        Portfolio section next.
+      </p>
+    </section>
+
+    <div class="footer">Built clean. Built to scale.</div>
   </main>
 
   <!-- Modal -->
@@ -804,17 +855,93 @@
   <div class="toast" id="toast">Copied</div>
 
   <script>
+    // ==============================
+    // HERO RAIL: dots + drag (JU)
+    // ==============================
+    const rail = document.getElementById('rail');
+    const dotsWrap = document.getElementById('dots');
+
+    function tiles(){ return Array.from(rail?.querySelectorAll?.('.tile') || []); }
+
+    function tileStep(){
+      const firstTile = rail?.querySelector?.('.tile');
+      if(!firstTile) return 600;
+      const styles = getComputedStyle(rail);
+      const gap = parseFloat(styles.columnGap || styles.gap || 18);
+      return firstTile.getBoundingClientRect().width + gap;
+    }
+
+    function buildDots(){
+      if(!dotsWrap) return;
+      dotsWrap.innerHTML = "";
+      tiles().forEach((_, i) => {
+        const b = document.createElement('button');
+        b.className = 'dotBtn' + (i === 0 ? ' isActive' : '');
+        b.type = 'button';
+        b.setAttribute('aria-label', 'Go to slide ' + (i+1));
+        b.addEventListener('click', () => {
+          rail?.scrollTo({ left: i * tileStep(), behavior: 'smooth' });
+        });
+        dotsWrap.appendChild(b);
+      });
+    }
+
+    function setActiveDot(){
+      if(!rail || !dotsWrap) return;
+      const step = tileStep();
+      const idx = Math.round(rail.scrollLeft / step);
+      const btns = dotsWrap.querySelectorAll('.dotBtn');
+      btns.forEach((b, i) => b.classList.toggle('isActive', i === Math.max(0, Math.min(idx, btns.length-1))));
+    }
+
+    // drag-to-scroll
+    let isDown = false;
+    let startX = 0;
+    let scrollStart = 0;
+
+    rail?.addEventListener('pointerdown', (e) => {
+      isDown = true;
+      rail.setPointerCapture(e.pointerId);
+      startX = e.clientX;
+      scrollStart = rail.scrollLeft;
+      rail.style.scrollBehavior = 'auto';
+    });
+
+    rail?.addEventListener('pointermove', (e) => {
+      if(!isDown) return;
+      const dx = (e.clientX - startX);
+      rail.scrollLeft = scrollStart - dx;
+      setActiveDot();
+    });
+
+    function endDrag(){
+      if(!isDown) return;
+      isDown = false;
+      if(rail) rail.style.scrollBehavior = '';
+      setActiveDot();
+    }
+
+    rail?.addEventListener('pointerup', endDrag);
+    rail?.addEventListener('pointercancel', endDrag);
+    rail?.addEventListener('mouseleave', endDrag);
+    rail?.addEventListener('scroll', () => { setActiveDot(); }, { passive:true });
+    window.addEventListener('resize', () => { buildDots(); setActiveDot(); });
+
+    buildDots(); setActiveDot();
+
+    // ==============================
+    // MAP: pins + modal + picker
+    // ==============================
     const map = document.getElementById('map');
     const pins = Array.from(document.querySelectorAll('.pin'));
+    const readout = document.getElementById('readout');
+    const toast = document.getElementById('toast');
 
     const modalBack = document.getElementById('modalBack');
     const modalLogo = document.getElementById('modalLogo');
     const modalTitle = document.getElementById('modalTitle');
     const modalCaption = document.getElementById('modalCaption');
     const closeBtn = document.getElementById('closeBtn');
-
-    const readout = document.getElementById('readout');
-    const toast = document.getElementById('toast');
 
     const pickerBtn = document.getElementById('pickerBtn');
     const modeBtn = document.getElementById('modeBtn');
@@ -845,7 +972,7 @@
     mqMobile.addEventListener?.('change', applyPinPositions);
     window.addEventListener('resize', applyPinPositions);
 
-    // Parallax (hover devices)
+    // map parallax (hover only)
     if (matchMedia('(hover:hover)').matches){
       map.addEventListener('mousemove', (e)=>{
         const r = map.getBoundingClientRect();
@@ -870,6 +997,7 @@
       document.body.style.overflow = '';
       modalLogo.src = '';
     }
+
     closeBtn.addEventListener('click', closeModal);
     modalBack.addEventListener('click', (e)=>{ if (e.target === modalBack) closeModal(); });
     window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
@@ -920,7 +1048,7 @@
       });
     });
 
-    // Pin Picker UI
+    // Pin picker UI
     function updatePickerUI(){
       pickerBtn.textContent = `Pin Picker: ${picking ? 'On' : 'Off'}`;
       modeBtn.disabled = !picking;
