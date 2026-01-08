@@ -144,8 +144,8 @@
     .rail{
       display:flex;
       gap: 18px;
-      /* ✅ UPDATED: brought padding in just a tad */
-      padding: 12px 18px 18px;
+      /* gutter / white edge control */
+      padding: 10px 16px 16px; /* (tweak left/right here) */
       scroll-snap-type: x mandatory;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -394,7 +394,7 @@
     .readout.show{ opacity:1; transform: translateY(0); }
 
     /* ==============================
-       ✅ NEW: Logo pill rail (under map)
+       Logo pill rail (under map)
        ============================== */
     .trustTitle{
       margin: 0 0 14px;
@@ -436,7 +436,6 @@
       filter: saturate(.96);
     }
 
-    /* Slightly taller pills on desktop */
     @media (min-width: 980px){
       .trustPill{ height: 56px; padding: 0 18px; }
       .trustPill img{ height: 24px; }
@@ -525,6 +524,148 @@
       font-weight: 700;
       font-size: 13px;
       margin-top: 6px;
+    }
+
+    /* ==============================
+       ✅ NEW: CREDENTIALS (tall 3-card rail)
+       ============================== */
+    .credWrap{
+      border-radius: 34px;
+      border: 1px solid rgba(17,17,17,.08);
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 22px 70px rgba(0,0,0,.06);
+      overflow:hidden;
+    }
+    .credHead{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 16px;
+      padding: 18px 18px 10px;
+    }
+    .credHead h2{
+      margin:0;
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -.01em;
+      color: rgba(17,17,17,.92);
+    }
+
+    .credRailShell{ position: relative; }
+    .credViewport{ overflow:hidden; }
+    .credRail{
+      display:flex;
+      gap: 18px;
+      /* "alternating gutter" vs hero rail */
+      padding: 14px 16px 18px;
+      overflow-x:auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scrollbar-width:none;
+    }
+    .credRail::-webkit-scrollbar{ display:none; }
+
+    .credFade{
+      pointer-events:none;
+      position:absolute;
+      top:0; bottom:0;
+      width:64px;
+      z-index:5;
+    }
+    .credFade.left{
+      left:0;
+      background: linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0));
+    }
+    .credFade.right{
+      right:0;
+      background: linear-gradient(270deg, rgba(255,255,255,1), rgba(255,255,255,0));
+    }
+
+    .credCard{
+      scroll-snap-align:start;
+      flex: 0 0 auto;
+      width: min(520px, calc(100vw - 84px));
+      border-radius: 28px;
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(17,17,17,.10);
+      box-shadow: 0 18px 55px rgba(0,0,0,.10);
+      overflow:hidden;
+      min-height: 520px; /* tall */
+      display:flex;
+      flex-direction:column;
+    }
+
+    .credCardTop{
+      padding: 18px 18px 10px;
+    }
+    .credCardTop h3{
+      margin:0;
+      font-size: 20px;
+      font-weight: 950;
+      letter-spacing: -.01em;
+      color: rgba(17,17,17,.92);
+    }
+
+    .credList{
+      padding: 10px 12px 16px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .credRow{
+      display:grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items:start;
+      padding: 12px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(17,17,17,.08);
+      background: rgba(255,255,255,.86);
+      box-shadow: 0 14px 34px rgba(0,0,0,.04);
+    }
+    .credLogo{
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(17,17,17,.10);
+      background: #fff;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+    }
+    .credLogo img{
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      display:block;
+    }
+
+    .credMain{ min-width: 0; }
+    .credTitle{
+      font-weight: 900;
+      font-size: 14.5px;
+      letter-spacing: -.01em;
+      line-height: 1.25;
+      color: rgba(17,17,17,.92);
+      margin: 0 0 6px;
+    }
+    .credMeta{
+      font-size: 12.5px;
+      color: rgba(17,17,17,.62);
+      font-weight: 800;
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items:center;
+      line-height: 1.25;
+    }
+    .credMeta .dot{ opacity:.55; }
+
+    @media (max-width: 860px){
+      .credHead{ padding: 16px 16px 8px; }
+      .credRail{ padding: 12px 14px 16px; }
+      .credCard{ min-height: 520px; }
     }
 
     /* ==============================
@@ -734,8 +875,8 @@
                   From analytics and software to design-forward systems, my work focuses on clarity, scalability, and intention. Every project reflects an obsession with structure, usability, and outcomes that hold up in the real world.
                 </p>
                 <div class="tileCtaRow">
-                  <a class="cta" href="#portfolio">
-                    Explore Portfolio
+                  <a class="cta" href="#credentials">
+                    Credentials
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
                   </a>
                 </div>
@@ -784,57 +925,43 @@
     </div>
   </section>
 
-  <!-- ✅ NEW TRUST STRIP (under map) -->
+  <!-- Trust strip -->
   <main class="wrap">
     <section class="section" aria-label="Trust strip">
       <h2 class="trustTitle">Educated across leading universities and companies</h2>
 
       <div class="trustRail" aria-label="Logos">
-        <!-- Tip: best practice is to download these SVGs and serve locally.
-             For now, these use Wikimedia "Special:FilePath" links. -->
-
         <div class="trustPill" aria-label="Google">
           <img alt="Google" src="https://commons.wikimedia.org/wiki/Special:FilePath/Google%202015%20logo.svg">
         </div>
-
         <div class="trustPill" aria-label="IBM">
           <img alt="IBM" src="https://commons.wikimedia.org/wiki/Special:FilePath/IBM%20logo.svg">
         </div>
-
         <div class="trustPill" aria-label="Microsoft">
           <img alt="Microsoft" src="https://commons.wikimedia.org/wiki/Special:FilePath/Microsoft%20logo%20(2012).svg">
         </div>
-
         <div class="trustPill" aria-label="Stanford University">
           <img alt="Stanford University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Stanford%20wordmark%20(2012).svg">
         </div>
-
         <div class="trustPill" aria-label="Harvard Business Review">
           <img alt="Harvard Business Review" src="https://commons.wikimedia.org/wiki/Special:FilePath/Harvard%20Business%20Review%20wordmark.svg">
         </div>
-
         <div class="trustPill" aria-label="Yale University">
           <img alt="Yale University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yale%20University%20logo.svg">
         </div>
-      
         <div class="trustPill" aria-label="Johns Hopkins University">
           <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
         </div>
-
         <div class="trustPill" aria-label="Duke University">
           <img alt="Duke University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Duke%20University%20logo.svg">
         </div>
-
         <div class="trustPill" aria-label="New York University">
           <img alt="NYU" src="https://commons.wikimedia.org/wiki/Special:FilePath/Nyu%20short%20color.svg">
         </div>
-
         <div class="trustPill" aria-label="Yonsei University">
           <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
         </div>
-
-      </div><!-- ✅ FIXED: close .trustRail -->
-      
+      </div>
     </section>
 
     <section class="section" aria-label="Hot new releases">
@@ -868,6 +995,203 @@
             <h3 class="hotName">Marketing Impact Calculator</h3>
             <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
           </div></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ CREDENTIALS (next section) -->
+    <section class="section" id="credentials" aria-label="Credentials">
+      <div class="credWrap">
+        <div class="credHead">
+          <h2>Credentials</h2>
+          <div class="railNav" aria-label="Credentials carousel dots">
+            <div class="dots" id="credDots"></div>
+          </div>
+        </div>
+
+        <div class="credRailShell">
+          <div class="credFade left"></div>
+          <div class="credFade right"></div>
+
+          <div class="credViewport">
+            <div class="credRail" id="credRail">
+
+              <!-- TECH -->
+              <article class="credCard" aria-label="Tech credentials">
+                <div class="credCardTop"><h3>Tech</h3></div>
+                <div class="credList">
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">AI for Cybersecurity Specialization</div>
+                      <div class="credMeta">
+                        <span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="IBM" src="https://commons.wikimedia.org/wiki/Special:FilePath/IBM%20logo.svg">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">Building AI Agents and Agentic Workflows Specialization</div>
+                      <div class="credMeta">
+                        <span>IBM</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="New York University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Nyu%20short%20color.svg">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">Enterprise and Infrastructure Security</div>
+                      <div class="credMeta">
+                        <span>New York University</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="New York University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Nyu%20short%20color.svg">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">Cyber Attack Countermeasures</div>
+                      <div class="credMeta">
+                        <span>New York University</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="IBM" src="https://commons.wikimedia.org/wiki/Special:FilePath/IBM%20logo.svg">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">Ethical Hacking with Kali Linux</div>
+                      <div class="credMeta">
+                        <span>IBM</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">Securing AI and Advanced Topics</div>
+                      <div class="credMeta">
+                        <span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">Advanced Malware and Network Anomaly Detection</div>
+                      <div class="credMeta">
+                        <span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">Introduction to AI for Cybersecurity</div>
+                      <div class="credMeta">
+                        <span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <!-- MARKETING -->
+              <article class="credCard" aria-label="Marketing credentials">
+                <div class="credCardTop"><h3>Marketing</h3></div>
+                <div class="credList">
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">International Marketing &amp; Cross Industry Growth Specialization</div>
+                      <div class="credMeta">
+                        <span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">International Marketing &amp; Cross Industry Growth Capstone Project</div>
+                      <div class="credMeta">
+                        <span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">International Entertainment and Sports Marketing</div>
+                      <div class="credMeta">
+                        <span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">International Hospitality &amp; Healthcare Services Marketing</div>
+                      <div class="credMeta">
+                        <span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <!-- OPERATIONS -->
+              <article class="credCard" aria-label="Operations credentials">
+                <div class="credCardTop"><h3>Operations</h3></div>
+                <div class="credList">
+                  <div class="credRow">
+                    <div class="credLogo">
+                      <img alt="Google" src="https://commons.wikimedia.org/wiki/Special:FilePath/Google%202015%20logo.svg">
+                    </div>
+                    <div class="credMain">
+                      <div class="credTitle">Google Project Management Specialization</div>
+                      <div class="credMeta">
+                        <span>Google</span><span class="dot">•</span><span>Credential # ________</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -909,64 +1233,82 @@
   <div class="toast" id="toast">Copied</div>
 
   <script>
-    // HERO RAIL dots + drag
-    const rail = document.getElementById('rail');
-    const dotsWrap = document.getElementById('dots');
+    // =========================================================
+    // Reusable rail init (dots + drag) — used for hero + credentials
+    // =========================================================
+    function initSnapRail({ railEl, dotsEl, itemSelector }){
+      if(!railEl || !dotsEl) return;
 
-    function tiles(){ return Array.from(rail?.querySelectorAll?.('.tile') || []); }
-    function tileStep(){
-      const firstTile = rail?.querySelector?.('.tile');
-      if(!firstTile) return 600;
-      const styles = getComputedStyle(rail);
-      const gap = parseFloat(styles.columnGap || styles.gap || 18);
-      return firstTile.getBoundingClientRect().width + gap;
-    }
-    function buildDots(){
-      if(!dotsWrap) return;
-      dotsWrap.innerHTML = "";
-      tiles().forEach((_, i) => {
-        const b = document.createElement('button');
-        b.className = 'dotBtn' + (i === 0 ? ' isActive' : '');
-        b.type = 'button';
-        b.setAttribute('aria-label', 'Go to slide ' + (i+1));
-        b.addEventListener('click', () => rail?.scrollTo({ left: i * tileStep(), behavior: 'smooth' }));
-        dotsWrap.appendChild(b);
+      function items(){ return Array.from(railEl.querySelectorAll(itemSelector)); }
+      function step(){
+        const first = railEl.querySelector(itemSelector);
+        if(!first) return 600;
+        const styles = getComputedStyle(railEl);
+        const gap = parseFloat(styles.columnGap || styles.gap || 18);
+        return first.getBoundingClientRect().width + gap;
+      }
+      function buildDots(){
+        dotsEl.innerHTML = "";
+        items().forEach((_, i)=>{
+          const b = document.createElement('button');
+          b.className = 'dotBtn' + (i === 0 ? ' isActive' : '');
+          b.type = 'button';
+          b.setAttribute('aria-label', 'Go to slide ' + (i+1));
+          b.addEventListener('click', ()=> railEl.scrollTo({ left: i * step(), behavior:'smooth' }));
+          dotsEl.appendChild(b);
+        });
+      }
+      function setActive(){
+        const s = step();
+        const idx = Math.round(railEl.scrollLeft / s);
+        const btns = dotsEl.querySelectorAll('.dotBtn');
+        btns.forEach((b,i)=> b.classList.toggle('isActive', i === Math.max(0, Math.min(idx, btns.length-1))));
+      }
+
+      let isDown=false, startX=0, scrollStart=0;
+      railEl.addEventListener('pointerdown', (e)=>{
+        isDown = true;
+        railEl.setPointerCapture(e.pointerId);
+        startX = e.clientX;
+        scrollStart = railEl.scrollLeft;
+        railEl.style.scrollBehavior = 'auto';
       });
-    }
-    function setActiveDot(){
-      if(!rail || !dotsWrap) return;
-      const step = tileStep();
-      const idx = Math.round(rail.scrollLeft / step);
-      const btns = dotsWrap.querySelectorAll('.dotBtn');
-      btns.forEach((b, i) => b.classList.toggle('isActive', i === Math.max(0, Math.min(idx, btns.length-1))));
+      railEl.addEventListener('pointermove', (e)=>{
+        if(!isDown) return;
+        const dx = (e.clientX - startX);
+        railEl.scrollLeft = scrollStart - dx;
+        setActive();
+      });
+      function endDrag(){
+        if(!isDown) return;
+        isDown = false;
+        railEl.style.scrollBehavior = '';
+        setActive();
+      }
+      railEl.addEventListener('pointerup', endDrag);
+      railEl.addEventListener('pointercancel', endDrag);
+      railEl.addEventListener('mouseleave', endDrag);
+      railEl.addEventListener('scroll', ()=> setActive(), { passive:true });
+
+      window.addEventListener('resize', ()=>{ buildDots(); setActive(); });
+
+      buildDots();
+      setActive();
     }
 
-    let isDown = false, startX = 0, scrollStart = 0;
-    rail?.addEventListener('pointerdown', (e) => {
-      isDown = true;
-      rail.setPointerCapture(e.pointerId);
-      startX = e.clientX;
-      scrollStart = rail.scrollLeft;
-      rail.style.scrollBehavior = 'auto';
+    // HERO RAIL init
+    initSnapRail({
+      railEl: document.getElementById('rail'),
+      dotsEl: document.getElementById('dots'),
+      itemSelector: '.tile'
     });
-    rail?.addEventListener('pointermove', (e) => {
-      if(!isDown) return;
-      const dx = (e.clientX - startX);
-      rail.scrollLeft = scrollStart - dx;
-      setActiveDot();
+
+    // CREDENTIALS RAIL init
+    initSnapRail({
+      railEl: document.getElementById('credRail'),
+      dotsEl: document.getElementById('credDots'),
+      itemSelector: '.credCard'
     });
-    function endDrag(){
-      if(!isDown) return;
-      isDown = false;
-      if(rail) rail.style.scrollBehavior = '';
-      setActiveDot();
-    }
-    rail?.addEventListener('pointerup', endDrag);
-    rail?.addEventListener('pointercancel', endDrag);
-    rail?.addEventListener('mouseleave', endDrag);
-    rail?.addEventListener('scroll', () => { setActiveDot(); }, { passive:true });
-    window.addEventListener('resize', () => { buildDots(); setActiveDot(); });
-    buildDots(); setActiveDot();
 
     // MAP pins + modal + picker
     const map = document.getElementById('map');
