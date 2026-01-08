@@ -394,7 +394,7 @@
     .readout.show{ opacity:1; transform: translateY(0); }
 
     /* ==============================
-       Logo pill rail (under map)
+       ✅ Logo pill rail (under map)
        ============================== */
     .trustTitle{
       margin: 0 0 14px;
@@ -435,7 +435,6 @@
       opacity: .95;
       filter: saturate(.96);
     }
-
     @media (min-width: 980px){
       .trustPill{ height: 56px; padding: 0 18px; }
       .trustPill img{ height: 24px; }
@@ -527,36 +526,15 @@
     }
 
     /* ==============================
-       ✅ CREDENTIALS (tall 3-card rail)
+       ✅ CREDENTIALS (3 separate tiles, no outer tile)
        ============================== */
-    .credWrap{
-      border-radius: 34px;
-      border: 1px solid rgba(17,17,17,.08);
-      background: rgba(255,255,255,.72);
-      box-shadow: 0 22px 70px rgba(0,0,0,.06);
-      overflow:hidden;
-    }
-    .credHead{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap: 16px;
-      padding: 18px 18px 10px; /* mobile stays fine */
-    }
-    .credHead h2{
-      margin:0;
-      font-size: 22px;
-      font-weight: 950;
-      letter-spacing: -.01em;
-      color: rgba(17,17,17,.92);
-    }
-
     .credRailShell{ position: relative; }
-    .credViewport{ overflow:hidden; }
+    .credViewport{ overflow:hidden; border-radius: calc(var(--tileRadius) + 6px); }
     .credRail{
       display:flex;
       gap: 18px;
-      padding: 14px 16px 18px;
+      /* matches hero rail gutter rhythm */
+      padding: 10px 16px 16px;
       overflow-x:auto;
       -webkit-overflow-scrolling: touch;
       scroll-snap-type: x mandatory;
@@ -564,16 +542,11 @@
     }
     .credRail::-webkit-scrollbar{ display:none; }
 
-    /* ✅ Desktop gutter alignment: match header to rail padding (same as hero header feel) */
-    @media (min-width: 861px){
-      .credHead{ padding-left: 16px; padding-right: 16px; }
-    }
-
     .credCard{
       scroll-snap-align:start;
       flex: 0 0 auto;
       width: min(520px, calc(100vw - 84px));
-      border-radius: 28px;
+      border-radius: var(--tileRadius);
       background: rgba(255,255,255,.94);
       border: 1px solid rgba(17,17,17,.10);
       box-shadow: 0 18px 55px rgba(0,0,0,.10);
@@ -651,7 +624,6 @@
     .credMeta .dot{ opacity:.55; }
 
     @media (max-width: 860px){
-      .credHead{ padding: 16px 16px 8px; }
       .credRail{ padding: 12px 14px 16px; }
       .credCard{ min-height: 520px; }
     }
@@ -854,7 +826,7 @@
             </div>
           </article>
 
-          <article class="tile t3" aria-label="Portfolio">
+          <article class="tile t3" aria-label="Credentials">
             <div class="tileGrid">
               <div class="tileBody">
                 <div class="tileEyebrow">WORK</div>
@@ -913,8 +885,9 @@
     </div>
   </section>
 
-  <!-- Trust strip -->
+  <!-- Main content -->
   <main class="wrap">
+    <!-- Trust strip -->
     <section class="section" aria-label="Trust strip">
       <h2 class="trustTitle">Educated across leading universities and companies</h2>
 
@@ -922,36 +895,46 @@
         <div class="trustPill" aria-label="Google">
           <img alt="Google" src="https://commons.wikimedia.org/wiki/Special:FilePath/Google%202015%20logo.svg">
         </div>
+
         <div class="trustPill" aria-label="IBM">
           <img alt="IBM" src="https://commons.wikimedia.org/wiki/Special:FilePath/IBM%20logo.svg">
         </div>
+
         <div class="trustPill" aria-label="Microsoft">
           <img alt="Microsoft" src="https://commons.wikimedia.org/wiki/Special:FilePath/Microsoft%20logo%20(2012).svg">
         </div>
+
         <div class="trustPill" aria-label="Stanford University">
           <img alt="Stanford University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Stanford%20wordmark%20(2012).svg">
         </div>
+
         <div class="trustPill" aria-label="Harvard Business Review">
           <img alt="Harvard Business Review" src="https://commons.wikimedia.org/wiki/Special:FilePath/Harvard%20Business%20Review%20wordmark.svg">
         </div>
+
         <div class="trustPill" aria-label="Yale University">
           <img alt="Yale University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yale%20University%20logo.svg">
         </div>
+
         <div class="trustPill" aria-label="Johns Hopkins University">
           <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
         </div>
+
         <div class="trustPill" aria-label="Duke University">
           <img alt="Duke University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Duke%20University%20logo.svg">
         </div>
+
         <div class="trustPill" aria-label="New York University">
           <img alt="NYU" src="https://commons.wikimedia.org/wiki/Special:FilePath/Nyu%20short%20color.svg">
         </div>
+
         <div class="trustPill" aria-label="Yonsei University">
           <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
         </div>
       </div>
     </section>
 
+    <!-- Hot New Releases -->
     <section class="section" aria-label="Hot new releases">
       <div class="hotWrap">
         <h2 class="hotTitle">
@@ -987,203 +970,177 @@
       </div>
     </section>
 
-    <!-- ✅ CREDENTIALS (next section) -->
+    <!-- ✅ Credentials (heading + 3 separate tiles) -->
     <section class="section" id="credentials" aria-label="Credentials">
-      <div class="credWrap">
-        <div class="credHead">
-          <h2>Credentials</h2>
-          <div class="railNav" aria-label="Credentials carousel dots">
-            <div class="dots" id="credDots"></div>
-          </div>
+      <div class="sectionTitleRow">
+        <div class="kicker">Credentials</div>
+        <div class="railNav" aria-label="Credentials carousel dots">
+          <div class="dots" id="credDots"></div>
         </div>
+      </div>
 
-        <div class="credRailShell">
-          <div class="credFade left"></div>
-          <div class="credFade right"></div>
+      <div class="credRailShell">
+        <div class="credViewport">
+          <div class="credRail" id="credRail">
 
-          <div class="credViewport">
-            <div class="credRail" id="credRail">
+            <!-- TECH -->
+            <article class="credCard" aria-label="Tech credentials">
+              <div class="credCardTop"><h3>Tech</h3></div>
+              <div class="credList">
 
-              <!-- TECH -->
-              <article class="credCard" aria-label="Tech credentials">
-                <div class="credCardTop"><h3>Tech</h3></div>
-                <div class="credList">
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">AI for Cybersecurity Specialization</div>
-                      <div class="credMeta">
-                        <span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
                   </div>
-
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="IBM" src="https://commons.wikimedia.org/wiki/Special:FilePath/IBM%20logo.svg">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">Building AI Agents and Agentic Workflows Specialization</div>
-                      <div class="credMeta">
-                        <span>IBM</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="New York University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Nyu%20short%20color.svg">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">Enterprise and Infrastructure Security</div>
-                      <div class="credMeta">
-                        <span>New York University</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="New York University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Nyu%20short%20color.svg">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">Cyber Attack Countermeasures</div>
-                      <div class="credMeta">
-                        <span>New York University</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="IBM" src="https://commons.wikimedia.org/wiki/Special:FilePath/IBM%20logo.svg">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">Ethical Hacking with Kali Linux</div>
-                      <div class="credMeta">
-                        <span>IBM</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">Securing AI and Advanced Topics</div>
-                      <div class="credMeta">
-                        <span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">Advanced Malware and Network Anomaly Detection</div>
-                      <div class="credMeta">
-                        <span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">Introduction to AI for Cybersecurity</div>
-                      <div class="credMeta">
-                        <span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
+                  <div class="credMain">
+                    <div class="credTitle">AI for Cybersecurity Specialization</div>
+                    <div class="credMeta"><span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span></div>
                   </div>
                 </div>
-              </article>
 
-              <!-- MARKETING -->
-              <article class="credCard" aria-label="Marketing credentials">
-                <div class="credCardTop"><h3>Marketing</h3></div>
-                <div class="credList">
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">International Marketing &amp; Cross Industry Growth Specialization</div>
-                      <div class="credMeta">
-                        <span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="IBM" src="https://commons.wikimedia.org/wiki/Special:FilePath/IBM%20logo.svg">
                   </div>
-
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">International Marketing &amp; Cross Industry Growth Capstone Project</div>
-                      <div class="credMeta">
-                        <span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">International Entertainment and Sports Marketing</div>
-                      <div class="credMeta">
-                        <span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">International Hospitality &amp; Healthcare Services Marketing</div>
-                      <div class="credMeta">
-                        <span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
+                  <div class="credMain">
+                    <div class="credTitle">Building AI Agents and Agentic Workflows Specialization</div>
+                    <div class="credMeta"><span>IBM</span><span class="dot">•</span><span>Credential # ________</span></div>
                   </div>
                 </div>
-              </article>
 
-              <!-- OPERATIONS -->
-              <article class="credCard" aria-label="Operations credentials">
-                <div class="credCardTop"><h3>Operations</h3></div>
-                <div class="credList">
-                  <div class="credRow">
-                    <div class="credLogo">
-                      <img alt="Google" src="https://commons.wikimedia.org/wiki/Special:FilePath/Google%202015%20logo.svg">
-                    </div>
-                    <div class="credMain">
-                      <div class="credTitle">Google Project Management Specialization</div>
-                      <div class="credMeta">
-                        <span>Google</span><span class="dot">•</span><span>Credential # ________</span>
-                      </div>
-                    </div>
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="New York University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Nyu%20short%20color.svg">
+                  </div>
+                  <div class="credMain">
+                    <div class="credTitle">Enterprise and Infrastructure Security</div>
+                    <div class="credMeta"><span>New York University</span><span class="dot">•</span><span>Credential # ________</span></div>
                   </div>
                 </div>
-              </article>
 
-            </div>
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="New York University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Nyu%20short%20color.svg">
+                  </div>
+                  <div class="credMain">
+                    <div class="credTitle">Cyber Attack Countermeasures</div>
+                    <div class="credMeta"><span>New York University</span><span class="dot">•</span><span>Credential # ________</span></div>
+                  </div>
+                </div>
+
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="IBM" src="https://commons.wikimedia.org/wiki/Special:FilePath/IBM%20logo.svg">
+                  </div>
+                  <div class="credMain">
+                    <div class="credTitle">Ethical Hacking with Kali Linux</div>
+                    <div class="credMeta"><span>IBM</span><span class="dot">•</span><span>Credential # ________</span></div>
+                  </div>
+                </div>
+
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
+                  </div>
+                  <div class="credMain">
+                    <div class="credTitle">Securing AI and Advanced Topics</div>
+                    <div class="credMeta"><span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span></div>
+                  </div>
+                </div>
+
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
+                  </div>
+                  <div class="credMain">
+                    <div class="credTitle">Advanced Malware and Network Anomaly Detection</div>
+                    <div class="credMeta"><span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span></div>
+                  </div>
+                </div>
+
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="Johns Hopkins University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Johns%20Hopkins%20University%20logo.png">
+                  </div>
+                  <div class="credMain">
+                    <div class="credTitle">Introduction to AI for Cybersecurity</div>
+                    <div class="credMeta"><span>Johns Hopkins University</span><span class="dot">•</span><span>Credential # ________</span></div>
+                  </div>
+                </div>
+
+              </div>
+            </article>
+
+            <!-- MARKETING -->
+            <article class="credCard" aria-label="Marketing credentials">
+              <div class="credCardTop"><h3>Marketing</h3></div>
+              <div class="credList">
+
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
+                  </div>
+                  <div class="credMain">
+                    <div class="credTitle">International Marketing &amp; Cross Industry Growth Specialization</div>
+                    <div class="credMeta"><span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span></div>
+                  </div>
+                </div>
+
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
+                  </div>
+                  <div class="credMain">
+                    <div class="credTitle">International Marketing &amp; Cross Industry Growth Capstone Project</div>
+                    <div class="credMeta"><span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span></div>
+                  </div>
+                </div>
+
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
+                  </div>
+                  <div class="credMain">
+                    <div class="credTitle">International Entertainment and Sports Marketing</div>
+                    <div class="credMeta"><span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span></div>
+                  </div>
+                </div>
+
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="Yonsei University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yonsei%20University%20Logo.png">
+                  </div>
+                  <div class="credMain">
+                    <div class="credTitle">International Hospitality &amp; Healthcare Services Marketing</div>
+                    <div class="credMeta"><span>Yonsei University</span><span class="dot">•</span><span>Credential # ________</span></div>
+                  </div>
+                </div>
+
+              </div>
+            </article>
+
+            <!-- OPERATIONS -->
+            <article class="credCard" aria-label="Operations credentials">
+              <div class="credCardTop"><h3>Operations</h3></div>
+              <div class="credList">
+                <div class="credRow">
+                  <div class="credLogo">
+                    <img alt="Google" src="https://commons.wikimedia.org/wiki/Special:FilePath/Google%202015%20logo.svg">
+                  </div>
+                  <div class="credMain">
+                    <div class="credTitle">Google Project Management Specialization</div>
+                    <div class="credMeta"><span>Google</span><span class="dot">•</span><span>Credential # ________</span></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Portfolio placeholder -->
     <section class="section" id="portfolio" aria-label="Portfolio placeholder">
       <div class="kicker">Portfolio</div>
       <p style="margin:10px 0 0; color: rgba(17,17,17,.65); font-weight:700;">
