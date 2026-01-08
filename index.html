@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Central Business Intelligence</title>
-  <meta name="description" content="About + How I Work + Education map with interactive pins and a logo-first modal." />
+  <meta name="description" content="About + How I Work + Education map with interactive pins." />
 
   <style>
     :root{
@@ -68,26 +68,6 @@
       flex-wrap: wrap;
     }
 
-    .navLink{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(11,11,15,.10);
-      background: rgba(11,11,15,.03);
-      color: rgba(11,11,15,.78);
-      font-weight: 650;
-      font-size: 13px;
-      text-decoration:none;
-      transition: transform .18s var(--ease), background .18s var(--ease);
-      user-select:none;
-      white-space: nowrap;
-      cursor:pointer;
-    }
-    .navLink:hover{ background: rgba(11,11,15,.05); }
-    .navLink:active{ transform: scale(.98); }
-
     .btn{
       border: 1px solid rgba(11,11,15,.12);
       background: rgba(11,11,15,.04);
@@ -105,66 +85,43 @@
     .btn:active{ transform: scale(.98); }
     .btn:disabled{ opacity:.45; cursor: default; }
 
-    /* ======= HERO ======= */
-    .hero{
-      padding: 64px 0 18px;
+    /* ======= Page spacing ======= */
+    .page{
+      padding: 34px 0 0;
       background:
         radial-gradient(1100px 520px at 50% -10%, rgba(11,11,15,.06), transparent 58%),
         radial-gradient(900px 420px at 10% 10%, rgba(11,11,15,.03), transparent 55%),
         #fff;
     }
-    .heroCopy{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 18px 18px;
-    }
-    .eyebrow{
-      margin:0 0 10px;
-      font-size: 12px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      color: rgba(11,11,15,.55);
-    }
-    h1{
-      margin:0;
-      font-size: clamp(40px, 6vw, 84px);
-      letter-spacing: -0.04em;
-      line-height: 0.98;
-    }
-    .sub{
-      margin: 14px 0 0;
-      font-size: 16px;
-      line-height: 1.5;
-      color: var(--muted);
-      max-width: 74ch;
+    @media (max-width: 860px){
+      .page{ padding-top: 22px; }
     }
 
-    /* ======= About / How I Work section ======= */
+    /* ======= “How I Work” card section (the one you like) ======= */
     .section{
       max-width: 1200px;
       margin: 0 auto;
-      padding: 28px 18px 14px;
+      padding: 28px 18px 18px;
     }
     .card{
       border: 1px solid rgba(11,11,15,.08);
-      background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.68));
-      border-radius: 28px;
+      background: #fff;
+      border-radius: 34px;
       padding: 22px 22px 20px;
       box-shadow: 0 14px 44px rgba(0,0,0,.06);
-      backdrop-filter: blur(14px);
     }
     .cardTitle{
       margin:0;
-      font-size: 22px;
+      font-size: 28px;
       letter-spacing: -0.02em;
-      line-height: 1.15;
+      line-height: 1.12;
     }
     .cardBody{
       margin: 10px 0 0;
-      font-size: 15px;
-      line-height: 1.55;
+      font-size: 16px;
+      line-height: 1.6;
       color: rgba(11,11,15,.70);
-      max-width: 90ch;
+      max-width: 92ch;
     }
 
     /* ======= FULL BLEED MAP ======= */
@@ -185,7 +142,6 @@
       touch-action: manipulation;
     }
     @media (max-width: 860px){
-      .hero{ padding-top: 46px; }
       .map{ aspect-ratio: 4 / 5; }
     }
 
@@ -405,9 +361,7 @@
 <body>
   <div class="nav">
     <div class="navInner">
-      <div class="brand">
-        <span class="dot"></span> About
-      </div>
+      <div class="brand"><span class="dot"></span> About</div>
 
       <div class="navRight">
         <button class="btn" id="pickerBtn" type="button">Pin Picker: Off</button>
@@ -416,16 +370,8 @@
     </div>
   </div>
 
-  <main class="hero" id="about">
-    <section class="heroCopy">
-      <p class="eyebrow">About</p>
-      <h1>How I Work</h1>
-      <p class="sub">
-        I’m deeply passionate about technology, the arts, and humanitarian work because all three shape how people live, express themselves, and move through the world. My work in software has given me a front-row seat to decision-making at scale, and I’ve learned how to translate technical choices into outcomes that people actually feel.
-      </p>
-    </section>
-
-    <!-- Optional: a slightly more “section” feel while staying Apple-clean -->
+  <main class="page">
+    <!-- KEEP ONLY THIS (you liked the second screenshot) -->
     <section class="section" id="how-i-work">
       <div class="card">
         <h2 class="cardTitle">How I Work</h2>
@@ -438,7 +384,6 @@
     <!-- Education map -->
     <section class="bleed" aria-label="Education map section">
       <div class="map" id="map" aria-label="World map with location pins">
-
         <!-- Desktop + Mobile coordinates stored per pin -->
         <button class="pin" data-i="1"
           data-label="California"
@@ -493,9 +438,7 @@
       </div>
     </section>
 
-    <div class="footer">
-      Seamless white. Full-bleed hero.
-    </div>
+    <div class="footer">Seamless white. Full-bleed hero.</div>
   </main>
 
   <!-- Modal -->
