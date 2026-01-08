@@ -43,8 +43,8 @@
     a{ color:inherit; text-decoration:none; }
     .wrap{ max-width: 1180px; margin: 0 auto; padding: 0 20px; }
 
-    /* ===== Full-bleed container (same trick as the map) ===== */
-    .bleedHero{
+    /* ===== Full-bleed containers (map + hero rail) ===== */
+    .bleedHero, .bleed{
       width: 100vw;
       margin-left: 50%;
       transform: translateX(-50%);
@@ -137,7 +137,7 @@
     }
 
     /* ==============================
-       HERO RAIL (JU exact)
+       HERO RAIL (JU)
        ============================== */
     .heroRail{ position: relative; margin-top: 10px; }
     .railViewport{ overflow: hidden; border-radius: calc(var(--tileRadius) + 6px); }
@@ -272,7 +272,7 @@
     }
 
     /* ==============================
-       JU dots
+       Dots
        ============================== */
     .railNav{
       display:flex;
@@ -295,44 +295,30 @@
       width: 6px;
       height: 6px;
       border-radius: 99px;
-      background: rgba(17,17,17,.28);
+      background: var(--dot);
       border: 0;
       padding:0;
       cursor:pointer;
       transition: transform .18s var(--easeOut), background .18s var(--easeOut), opacity .18s var(--easeOut);
     }
     .dotBtn:hover{ transform: scale(1.2); }
-    .dotBtn.isActive{ background: rgba(17,17,17,.85); transform: scale(1.25); }
+    .dotBtn.isActive{ background: var(--dotOn); transform: scale(1.25); }
 
     /* ==============================
-       Mobile: keep tiles wide, show full text (no clamp)
+       Mobile: keep tiles wide, show full text
        ============================== */
     @media (max-width: 860px){
       .tools{ display:none; }
-
       .tile{ min-height: unset; }
       .tileGrid{ grid-template-columns: 1fr; min-height: unset; }
       .tileMedia{ display:none; }
-
       .tileBody{ padding: 30px 22px 24px; }
-
-      /* ✅ full verbiage on mobile */
-      .tileDesc{
-        max-width: none;
-        display:block;
-        overflow: visible;
-      }
+      .tileDesc{ max-width: none; display:block; overflow: visible; }
     }
 
     /* ==============================
        MAP (full bleed)
        ============================== */
-    .bleed{
-      width: 100vw;
-      margin-left: 50%;
-      transform: translateX(-50%);
-      padding: 0;
-    }
     .map{
       position: relative;
       width: 100%;
@@ -407,7 +393,141 @@
     .readout.show{ opacity:1; transform: translateY(0); }
 
     /* ==============================
-       MODAL (logo-first)
+       ✅ NEW: Logo pill rail (under map)
+       ============================== */
+    .trustTitle{
+      margin: 0 0 14px;
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -.01em;
+      color: rgba(17,17,17,.92);
+    }
+    .trustRail{
+      display:flex;
+      gap: 14px;
+      align-items:center;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width:none;
+      padding: 6px 2px 2px;
+    }
+    .trustRail::-webkit-scrollbar{ display:none; }
+
+    .trustPill{
+      flex: 0 0 auto;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      height: 52px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(17,17,17,.10);
+      background: rgba(255,255,255,.86);
+      box-shadow: 0 18px 55px rgba(0,0,0,.06);
+      user-select:none;
+      white-space: nowrap;
+    }
+    .trustPill img{
+      height: 22px;
+      width: auto;
+      display:block;
+      opacity: .95;
+      filter: saturate(.96);
+    }
+
+    /* Slightly taller pills on desktop */
+    @media (min-width: 980px){
+      .trustPill{ height: 56px; padding: 0 18px; }
+      .trustPill img{ height: 24px; }
+    }
+
+    /* ==============================
+       HOT NEW RELEASES (JU)
+       ============================== */
+    .hotWrap{
+      border-radius: 34px;
+      background: linear-gradient(90deg, #1d66ff, #36b6ff, #43d7b4);
+      padding: 18px;
+      box-shadow: 0 26px 90px rgba(0,0,0,.12);
+    }
+    .hotTitle{
+      color: rgba(255,255,255,.95);
+      font-weight: 950;
+      letter-spacing: -.01em;
+      margin: 0 0 12px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-size: 18px;
+    }
+    .hotTitle svg{ width: 18px; height: 18px; stroke:#fff; stroke-width:2.6; fill:none; }
+
+    .hotRail{
+      display:flex;
+      gap: 18px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width:none;
+    }
+    .hotRail::-webkit-scrollbar{ display:none; }
+
+    .hotCard{
+      scroll-snap-align: start;
+      flex: 0 0 auto;
+      width: min(320px, calc(100vw - 96px));
+      border-radius: 22px;
+      background: rgba(255,255,255,.96);
+      border: 1px solid rgba(0,0,0,.10);
+      box-shadow: 0 18px 55px rgba(0,0,0,.12);
+      overflow:hidden;
+      transition: transform .22s var(--easeApple), box-shadow .22s var(--easeApple);
+    }
+    .hotCard:hover{ transform: translateY(-2px); box-shadow: 0 26px 85px rgba(0,0,0,.16); }
+    .hotImg{
+      height: 170px;
+      background: linear-gradient(135deg, rgba(0,0,0,.08), rgba(0,0,0,.02));
+    }
+    .hotBody{ padding: 14px 14px 16px; }
+    .hotBrand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      color: rgba(17,17,17,.68);
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .hotBrand .miniLogo{
+      width: 22px; height: 22px;
+      border-radius: 6px;
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.8);
+      display:grid; place-items:center;
+      font-weight: 950;
+      font-size: 12px;
+      color: rgba(17,17,17,.62);
+    }
+    .hotName{
+      margin: 0 0 10px;
+      font-weight: 950;
+      letter-spacing: -.01em;
+      line-height: 1.15;
+      font-size: 18px;
+    }
+    .hotMeta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color: rgba(17,17,17,.60);
+      font-weight: 700;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    /* ==============================
+       MODAL + TOAST
        ============================== */
     .modalBack{
       position: fixed;
@@ -508,91 +628,6 @@
       max-width: 72ch;
     }
 
-    /* ==============================
-       HOT NEW RELEASES (JU exact)
-       ============================== */
-    .hotWrap{
-      border-radius: 34px;
-      background: linear-gradient(90deg, #1d66ff, #36b6ff, #43d7b4);
-      padding: 18px;
-      box-shadow: 0 26px 90px rgba(0,0,0,.12);
-    }
-    .hotTitle{
-      color: rgba(255,255,255,.95);
-      font-weight: 950;
-      letter-spacing: -.01em;
-      margin: 0 0 12px;
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      font-size: 18px;
-    }
-    .hotTitle svg{ width: 18px; height: 18px; stroke:#fff; stroke-width:2.6; fill:none; }
-
-    .hotRail{
-      display:flex;
-      gap: 18px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 4px;
-      scroll-snap-type: x mandatory;
-      scrollbar-width:none;
-    }
-    .hotRail::-webkit-scrollbar{ display:none; }
-
-    .hotCard{
-      scroll-snap-align: start;
-      flex: 0 0 auto;
-      width: min(320px, calc(100vw - 96px));
-      border-radius: 22px;
-      background: rgba(255,255,255,.96);
-      border: 1px solid rgba(0,0,0,.10);
-      box-shadow: 0 18px 55px rgba(0,0,0,.12);
-      overflow:hidden;
-      transition: transform .22s var(--easeApple), box-shadow .22s var(--easeApple);
-    }
-    .hotCard:hover{ transform: translateY(-2px); box-shadow: 0 26px 85px rgba(0,0,0,.16); }
-    .hotImg{
-      height: 170px;
-      background: linear-gradient(135deg, rgba(0,0,0,.08), rgba(0,0,0,.02));
-    }
-    .hotBody{ padding: 14px 14px 16px; }
-    .hotBrand{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      color: rgba(17,17,17,.68);
-      font-weight: 800;
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-    .hotBrand .miniLogo{
-      width: 22px; height: 22px;
-      border-radius: 6px;
-      border: 1px solid rgba(0,0,0,.10);
-      background: rgba(255,255,255,.8);
-      display:grid; place-items:center;
-      font-weight: 950;
-      font-size: 12px;
-      color: rgba(17,17,17,.62);
-    }
-    .hotName{
-      margin: 0 0 10px;
-      font-weight: 950;
-      letter-spacing: -.01em;
-      line-height: 1.15;
-      font-size: 18px;
-    }
-    .hotMeta{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      color: rgba(17,17,17,.60);
-      font-weight: 700;
-      font-size: 13px;
-      margin-top: 6px;
-    }
-
     .toast{
       position: fixed;
       left: 50%;
@@ -636,7 +671,7 @@
     </div>
   </div>
 
-  <!-- Title row stays in wrap (nice alignment) -->
+  <!-- Title row stays aligned -->
   <main class="wrap">
     <section class="section" aria-label="About tiles">
       <div class="sectionTitleRow">
@@ -648,7 +683,7 @@
     </section>
   </main>
 
-  <!-- ✅ HERO RAIL is now full-bleed like the map -->
+  <!-- HERO RAIL full-bleed -->
   <section class="bleedHero" aria-label="Hero card rail (full bleed)">
     <div class="heroRail">
       <div class="railFade left"></div>
@@ -713,7 +748,7 @@
     </div>
   </section>
 
-  <!-- Education map (already full bleed) -->
+  <!-- Education map (full bleed) -->
   <section class="bleed" id="education-map" aria-label="Education map section">
     <div class="map" id="map" aria-label="World map with location pins">
       <button class="pin" data-i="1" data-label="California" data-logo="assets/logos/UCR.png"
@@ -748,7 +783,41 @@
     </div>
   </section>
 
+  <!-- ✅ NEW TRUST STRIP (under map) -->
   <main class="wrap">
+    <section class="section" aria-label="Trust strip">
+      <h2 class="trustTitle">Learn from 20+ leading universities and companies</h2>
+
+      <div class="trustRail" aria-label="Logos">
+        <!-- Tip: best practice is to download these SVGs and serve locally.
+             For now, these use Wikimedia "Special:FilePath" links. -->
+
+        <div class="trustPill" aria-label="Google">
+          <img alt="Google" src="https://commons.wikimedia.org/wiki/Special:FilePath/Google%202015%20logo.svg">
+        </div>
+
+        <div class="trustPill" aria-label="IBM">
+          <img alt="IBM" src="https://commons.wikimedia.org/wiki/Special:FilePath/IBM%20logo.svg">
+        </div>
+
+        <div class="trustPill" aria-label="Microsoft">
+          <img alt="Microsoft" src="https://commons.wikimedia.org/wiki/Special:FilePath/Microsoft%20logo%20(2012).svg">
+        </div>
+
+        <div class="trustPill" aria-label="Stanford University">
+          <img alt="Stanford University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Stanford%20wordmark%20(2012).svg">
+        </div>
+
+        <div class="trustPill" aria-label="Harvard Business Review">
+          <img alt="Harvard Business Review" src="https://commons.wikimedia.org/wiki/Special:FilePath/Harvard%20Business%20Review%20wordmark.svg">
+        </div>
+
+        <div class="trustPill" aria-label="Yale University">
+          <img alt="Yale University" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yale%20University%20logo.svg">
+        </div>
+      </div>
+    </section>
+
     <section class="section" aria-label="Hot new releases">
       <div class="hotWrap">
         <h2 class="hotTitle">
@@ -794,6 +863,7 @@
     <div class="footer">Built clean. Built to scale.</div>
   </main>
 
+  <!-- Modal -->
   <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-label="Location details">
     <div class="modal">
       <div class="modalTop">
