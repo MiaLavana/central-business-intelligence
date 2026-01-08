@@ -4,17 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Central Business Intelligence</title>
-  <meta name="description" content="Apple-clean education map with interactive pins." />
+  <meta name="description" content="Education map with interactive pins and a logo-first modal." />
 
   <style>
     :root{
       --bg:#ffffff;
       --text:#0b0b0f;
       --muted: rgba(11,11,15,.62);
-      --hair: rgba(11,11,15,.10);
-      --shadow: 0 28px 90px rgba(0,0,0,.14);
       --ease: cubic-bezier(.22,.61,.36,1);
-      --radius: 28px;
+      --hair: rgba(11,11,15,.06);
     }
 
     *{ box-sizing:border-box; }
@@ -29,14 +27,14 @@
       overflow-x:hidden;
     }
 
-    /* ======= Apple-clean layout ======= */
+    /* ======= Minimal top bar ======= */
     .nav{
       position: sticky;
       top: 0;
       z-index: 20;
       background: rgba(255,255,255,.72);
       backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(11,11,15,.06);
+      border-bottom: 1px solid var(--hair);
     }
     .navInner{
       max-width: 1200px;
@@ -53,6 +51,7 @@
       gap: 10px;
       font-weight: 700;
       letter-spacing: -.01em;
+      white-space: nowrap;
     }
     .dot{
       width:10px; height:10px;
@@ -60,16 +59,15 @@
       background: rgba(11,11,15,.85);
       display:inline-block;
     }
+
     .navRight{
       display:flex;
       gap: 10px;
       align-items:center;
-      color: rgba(11,11,15,.55);
-      font-size: 13px;
-      white-space: nowrap;
+      justify-content:flex-end;
+      flex-wrap: wrap;
     }
 
-    /* Toggle button (Apple-clean) */
     .btn{
       border: 1px solid rgba(11,11,15,.12);
       background: rgba(11,11,15,.04);
@@ -80,9 +78,14 @@
       cursor: pointer;
       transition: transform .18s var(--ease), background .18s var(--ease);
       user-select:none;
+      white-space: nowrap;
     }
     .btn:hover{ background: rgba(11,11,15,.06); }
     .btn:active{ transform: scale(.98); }
+    .btn:disabled{
+      opacity:.45;
+      cursor: default;
+    }
 
     /* ======= HERO ======= */
     .hero{
@@ -92,13 +95,11 @@
         radial-gradient(900px 420px at 10% 10%, rgba(11,11,15,.03), transparent 55%),
         #fff;
     }
-
     .heroCopy{
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 18px 22px;
     }
-
     .eyebrow{
       margin:0 0 10px;
       font-size: 12px;
@@ -106,14 +107,12 @@
       text-transform: uppercase;
       color: rgba(11,11,15,.55);
     }
-
     h1{
       margin:0;
       font-size: clamp(40px, 6vw, 84px);
       letter-spacing: -0.04em;
       line-height: 0.98;
     }
-
     .sub{
       margin: 14px 0 0;
       font-size: 16px;
@@ -122,55 +121,23 @@
       max-width: 74ch;
     }
 
-    .hintRow{
-      margin-top: 16px;
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      flex-wrap: wrap;
-      color: rgba(11,11,15,.55);
-      font-size: 13px;
-    }
-
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(11,11,15,.10);
-      background: rgba(11,11,15,.03);
-      user-select:none;
-    }
-    .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 8px;
-      border: 1px solid rgba(11,11,15,.14);
-      background: rgba(255,255,255,.75);
-      color: rgba(11,11,15,.72);
-    }
-
-    /* ======= FULL BLEED MAP (WOW) ======= */
+    /* ======= FULL BLEED MAP ======= */
     .bleed{
       width: 100vw;
       margin-left: 50%;
       transform: translateX(-50%);
       padding: 0;
     }
-
     .map{
       position: relative;
       width: 100%;
-      aspect-ratio: 21 / 9; /* wide + cinematic */
+      aspect-ratio: 21 / 9;
       background: #fff url("assets/banner-map.png") center / contain no-repeat;
-      border-top: 1px solid rgba(11,11,15,.06);
-      border-bottom: 1px solid rgba(11,11,15,.06);
+      border-top: 1px solid var(--hair);
+      border-bottom: 1px solid var(--hair);
       transform: translateZ(0);
+      touch-action: manipulation;
     }
-
-    /* Taller on small screens so it still feels like a hero */
     @media (max-width: 860px){
       .hero{ padding-top: 46px; }
       .map{ aspect-ratio: 4 / 5; }
@@ -192,11 +159,24 @@
       border-radius: 999px;
       background: rgba(11,11,15,.92);
       border: 2px solid rgba(255,255,255,.98);
-      transform: translate(-50%, -50%);
       cursor:pointer;
       box-shadow: 0 10px 22px rgba(0,0,0,.18);
       outline:none;
+
+      --scale: 1;
+      transform: translate(-50%, -50%) scale(var(--scale));
+      transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+      z-index: 2;
     }
+
+    /* Bigger invisible hit area */
+    .pin::before{
+      content:"";
+      position:absolute;
+      inset:-18px;
+      border-radius:999px;
+    }
+
     .pin::after{
       content:"";
       position:absolute;
@@ -206,13 +186,9 @@
       transform: scale(.55);
       opacity:0;
       animation: pulse 2.2s var(--ease) infinite;
-    }
-    .pin:hover{ transform: translate(-50%,-50%) scale(1.06); }
-    .pin:focus-visible{
-      box-shadow: 0 0 0 4px rgba(11,11,15,.14), 0 10px 22px rgba(0,0,0,.18);
+      pointer-events:none;
     }
 
-    /* tiny stagger (premium rhythm) */
     .pin[data-i="2"]::after{ animation-delay: .25s; }
     .pin[data-i="3"]::after{ animation-delay: .5s; }
     .pin[data-i="4"]::after{ animation-delay: .75s; }
@@ -225,7 +201,19 @@
       100%{ transform: scale(1.65); opacity:0; }
     }
 
-    /* Picker readout (hidden unless picker enabled) */
+    /* Proximity states */
+    .pin.isNear{
+      --scale: 1.55;
+      z-index: 10;
+      box-shadow: 0 14px 34px rgba(0,0,0,.24);
+    }
+    .pin.isClosest{
+      --scale: 1.95;
+      z-index: 20;
+      box-shadow: 0 18px 44px rgba(0,0,0,.28);
+    }
+
+    /* Picker readout */
     .readout{
       position:absolute;
       right: 14px;
@@ -247,7 +235,7 @@
       transform: translateY(0);
     }
 
-    /* ======= MODAL (Apple sheet) ======= */
+    /* ======= MODAL (logo-first) ======= */
     .modalBack{
       position: fixed;
       inset: 0;
@@ -261,7 +249,7 @@
     .modalBack.isOpen{ display:flex; }
 
     .modal{
-      width: min(880px, 100%);
+      width: min(900px, 100%);
       border-radius: 30px;
       background: rgba(255,255,255,.92);
       border: 1px solid rgba(255,255,255,.20);
@@ -303,39 +291,54 @@
     .close:active{ transform: scale(.98); }
 
     .modalBody{
-      padding: 16px 16px 18px;
-      display:grid;
-      gap: 14px;
+      padding: 32px 32px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
     }
-    .logoWrap{
+
+    .logoHero{
+      width: 100%;
+      height: 300px;
       display:flex;
-      justify-content:center;
       align-items:center;
-      padding: 22px 18px;
-      background: rgba(11,11,15,.02);
-      border-radius: 18px;
-      border: 1px solid rgba(11,11,15,.08);
+      justify-content:center;
+      background: linear-gradient(180deg, rgba(11,11,15,.04), rgba(11,11,15,.01));
+      border-radius: 26px;
     }
-    .logoWrap img{
-      max-height: 72px;
-      max-width: 260px;
+    .logoHero img{
+      max-width: 620px;
+      max-height: 210px;
+      width: auto;
+      height: auto;
       object-fit: contain;
-      filter: saturate(.95);
+      opacity: 0;
+      transform: scale(.96);
+      transition: opacity .35s ease, transform .35s ease;
     }
+    .modalBack.isOpen .logoHero img{
+      opacity: 1;
+      transform: scale(1);
+    }
+
     .meta{
       text-align:center;
+      margin-top: 2px;
     }
     .meta h2{
       margin:0;
-      font-size: 22px;
+      font-size: 20px;
+      font-weight: 600;
       letter-spacing: -0.02em;
       line-height: 1.15;
     }
     .meta p{
       margin: 8px 0 0;
-      color: rgba(11,11,15,.65);
+      color: rgba(11,11,15,.58);
       font-size: 14px;
       line-height: 1.45;
+      max-width: 72ch;
     }
 
     /* Toast */
@@ -356,12 +359,11 @@
     }
     .toast.show{ opacity: 1; }
 
-    /* Footer (quiet) */
     .footer{
       max-width: 1200px;
       margin: 0 auto;
-      padding: 22px 18px 44px;
-      color: rgba(11,11,15,.55);
+      padding: 18px 18px 44px;
+      color: rgba(11,11,15,.50);
       font-size: 13px;
     }
   </style>
@@ -372,9 +374,10 @@
     <div class="navInner">
       <div class="brand"><span class="dot"></span> Central Business Intelligence</div>
 
-      <!-- ✅ NEW: visible toggle (no keyboard needed) -->
+      <!-- ✅ Pin picker controls -->
       <div class="navRight">
         <button class="btn" id="pickerBtn" type="button">Pin Picker: Off</button>
+        <button class="btn" id="modeBtn" type="button" disabled>Mode: Mobile</button>
       </div>
     </div>
   </div>
@@ -383,80 +386,70 @@
     <section class="heroCopy">
       <p class="eyebrow">Education Map</p>
       <h1>Places that shaped my path.</h1>
-      <p class="sub">
-        A clean, minimal global view. Tap a pin to open details.
-      </p>
-
-      <div class="hintRow">
-        <span class="chip">Interactive pins • modal details • Apple-clean</span>
-        <span class="chip">Pin Picker is now a button in the top bar</span>
-      </div>
+      <p class="sub">Tap a pin to open details.</p>
     </section>
 
     <section class="bleed">
       <div class="map" id="map" aria-label="World map with location pins">
-        <!-- California -->
+
+        <!-- Pins now store BOTH sets: desktop (d) and mobile (m).
+             JS applies the correct set automatically based on screen width. -->
+
         <button class="pin" data-i="1"
           data-label="California"
           data-logo="assets/logos/UCR.png"
           data-caption="UCR School of Business • A. Gary Anderson Graduate School of Management"
-          style="left:18.7%; top:48.8%"></button>
+          data-d-left="36.4" data-d-top="30.4"
+          data-m-left="31.8" data-m-top="41.0"></button>
 
-        <!-- NYC -->
-        <button class="pin" data-i="2"
-          data-label="New York City"
-          data-logo="assets/logos/NYU.png"
-          data-caption="NYU Tandon School of Engineering"
-          style="left:24.4%; top:42.0%"></button>
-
-        <!-- Cambridge (Harvard) -->
-        <button class="pin" data-i="3"
-          data-label="Cambridge"
-          data-logo="assets/logos/HBR.png"
-          data-caption="Harvard Business Review"
-          style="left:24.2%; top:41.5%"></button>
-
-        <!-- Yale -->
-        <button class="pin" data-i="4"
-          data-label="New Haven"
-          data-logo="assets/logos/Yale.png"
-          data-caption="Yale University"
-          style="left:24.0%; top:42.3%"></button>
-
-        <!-- Duke -->
-        <button class="pin" data-i="5"
-          data-label="Durham"
-          data-logo="assets/logos/Duke.png"
-          data-caption="Duke University"
-          style="left:23.0%; top:46.2%"></button>
-
-        <!-- Johns Hopkins -->
-        <button class="pin" data-i="1"
-          data-label="Baltimore"
-          data-logo="assets/logos/Johns-Hopkins.png"
-          data-caption="Johns Hopkins University"
-          style="left:23.6%; top:44.7%"></button>
-
-        <!-- Italy (Bocconi) -->
         <button class="pin" data-i="2"
           data-label="Milan"
           data-logo="assets/logos/Bocconi.png"
           data-caption="SDA Bocconi School of Management"
-          style="left:55.8%; top:40.7%"></button>
+          data-d-left="49.6" data-d-top="28.1"
+          data-m-left="49.3" data-m-top="39.8"></button>
 
-        <!-- Hong Kong -->
         <button class="pin" data-i="3"
+          data-label="Durham"
+          data-logo="assets/logos/Duke.png"
+          data-caption="Duke University"
+          data-d-left="40.1" data-d-top="29.5"
+          data-m-left="37.1" data-m-top="40.8"></button>
+
+        <button class="pin" data-i="4"
+          data-label="Cambridge"
+          data-logo="assets/logos/HBR.png"
+          data-caption="Harvard Business Review"
+          data-d-left="40.9" data-d-top="27.9"
+          data-m-left="39.1" data-m-top="39.8"></button>
+
+        <button class="pin" data-i="5"
           data-label="Hong Kong"
           data-logo="assets/logos/Hong-Kong.png"
           data-caption="The Hong Kong University of Science and Technology"
-          style="left:78.8%; top:50.0%"></button>
+          data-d-left="59.8" data-d-top="32.8"
+          data-m-left="63.4" data-m-top="41.6"></button>
+
+        <button class="pin" data-i="2"
+          data-label="New York City"
+          data-logo="assets/logos/NYU.png"
+          data-caption="NYU Tandon School of Engineering"
+          data-d-left="40.7" data-d-top="28.1"
+          data-m-left="38.1" data-m-top="40.2"></button>
+
+        <button class="pin" data-i="3"
+          data-label="New Haven"
+          data-logo="assets/logos/Yale.png"
+          data-caption="Yale University"
+          data-d-left="41.3" data-d-top="28.1"
+          data-m-left="37.6" data-m-top="40.2"></button>
 
         <div class="readout" id="readout" aria-hidden="true"></div>
       </div>
     </section>
 
     <div class="footer">
-      Seamless white. Full-bleed hero. Tiles next.
+      Seamless white. Full-bleed hero.
     </div>
   </main>
 
@@ -473,11 +466,11 @@
       </div>
 
       <div class="modalBody">
-        <div class="logoWrap">
+        <div class="logoHero">
           <img id="modalLogo" src="" alt="">
         </div>
         <div class="meta">
-          <h2 id="modalTitle">Location</h2>
+          <h2 id="modalTitle"></h2>
           <p id="modalCaption"></p>
         </div>
       </div>
@@ -488,9 +481,7 @@
 
   <script>
     const map = document.getElementById('map');
-    const readout = document.getElementById('readout');
-    const toast = document.getElementById('toast');
-    const pickerBtn = document.getElementById('pickerBtn');
+    const pins = Array.from(document.querySelectorAll('.pin'));
 
     const modalBack = document.getElementById('modalBack');
     const modalLogo = document.getElementById('modalLogo');
@@ -498,7 +489,15 @@
     const modalCaption = document.getElementById('modalCaption');
     const closeBtn = document.getElementById('closeBtn');
 
+    const readout = document.getElementById('readout');
+    const toast = document.getElementById('toast');
+
+    const pickerBtn = document.getElementById('pickerBtn');
+    const modeBtn = document.getElementById('modeBtn');
+
+    const mqMobile = matchMedia('(max-width: 860px)');
     let picking = false;
+    let pickerMode = 'mobile'; // default since you're finding mobile coords
 
     function showToast(text){
       toast.textContent = text;
@@ -507,15 +506,115 @@
       showToast._t = setTimeout(()=> toast.classList.remove('show'), 900);
     }
 
+    function applyPinPositions(){
+      const useMobile = mqMobile.matches;
+      pins.forEach(p=>{
+        const dL = p.dataset.dLeft, dT = p.dataset.dTop;
+        const mL = p.dataset.mLeft, mT = p.dataset.mTop;
+        const left = useMobile ? (mL || dL) : dL;
+        const top  = useMobile ? (mT || dT) : dT;
+        p.style.left = `${left}%`;
+        p.style.top  = `${top}%`;
+      });
+    }
+    applyPinPositions();
+    mqMobile.addEventListener?.('change', applyPinPositions);
+    window.addEventListener('resize', applyPinPositions);
+
+    // Subtle parallax (hover devices)
+    if (matchMedia('(hover:hover)').matches){
+      map.addEventListener('mousemove', (e)=>{
+        const r = map.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        map.style.transform = `scale(1.008) translate(${px * 6}px, ${py * 6}px)`;
+      });
+      map.addEventListener('mouseleave', ()=>{ map.style.transform = ''; });
+    }
+
+    function openFromPin(pin){
+      modalTitle.textContent = pin.dataset.label || 'Location';
+      modalCaption.textContent = pin.dataset.caption || '';
+      modalLogo.src = pin.dataset.logo || '';
+      modalLogo.alt = pin.dataset.label || 'Logo';
+      modalBack.classList.add('isOpen');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(){
+      modalBack.classList.remove('isOpen');
+      document.body.style.overflow = '';
+      modalLogo.src = '';
+    }
+    closeBtn.addEventListener('click', closeModal);
+    modalBack.addEventListener('click', (e)=>{ if (e.target === modalBack) closeModal(); });
+    window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
+
+    // Proximity helper (clickability)
+    function setProximity(clientX, clientY){
+      pins.forEach(p => p.classList.remove('isNear','isClosest'));
+
+      const dists = pins.map(p=>{
+        const r = p.getBoundingClientRect();
+        const cx = r.left + r.width/2;
+        const cy = r.top + r.height/2;
+        return { p, d: Math.hypot(clientX - cx, clientY - cy) };
+      }).sort((a,b)=>a.d-b.d);
+
+      const nearRadius = 56;
+      const closestRadius = 34;
+
+      if (!dists[0] || dists[0].d > nearRadius) return;
+
+      if (dists[0].d <= closestRadius) dists[0].p.classList.add('isClosest');
+      else dists[0].p.classList.add('isNear');
+
+      for (let i=1; i<Math.min(dists.length, 5); i++){
+        if (dists[i].d <= nearRadius) dists[i].p.classList.add('isNear');
+      }
+    }
+
+    if (matchMedia('(hover:hover)').matches){
+      map.addEventListener('mousemove', (e)=> setProximity(e.clientX, e.clientY));
+      map.addEventListener('mouseleave', ()=> pins.forEach(p => p.classList.remove('isNear','isClosest')));
+    } else {
+      map.addEventListener('touchstart', (e)=>{
+        const t = e.touches && e.touches[0];
+        if (!t) return;
+        setProximity(t.clientX, t.clientY);
+        clearTimeout(map._clearT);
+        map._clearT = setTimeout(()=> pins.forEach(p => p.classList.remove('isNear','isClosest')), 1800);
+      }, { passive:true });
+    }
+
+    // Pins -> modal (disabled while picking)
+    pins.forEach(pin=>{
+      pin.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        if (picking) return;
+        openFromPin(pin);
+      });
+    });
+
+    // ===== Pin Picker Tool =====
     function updatePickerUI(){
       pickerBtn.textContent = `Pin Picker: ${picking ? 'On' : 'Off'}`;
-      if(!picking) readout.classList.remove('show');
+      modeBtn.disabled = !picking;
+      modeBtn.textContent = `Mode: ${pickerMode === 'mobile' ? 'Mobile' : 'Desktop'}`;
+      if (!picking) readout.classList.remove('show');
     }
+    updatePickerUI();
 
     pickerBtn.addEventListener('click', ()=>{
       picking = !picking;
-      updatePickerUI();
       showToast(picking ? 'Pin Picker On' : 'Pin Picker Off');
+      updatePickerUI();
+    });
+
+    modeBtn.addEventListener('click', ()=>{
+      pickerMode = (pickerMode === 'mobile') ? 'desktop' : 'mobile';
+      showToast(`Mode: ${pickerMode}`);
+      updatePickerUI();
     });
 
     function percentsFromEvent(e){
@@ -525,7 +624,6 @@
       return { x, y };
     }
 
-    // Live readout only when picking
     map.addEventListener('mousemove', (e)=>{
       if (!picking) return;
       const { x, y } = percentsFromEvent(e);
@@ -538,66 +636,24 @@
       readout.classList.remove('show');
     });
 
-    // Subtle parallax (hover devices)
-    if (matchMedia('(hover:hover)').matches){
-      map.addEventListener('mousemove', (e)=>{
-        const r = map.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width - 0.5;
-        const py = (e.clientY - r.top) / r.height - 0.5;
-        map.style.transform = `scale(1.008) translate(${px * 6}px, ${py * 6}px)`;
-      });
-      map.addEventListener('mouseleave', ()=>{
-        map.style.transform = '';
-      });
-    }
-
-    // Map click -> copy snippet when picking
+    // Click map -> copy the right snippet for the selected mode
     map.addEventListener('click', async (e)=>{
       if (!picking) return;
       const { x, y } = percentsFromEvent(e);
       const left = x.toFixed(1);
       const top  = y.toFixed(1);
-      const snippet = `style="left:${left}%; top:${top}%"`;
+
+      const snippet = (pickerMode === 'mobile')
+        ? `data-m-left="${left}" data-m-top="${top}"`
+        : `data-d-left="${left}" data-d-top="${top}"`;
+
       try{
         await navigator.clipboard.writeText(snippet);
         showToast(`Copied: ${snippet}`);
       }catch{
-        showToast(`Pin: ${left}% , ${top}%`);
+        showToast(`Use: ${snippet}`);
       }
     });
-
-    // Pins -> modal (when not picking)
-    document.querySelectorAll('.pin').forEach(pin=>{
-      pin.addEventListener('click', (e)=>{
-        e.stopPropagation();
-        if (picking) return;
-
-        modalTitle.textContent = pin.dataset.label || 'Location';
-        modalCaption.textContent = pin.dataset.caption || '';
-        modalLogo.src = pin.dataset.logo || '';
-        modalLogo.alt = pin.dataset.label || 'Logo';
-
-        modalBack.classList.add('isOpen');
-        document.body.style.overflow = 'hidden';
-      });
-    });
-
-    function closeModal(){
-      modalBack.classList.remove('isOpen');
-      document.body.style.overflow = '';
-      modalLogo.src = '';
-    }
-    closeBtn.addEventListener('click', closeModal);
-    modalBack.addEventListener('click', (e)=>{ if (e.target === modalBack) closeModal(); });
-
-    // Keep keyboard Escape support
-    window.addEventListener('keydown', (e)=>{
-      if (e.key === 'Escape' && modalBack.classList.contains('isOpen')){
-        closeModal();
-      }
-    });
-
-    updatePickerUI();
   </script>
 </body>
 </html>
