@@ -145,7 +145,7 @@
       display:flex;
       gap: 18px;
       /* gutter / white edge control */
-      padding: 10px 16px 16px; /* (tweak left/right here) */
+      padding: 10px 16px 16px;
       scroll-snap-type: x mandatory;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -527,7 +527,7 @@
     }
 
     /* ==============================
-       ✅ NEW: CREDENTIALS (tall 3-card rail)
+       ✅ CREDENTIALS (tall 3-card rail)
        ============================== */
     .credWrap{
       border-radius: 34px;
@@ -541,7 +541,7 @@
       align-items:flex-end;
       justify-content:space-between;
       gap: 16px;
-      padding: 18px 18px 10px;
+      padding: 18px 18px 10px; /* mobile stays fine */
     }
     .credHead h2{
       margin:0;
@@ -556,7 +556,6 @@
     .credRail{
       display:flex;
       gap: 18px;
-      /* "alternating gutter" vs hero rail */
       padding: 14px 16px 18px;
       overflow-x:auto;
       -webkit-overflow-scrolling: touch;
@@ -564,6 +563,11 @@
       scrollbar-width:none;
     }
     .credRail::-webkit-scrollbar{ display:none; }
+
+    /* ✅ Desktop gutter alignment: match header to rail padding (same as hero header feel) */
+    @media (min-width: 861px){
+      .credHead{ padding-left: 16px; padding-right: 16px; }
+    }
 
     .credFade{
       pointer-events:none;
@@ -590,7 +594,7 @@
       border: 1px solid rgba(17,17,17,.10);
       box-shadow: 0 18px 55px rgba(0,0,0,.10);
       overflow:hidden;
-      min-height: 520px; /* tall */
+      min-height: 520px;
       display:flex;
       flex-direction:column;
     }
