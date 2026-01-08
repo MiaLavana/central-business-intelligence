@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Central Business Intelligence</title>
-  <meta name="description" content="Education map with interactive pins and a logo-first modal." />
+  <meta name="description" content="About + How I Work + Education map with interactive pins and a logo-first modal." />
 
   <style>
     :root{
@@ -68,6 +68,26 @@
       flex-wrap: wrap;
     }
 
+    .navLink{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(11,11,15,.10);
+      background: rgba(11,11,15,.03);
+      color: rgba(11,11,15,.78);
+      font-weight: 650;
+      font-size: 13px;
+      text-decoration:none;
+      transition: transform .18s var(--ease), background .18s var(--ease);
+      user-select:none;
+      white-space: nowrap;
+      cursor:pointer;
+    }
+    .navLink:hover{ background: rgba(11,11,15,.05); }
+    .navLink:active{ transform: scale(.98); }
+
     .btn{
       border: 1px solid rgba(11,11,15,.12);
       background: rgba(11,11,15,.04);
@@ -79,17 +99,15 @@
       transition: transform .18s var(--ease), background .18s var(--ease);
       user-select:none;
       white-space: nowrap;
+      color: rgba(11,11,15,.82);
     }
     .btn:hover{ background: rgba(11,11,15,.06); }
     .btn:active{ transform: scale(.98); }
-    .btn:disabled{
-      opacity:.45;
-      cursor: default;
-    }
+    .btn:disabled{ opacity:.45; cursor: default; }
 
     /* ======= HERO ======= */
     .hero{
-      padding: 64px 0 34px;
+      padding: 64px 0 18px;
       background:
         radial-gradient(1100px 520px at 50% -10%, rgba(11,11,15,.06), transparent 58%),
         radial-gradient(900px 420px at 10% 10%, rgba(11,11,15,.03), transparent 55%),
@@ -98,7 +116,7 @@
     .heroCopy{
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 18px 22px;
+      padding: 0 18px 18px;
     }
     .eyebrow{
       margin:0 0 10px;
@@ -119,6 +137,34 @@
       line-height: 1.5;
       color: var(--muted);
       max-width: 74ch;
+    }
+
+    /* ======= About / How I Work section ======= */
+    .section{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 18px 14px;
+    }
+    .card{
+      border: 1px solid rgba(11,11,15,.08);
+      background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.68));
+      border-radius: 28px;
+      padding: 22px 22px 20px;
+      box-shadow: 0 14px 44px rgba(0,0,0,.06);
+      backdrop-filter: blur(14px);
+    }
+    .cardTitle{
+      margin:0;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .cardBody{
+      margin: 10px 0 0;
+      font-size: 15px;
+      line-height: 1.55;
+      color: rgba(11,11,15,.70);
+      max-width: 90ch;
     }
 
     /* ======= FULL BLEED MAP ======= */
@@ -143,7 +189,6 @@
       .map{ aspect-ratio: 4 / 5; }
     }
 
-    /* Subtle Apple motion: gentle parallax on hover devices */
     @media (hover:hover){
       .map{
         will-change: transform;
@@ -168,15 +213,12 @@
       transition: transform .18s var(--ease), box-shadow .18s var(--ease);
       z-index: 2;
     }
-
-    /* Bigger invisible hit area */
     .pin::before{
       content:"";
       position:absolute;
       inset:-18px;
       border-radius:999px;
     }
-
     .pin::after{
       content:"";
       position:absolute;
@@ -188,7 +230,6 @@
       animation: pulse 2.2s var(--ease) infinite;
       pointer-events:none;
     }
-
     .pin[data-i="2"]::after{ animation-delay: .25s; }
     .pin[data-i="3"]::after{ animation-delay: .5s; }
     .pin[data-i="4"]::after{ animation-delay: .75s; }
@@ -201,7 +242,6 @@
       100%{ transform: scale(1.65); opacity:0; }
     }
 
-    /* Proximity states */
     .pin.isNear{
       --scale: 1.55;
       z-index: 10;
@@ -230,10 +270,7 @@
       transform: translateY(6px);
       transition: opacity .18s var(--ease), transform .18s var(--ease);
     }
-    .readout.show{
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .readout.show{ opacity: 1; transform: translateY(0); }
 
     /* ======= MODAL (logo-first) ======= */
     .modalBack{
@@ -317,10 +354,7 @@
       transform: scale(.96);
       transition: opacity .35s ease, transform .35s ease;
     }
-    .modalBack.isOpen .logoHero img{
-      opacity: 1;
-      transform: scale(1);
-    }
+    .modalBack.isOpen .logoHero img{ opacity: 1; transform: scale(1); }
 
     .meta{
       text-align:center;
@@ -341,7 +375,6 @@
       max-width: 72ch;
     }
 
-    /* Toast */
     .toast{
       position: fixed;
       left: 50%;
@@ -372,9 +405,10 @@
 <body>
   <div class="nav">
     <div class="navInner">
-      <div class="brand"><span class="dot"></span> Central Business Intelligence</div>
+      <div class="brand">
+        <span class="dot"></span> About
+      </div>
 
-      <!-- ✅ Pin picker controls -->
       <div class="navRight">
         <button class="btn" id="pickerBtn" type="button">Pin Picker: Off</button>
         <button class="btn" id="modeBtn" type="button" disabled>Mode: Mobile</button>
@@ -382,19 +416,30 @@
     </div>
   </div>
 
-  <main class="hero">
+  <main class="hero" id="about">
     <section class="heroCopy">
-      <p class="eyebrow">Education Map</p>
-      <h1>Places that shaped my path.</h1>
-      <p class="sub">Tap a pin to open details.</p>
+      <p class="eyebrow">About</p>
+      <h1>How I Work</h1>
+      <p class="sub">
+        I’m deeply passionate about technology, the arts, and humanitarian work because all three shape how people live, express themselves, and move through the world. My work in software has given me a front-row seat to decision-making at scale, and I’ve learned how to translate technical choices into outcomes that people actually feel.
+      </p>
     </section>
 
-    <section class="bleed">
+    <!-- Optional: a slightly more “section” feel while staying Apple-clean -->
+    <section class="section" id="how-i-work">
+      <div class="card">
+        <h2 class="cardTitle">How I Work</h2>
+        <p class="cardBody">
+          I’m deeply passionate about technology, the arts, and humanitarian work because all three shape how people live, express themselves, and move through the world. My work in software has given me a front-row seat to decision-making at scale, and I’ve learned how to translate technical choices into outcomes that people actually feel.
+        </p>
+      </div>
+    </section>
+
+    <!-- Education map -->
+    <section class="bleed" aria-label="Education map section">
       <div class="map" id="map" aria-label="World map with location pins">
 
-        <!-- Pins now store BOTH sets: desktop (d) and mobile (m).
-             JS applies the correct set automatically based on screen width. -->
-
+        <!-- Desktop + Mobile coordinates stored per pin -->
         <button class="pin" data-i="1"
           data-label="California"
           data-logo="assets/logos/UCR.png"
@@ -497,7 +542,7 @@
 
     const mqMobile = matchMedia('(max-width: 860px)');
     let picking = false;
-    let pickerMode = 'mobile'; // default since you're finding mobile coords
+    let pickerMode = 'mobile';
 
     function showToast(text){
       toast.textContent = text;
@@ -521,7 +566,7 @@
     mqMobile.addEventListener?.('change', applyPinPositions);
     window.addEventListener('resize', applyPinPositions);
 
-    // Subtle parallax (hover devices)
+    // Parallax (hover devices)
     if (matchMedia('(hover:hover)').matches){
       map.addEventListener('mousemove', (e)=>{
         const r = map.getBoundingClientRect();
@@ -550,7 +595,7 @@
     modalBack.addEventListener('click', (e)=>{ if (e.target === modalBack) closeModal(); });
     window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
 
-    // Proximity helper (clickability)
+    // Proximity helper
     function setProximity(clientX, clientY){
       pins.forEach(p => p.classList.remove('isNear','isClosest'));
 
@@ -596,7 +641,7 @@
       });
     });
 
-    // ===== Pin Picker Tool =====
+    // Pin Picker UI
     function updatePickerUI(){
       pickerBtn.textContent = `Pin Picker: ${picking ? 'On' : 'Off'}`;
       modeBtn.disabled = !picking;
@@ -636,9 +681,9 @@
       readout.classList.remove('show');
     });
 
-    // Click map -> copy the right snippet for the selected mode
     map.addEventListener('click', async (e)=>{
       if (!picking) return;
+
       const { x, y } = percentsFromEvent(e);
       const left = x.toFixed(1);
       const top  = y.toFixed(1);
