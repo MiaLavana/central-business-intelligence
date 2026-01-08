@@ -394,7 +394,7 @@
     .readout.show{ opacity:1; transform: translateY(0); }
 
     /* ==============================
-       ✅ Logo pill rail (under map)
+       ✅ Trust title style (we reuse for Credentials heading)
        ============================== */
     .trustTitle{
       margin: 0 0 14px;
@@ -526,14 +526,13 @@
     }
 
     /* ==============================
-       ✅ CREDENTIALS (3 separate tiles, no outer tile)
+       ✅ CREDENTIALS (3 separate tiles)
        ============================== */
     .credRailShell{ position: relative; }
     .credViewport{ overflow:hidden; border-radius: calc(var(--tileRadius) + 6px); }
     .credRail{
       display:flex;
       gap: 18px;
-      /* matches hero rail gutter rhythm */
       padding: 10px 16px 16px;
       overflow-x:auto;
       -webkit-overflow-scrolling: touch;
@@ -887,6 +886,7 @@
 
   <!-- Main content -->
   <main class="wrap">
+
     <!-- Trust strip -->
     <section class="section" aria-label="Trust strip">
       <h2 class="trustTitle">Educated across leading universities and companies</h2>
@@ -970,10 +970,10 @@
       </div>
     </section>
 
-    <!-- ✅ Credentials (heading + 3 separate tiles) -->
+    <!-- ✅ Credentials (heading matches trustTitle) -->
     <section class="section" id="credentials" aria-label="Credentials">
       <div class="sectionTitleRow">
-        <div class="kicker">Credentials</div>
+        <h2 class="trustTitle" style="margin:0;">Credentials</h2>
         <div class="railNav" aria-label="Credentials carousel dots">
           <div class="dots" id="credDots"></div>
         </div>
