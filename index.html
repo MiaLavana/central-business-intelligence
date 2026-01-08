@@ -83,7 +83,6 @@
       border-color: rgba(255,255,255,.92);
     }
 
-    /* Pin tools (JU pill vibe) */
     .tools{
       display:flex;
       gap: 10px;
@@ -130,7 +129,7 @@
     }
 
     /* ==============================
-       HERO RAIL (EXACT JU sizing)
+       HERO RAIL (JU exact)
        ============================== */
     .heroRail{ position: relative; margin-top: 10px; }
     .railViewport{ overflow: hidden; border-radius: calc(var(--tileRadius) + 6px); }
@@ -165,7 +164,7 @@
     .tile{
       scroll-snap-align: start;
       flex: 0 0 auto;
-      width: min(860px, calc(100vw - 64px)); /* JU exact */
+      width: min(860px, calc(100vw - 64px));
       border-radius: var(--tileRadius);
       background: var(--cardBg);
       border: 1px solid var(--cardStroke);
@@ -174,32 +173,31 @@
       position: relative;
       transform: translateZ(0);
       transition: transform .22s var(--easeApple), box-shadow .22s var(--easeApple);
-      min-height: 340px; /* JU exact */
+      min-height: 340px;
     }
     .tile:hover{ transform: translateY(-2px); box-shadow: var(--shadowHover); }
 
-    .tileGrid{ display:grid; grid-template-columns: 1.05fr .95fr; min-height: 340px; } /* JU exact */
+    .tileGrid{ display:grid; grid-template-columns: 1.05fr .95fr; min-height: 340px; }
     .tileBody{
-      padding: 44px 44px 40px; /* JU exact */
+      padding: 44px 44px 40px;
       display:flex;
       flex-direction:column;
       justify-content:center;
       gap: 16px;
     }
 
-    /* JU-style eyebrow + title */
     .tileEyebrow{
       display:flex;
       align-items:center;
       gap: 10px;
       font-weight: 800;
       letter-spacing:.25px;
-      text-transform: lowercase;   /* JU exact vibe */
-      font-size: 16px;            /* JU exact */
+      text-transform: lowercase;
+      font-size: 16px;
       opacity: .95;
     }
     .tileTitle{
-      font-size: clamp(28px, 3.2vw, 44px); /* JU exact */
+      font-size: clamp(28px, 3.2vw, 44px);
       letter-spacing: -.02em;
       line-height: 1.05;
       margin: 0;
@@ -210,7 +208,7 @@
       color: rgba(255,255,255,.86);
       font-size: 15px;
       line-height: 1.45;
-      max-width: 46ch; /* JU exact */
+      max-width: 46ch;
     }
 
     .tileCtaRow{
@@ -227,8 +225,8 @@
       gap:10px;
       height: 44px;
       padding: 0 16px;
-      border-radius: 12px;        /* JU exact */
-      font-weight: 800;           /* JU exact */
+      border-radius: 12px;
+      font-weight: 800;
       background: rgba(255,255,255,.92);
       color: #0b1b12;
       border: 1px solid rgba(255,255,255,.18);
@@ -248,7 +246,6 @@
       overflow:hidden;
     }
 
-    /* Backgrounds (JU-ish gradients) */
     .t1{ background: radial-gradient(900px 500px at 60% 40%, rgba(124,92,255,.32), rgba(0,0,0,0) 60%),
                    radial-gradient(680px 420px at 80% 10%, rgba(0,122,255,.30), rgba(0,0,0,0) 55%),
                    #061f4a; }
@@ -297,6 +294,25 @@
     }
     .dotBtn:hover{ transform: scale(1.2); }
     .dotBtn.isActive{ background: var(--dotOn); transform: scale(1.25); }
+
+    /* ==============================
+       FIX: keep tiles WIDE on mobile
+       ============================== */
+    @media (max-width: 980px){
+      /* Keep the rail wide carousel; do NOT collapse tileGrid into 1 column */
+      .tileGrid{ grid-template-columns: 1.05fr .95fr; }
+
+      /* Reduce height so it feels “wide”, not tall */
+      .tile{ min-height: 260px; }
+      .tileGrid{ min-height: 260px; }
+      .tileMedia{ min-height: 260px; }
+
+      /* Tighten padding like JU on small screens */
+      .tileBody{ padding: 28px 22px 22px; }
+
+      /* Hide tools (already) */
+      .tools{ display:none; }
+    }
 
     /* ==============================
        MAP
@@ -394,7 +410,6 @@
       z-index: 120;
     }
     .modalBack.isOpen{ display:flex; }
-
     .modal{
       width: min(900px, 100%);
       border-radius: 30px;
@@ -483,7 +498,7 @@
     }
 
     /* ==============================
-       HOT NEW RELEASES (EXACT JU sizing)
+       HOT NEW RELEASES (JU exact)
        ============================== */
     .hotWrap{
       border-radius: 34px;
@@ -499,7 +514,7 @@
       display:flex;
       align-items:center;
       gap: 10px;
-      font-size: 18px; /* JU exact */
+      font-size: 18px;
     }
     .hotTitle svg{ width: 18px; height: 18px; stroke:#fff; stroke-width:2.6; fill:none; }
 
@@ -517,7 +532,7 @@
     .hotCard{
       scroll-snap-align: start;
       flex: 0 0 auto;
-      width: min(320px, calc(100vw - 96px)); /* JU exact */
+      width: min(320px, calc(100vw - 96px));
       border-radius: 22px;
       background: rgba(255,255,255,.96);
       border: 1px solid rgba(0,0,0,.10);
@@ -527,7 +542,7 @@
     }
     .hotCard:hover{ transform: translateY(-2px); box-shadow: 0 26px 85px rgba(0,0,0,.16); }
     .hotImg{
-      height: 170px; /* JU exact */
+      height: 170px;
       background: linear-gradient(135deg, rgba(0,0,0,.08), rgba(0,0,0,.02));
     }
     .hotBody{ padding: 14px 14px 16px; }
@@ -550,20 +565,12 @@
       font-size: 12px;
       color: rgba(17,17,17,.62);
     }
-    .hotBrand .miniLogo svg{
-      width: 14px; height: 14px;
-      fill: none;
-      stroke: rgba(17,17,17,.70);
-      stroke-width: 2.4;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
     .hotName{
       margin: 0 0 10px;
       font-weight: 950;
       letter-spacing: -.01em;
       line-height: 1.15;
-      font-size: 18px; /* JU exact */
+      font-size: 18px;
     }
     .hotMeta{
       display:flex;
@@ -571,11 +578,10 @@
       justify-content:space-between;
       color: rgba(17,17,17,.60);
       font-weight: 700;
-      font-size: 13px; /* JU exact */
+      font-size: 13px;
       margin-top: 6px;
     }
 
-    /* Toast */
     .toast{
       position: fixed;
       left: 50%;
@@ -599,15 +605,6 @@
       font-size: 13px;
     }
 
-    /* Responsive */
-    @media (max-width: 980px){
-      .tileGrid{ grid-template-columns: 1fr; }
-      .tileMedia{ min-height: 240px; }
-      .tile{ min-height: unset; }
-      .tileBody{ padding: 34px 28px 26px; }
-      .tools{ display:none; }
-    }
-
     @media (prefers-reduced-motion: reduce){
       *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     }
@@ -616,7 +613,6 @@
 
 <body>
 
-  <!-- Top bar -->
   <div class="topbar">
     <div class="wrap">
       <nav class="tabs" aria-label="Page">
@@ -630,8 +626,6 @@
   </div>
 
   <main class="wrap">
-
-    <!-- HERO tiles (JU exact) -->
     <section class="section" aria-label="About tiles">
       <div class="sectionTitleRow">
         <div class="kicker">Central Business Intelligence</div>
@@ -647,7 +641,6 @@
         <div class="railViewport">
           <div class="rail" id="rail">
 
-            <!-- Tile 1 (no button) -->
             <article class="tile t1" aria-label="How I Work">
               <div class="tileGrid">
                 <div class="tileBody" style="color: rgba(255,255,255,.92);">
@@ -661,7 +654,6 @@
               </div>
             </article>
 
-            <!-- Tile 2 -->
             <article class="tile t2" aria-label="Trained Worldwide">
               <div class="tileGrid">
                 <div class="tileBody" style="color: rgba(255,255,255,.92);">
@@ -681,7 +673,6 @@
               </div>
             </article>
 
-            <!-- Tile 3 -->
             <article class="tile t3" aria-label="Portfolio">
               <div class="tileGrid">
                 <div class="tileBody">
@@ -705,67 +696,42 @@
         </div>
       </div>
     </section>
-
   </main>
 
-  <!-- Education Map -->
   <section class="bleed" id="education-map" aria-label="Education map section">
     <div class="map" id="map" aria-label="World map with location pins">
-
-      <button class="pin" data-i="1"
-        data-label="California"
-        data-logo="assets/logos/UCR.png"
+      <button class="pin" data-i="1" data-label="California" data-logo="assets/logos/UCR.png"
         data-caption="UCR School of Business • A. Gary Anderson Graduate School of Management"
-        data-d-left="36.4" data-d-top="30.4"
-        data-m-left="31.8" data-m-top="41.0"></button>
+        data-d-left="36.4" data-d-top="30.4" data-m-left="31.8" data-m-top="41.0"></button>
 
-      <button class="pin" data-i="2"
-        data-label="Milan"
-        data-logo="assets/logos/Bocconi.png"
+      <button class="pin" data-i="2" data-label="Milan" data-logo="assets/logos/Bocconi.png"
         data-caption="SDA Bocconi School of Management"
-        data-d-left="49.6" data-d-top="28.1"
-        data-m-left="49.3" data-m-top="39.8"></button>
+        data-d-left="49.6" data-d-top="28.1" data-m-left="49.3" data-m-top="39.8"></button>
 
-      <button class="pin" data-i="3"
-        data-label="Durham"
-        data-logo="assets/logos/Duke.png"
+      <button class="pin" data-i="3" data-label="Durham" data-logo="assets/logos/Duke.png"
         data-caption="Duke University"
-        data-d-left="40.1" data-d-top="29.5"
-        data-m-left="37.1" data-m-top="40.8"></button>
+        data-d-left="40.1" data-d-top="29.5" data-m-left="37.1" data-m-top="40.8"></button>
 
-      <button class="pin" data-i="4"
-        data-label="Cambridge"
-        data-logo="assets/logos/HBR.png"
+      <button class="pin" data-i="4" data-label="Cambridge" data-logo="assets/logos/HBR.png"
         data-caption="Harvard Business Review"
-        data-d-left="40.9" data-d-top="27.9"
-        data-m-left="39.1" data-m-top="39.8"></button>
+        data-d-left="40.9" data-d-top="27.9" data-m-left="39.1" data-m-top="39.8"></button>
 
-      <button class="pin" data-i="5"
-        data-label="Hong Kong"
-        data-logo="assets/logos/Hong-Kong.png"
+      <button class="pin" data-i="5" data-label="Hong Kong" data-logo="assets/logos/Hong-Kong.png"
         data-caption="The Hong Kong University of Science and Technology"
-        data-d-left="59.8" data-d-top="32.8"
-        data-m-left="63.4" data-m-top="41.6"></button>
+        data-d-left="59.8" data-d-top="32.8" data-m-left="63.4" data-m-top="41.6"></button>
 
-      <button class="pin" data-i="2"
-        data-label="New York City"
-        data-logo="assets/logos/NYU.png"
+      <button class="pin" data-i="2" data-label="New York City" data-logo="assets/logos/NYU.png"
         data-caption="NYU Tandon School of Engineering"
-        data-d-left="40.7" data-d-top="28.1"
-        data-m-left="38.1" data-m-top="40.2"></button>
+        data-d-left="40.7" data-d-top="28.1" data-m-left="38.1" data-m-top="40.2"></button>
 
-      <button class="pin" data-i="3"
-        data-label="New Haven"
-        data-logo="assets/logos/Yale.png"
+      <button class="pin" data-i="3" data-label="New Haven" data-logo="assets/logos/Yale.png"
         data-caption="Yale University"
-        data-d-left="41.3" data-d-top="28.1"
-        data-m-left="37.6" data-m-top="40.2"></button>
+        data-d-left="41.3" data-d-top="28.1" data-m-left="37.6" data-m-top="40.2"></button>
 
       <div class="readout" id="readout" aria-hidden="true"></div>
     </div>
   </section>
 
-  <!-- Hot New Releases (EXACT JU sizing) -->
   <main class="wrap">
     <section class="section" aria-label="Hot new releases">
       <div class="hotWrap">
@@ -775,61 +741,29 @@
         </h2>
 
         <div class="hotRail">
-          <article class="hotCard">
-            <div class="hotImg"></div>
-            <div class="hotBody">
-              <div class="hotBrand">
-                <span class="miniLogo" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.7 6.2.7-4.6 4 1.3 6-5.5-3.1-5.5 3.1 1.3-6-4.6-4 6.2-.7L12 3Z"/></svg>
-                </span>
-                Sales
-              </div>
-              <h3 class="hotName">ROI &amp; Forecast Calculators</h3>
-              <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
-            </div>
-          </article>
+          <article class="hotCard"><div class="hotImg"></div><div class="hotBody">
+            <div class="hotBrand"><span class="miniLogo">★</span> Sales</div>
+            <h3 class="hotName">ROI &amp; Forecast Calculators</h3>
+            <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
+          </div></article>
 
-          <article class="hotCard">
-            <div class="hotImg"></div>
-            <div class="hotBody">
-              <div class="hotBrand">
-                <span class="miniLogo" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.7 6.2.7-4.6 4 1.3 6-5.5-3.1-5.5 3.1 1.3-6-4.6-4 6.2-.7L12 3Z"/></svg>
-                </span>
-                Sales
-              </div>
-              <h3 class="hotName">Retail Sales Forecast Calculator</h3>
-              <div class="hotMeta"><span>FREE</span><span>★ 4.7</span></div>
-            </div>
-          </article>
+          <article class="hotCard"><div class="hotImg"></div><div class="hotBody">
+            <div class="hotBrand"><span class="miniLogo">★</span> Sales</div>
+            <h3 class="hotName">Retail Sales Forecast Calculator</h3>
+            <div class="hotMeta"><span>FREE</span><span>★ 4.7</span></div>
+          </div></article>
 
-          <article class="hotCard">
-            <div class="hotImg"></div>
-            <div class="hotBody">
-              <div class="hotBrand">
-                <span class="miniLogo" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.7 6.2.7-4.6 4 1.3 6-5.5-3.1-5.5 3.1 1.3-6-4.6-4 6.2-.7L12 3Z"/></svg>
-                </span>
-                Operations
-              </div>
-              <h3 class="hotName">Time Estimation: Three-Point (PERT)</h3>
-              <div class="hotMeta"><span>FREE</span><span>★ 4.9</span></div>
-            </div>
-          </article>
+          <article class="hotCard"><div class="hotImg"></div><div class="hotBody">
+            <div class="hotBrand"><span class="miniLogo">★</span> Operations</div>
+            <h3 class="hotName">Time Estimation: Three-Point (PERT)</h3>
+            <div class="hotMeta"><span>FREE</span><span>★ 4.9</span></div>
+          </div></article>
 
-          <article class="hotCard">
-            <div class="hotImg"></div>
-            <div class="hotBody">
-              <div class="hotBrand">
-                <span class="miniLogo" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.7 6.2.7-4.6 4 1.3 6-5.5-3.1-5.5 3.1 1.3-6-4.6-4 6.2-.7L12 3Z"/></svg>
-                </span>
-                Marketing
-              </div>
-              <h3 class="hotName">Marketing Impact Calculator</h3>
-              <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
-            </div>
-          </article>
+          <article class="hotCard"><div class="hotImg"></div><div class="hotBody">
+            <div class="hotBrand"><span class="miniLogo">★</span> Marketing</div>
+            <h3 class="hotName">Marketing Impact Calculator</h3>
+            <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
+          </div></article>
         </div>
       </div>
     </section>
@@ -844,7 +778,6 @@
     <div class="footer">Built clean. Built to scale.</div>
   </main>
 
-  <!-- Modal -->
   <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-label="Location details">
     <div class="modal">
       <div class="modalTop">
@@ -871,14 +804,11 @@
   <div class="toast" id="toast">Copied</div>
 
   <script>
-    // ==============================
-    // HERO RAIL: dots + drag (JU exact)
-    // ==============================
+    // HERO RAIL dots + drag
     const rail = document.getElementById('rail');
     const dotsWrap = document.getElementById('dots');
 
     function tiles(){ return Array.from(rail?.querySelectorAll?.('.tile') || []); }
-
     function tileStep(){
       const firstTile = rail?.querySelector?.('.tile');
       if(!firstTile) return 600;
@@ -886,7 +816,6 @@
       const gap = parseFloat(styles.columnGap || styles.gap || 18);
       return firstTile.getBoundingClientRect().width + gap;
     }
-
     function buildDots(){
       if(!dotsWrap) return;
       dotsWrap.innerHTML = "";
@@ -895,13 +824,10 @@
         b.className = 'dotBtn' + (i === 0 ? ' isActive' : '');
         b.type = 'button';
         b.setAttribute('aria-label', 'Go to slide ' + (i+1));
-        b.addEventListener('click', () => {
-          rail?.scrollTo({ left: i * tileStep(), behavior: 'smooth' });
-        });
+        b.addEventListener('click', () => rail?.scrollTo({ left: i * tileStep(), behavior: 'smooth' }));
         dotsWrap.appendChild(b);
       });
     }
-
     function setActiveDot(){
       if(!rail || !dotsWrap) return;
       const step = tileStep();
@@ -910,10 +836,7 @@
       btns.forEach((b, i) => b.classList.toggle('isActive', i === Math.max(0, Math.min(idx, btns.length-1))));
     }
 
-    let isDown = false;
-    let startX = 0;
-    let scrollStart = 0;
-
+    let isDown = false, startX = 0, scrollStart = 0;
     rail?.addEventListener('pointerdown', (e) => {
       isDown = true;
       rail.setPointerCapture(e.pointerId);
@@ -921,32 +844,26 @@
       scrollStart = rail.scrollLeft;
       rail.style.scrollBehavior = 'auto';
     });
-
     rail?.addEventListener('pointermove', (e) => {
       if(!isDown) return;
       const dx = (e.clientX - startX);
       rail.scrollLeft = scrollStart - dx;
       setActiveDot();
     });
-
     function endDrag(){
       if(!isDown) return;
       isDown = false;
       if(rail) rail.style.scrollBehavior = '';
       setActiveDot();
     }
-
     rail?.addEventListener('pointerup', endDrag);
     rail?.addEventListener('pointercancel', endDrag);
     rail?.addEventListener('mouseleave', endDrag);
     rail?.addEventListener('scroll', () => { setActiveDot(); }, { passive:true });
     window.addEventListener('resize', () => { buildDots(); setActiveDot(); });
-
     buildDots(); setActiveDot();
 
-    // ==============================
-    // MAP: pins + modal + picker
-    // ==============================
+    // MAP pins + modal + picker
     const map = document.getElementById('map');
     const pins = Array.from(document.querySelectorAll('.pin'));
     const readout = document.getElementById('readout');
@@ -1005,20 +922,17 @@
       modalBack.classList.add('isOpen');
       document.body.style.overflow = 'hidden';
     }
-
     function closeModal(){
       modalBack.classList.remove('isOpen');
       document.body.style.overflow = '';
       modalLogo.src = '';
     }
-
     closeBtn.addEventListener('click', closeModal);
     modalBack.addEventListener('click', (e)=>{ if (e.target === modalBack) closeModal(); });
     window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
 
     function setProximity(clientX, clientY){
       pins.forEach(p => p.classList.remove('isNear','isClosest'));
-
       const dists = pins.map(p=>{
         const r = p.getBoundingClientRect();
         const cx = r.left + r.width/2;
@@ -1026,9 +940,7 @@
         return { p, d: Math.hypot(clientX - cx, clientY - cy) };
       }).sort((a,b)=>a.d-b.d);
 
-      const nearRadius = 56;
-      const closestRadius = 34;
-
+      const nearRadius = 56, closestRadius = 34;
       if (!dists[0] || dists[0].d > nearRadius) return;
 
       if (dists[0].d <= closestRadius) dists[0].p.classList.add('isClosest');
@@ -1101,11 +1013,9 @@
 
     map.addEventListener('click', async (e)=>{
       if (!picking) return;
-
       const { x, y } = percentsFromEvent(e);
       const left = x.toFixed(1);
       const top  = y.toFixed(1);
-
       const snippet = (pickerMode === 'mobile')
         ? `data-m-left="${left}" data-m-top="${top}"`
         : `data-d-left="${left}" data-d-top="${top}"`;
