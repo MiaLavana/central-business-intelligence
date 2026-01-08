@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mia Lavana · Central Business Intelligence</title>
-  <meta name="description" content="About + Education Map + Calculators — Apple-clean, JU-polished." />
+  <meta name="description" content="About + Education Map + Calculators — JU-clean design system." />
 
   <style>
     :root{
@@ -44,7 +44,7 @@
     .wrap{ max-width: 1180px; margin: 0 auto; padding: 0 20px; }
 
     /* ==============================
-       TOP BAR (simple, like JU)
+       TOP BAR (JU style)
        ============================== */
     .topbar{
       background: rgba(0,0,0,.86);
@@ -83,7 +83,7 @@
       border-color: rgba(255,255,255,.92);
     }
 
-    /* Pin tools in topbar (JU pill vibe) */
+    /* Pin tools (JU pill vibe) */
     .tools{
       display:flex;
       gap: 10px;
@@ -109,7 +109,7 @@
     .toolBtn:disabled{ opacity:.45; cursor: default; }
 
     /* ==============================
-       HERO RAIL (JU wide tiles)
+       Sections
        ============================== */
     .section{ padding: 22px 0; }
     .sectionTitleRow{
@@ -129,6 +129,9 @@
       gap:10px;
     }
 
+    /* ==============================
+       HERO RAIL (EXACT JU sizing)
+       ============================== */
     .heroRail{ position: relative; margin-top: 10px; }
     .railViewport{ overflow: hidden; border-radius: calc(var(--tileRadius) + 6px); }
     .rail{
@@ -162,7 +165,7 @@
     .tile{
       scroll-snap-align: start;
       flex: 0 0 auto;
-      width: min(860px, calc(100vw - 64px));
+      width: min(860px, calc(100vw - 64px)); /* JU exact */
       border-radius: var(--tileRadius);
       background: var(--cardBg);
       border: 1px solid var(--cardStroke);
@@ -171,42 +174,45 @@
       position: relative;
       transform: translateZ(0);
       transition: transform .22s var(--easeApple), box-shadow .22s var(--easeApple);
-      min-height: 340px;
+      min-height: 340px; /* JU exact */
     }
     .tile:hover{ transform: translateY(-2px); box-shadow: var(--shadowHover); }
 
-    .tileGrid{ display:grid; grid-template-columns: 1.05fr .95fr; min-height: 340px; }
+    .tileGrid{ display:grid; grid-template-columns: 1.05fr .95fr; min-height: 340px; } /* JU exact */
     .tileBody{
-      padding: 44px 44px 40px;
+      padding: 44px 44px 40px; /* JU exact */
       display:flex;
       flex-direction:column;
       justify-content:center;
       gap: 16px;
     }
+
+    /* JU-style eyebrow + title */
     .tileEyebrow{
       display:flex;
       align-items:center;
       gap: 10px;
-      font-weight: 900;
+      font-weight: 800;
       letter-spacing:.25px;
-      text-transform: uppercase;
-      font-size: 12px;
+      text-transform: lowercase;   /* JU exact vibe */
+      font-size: 16px;            /* JU exact */
       opacity: .95;
     }
     .tileTitle{
-      font-size: clamp(30px, 3.6vw, 46px);
+      font-size: clamp(28px, 3.2vw, 44px); /* JU exact */
       letter-spacing: -.02em;
-      line-height: 1.04;
+      line-height: 1.05;
       margin: 0;
-      font-weight: 950;
+      font-weight: 900;
     }
     .tileDesc{
       margin: 0;
       color: rgba(255,255,255,.86);
       font-size: 15px;
       line-height: 1.45;
-      max-width: 54ch;
+      max-width: 46ch; /* JU exact */
     }
+
     .tileCtaRow{
       display:flex;
       gap: 12px;
@@ -221,8 +227,8 @@
       gap:10px;
       height: 44px;
       padding: 0 16px;
-      border-radius: 12px;
-      font-weight: 900;
+      border-radius: 12px;        /* JU exact */
+      font-weight: 800;           /* JU exact */
       background: rgba(255,255,255,.92);
       color: #0b1b12;
       border: 1px solid rgba(255,255,255,.18);
@@ -242,36 +248,25 @@
       overflow:hidden;
     }
 
-    /* Tile themes (JU-style gradients, but CBI vibe) */
-    .t1{
-      background:
-        radial-gradient(900px 500px at 60% 40%, rgba(124,92,255,.28), rgba(0,0,0,0) 60%),
-        radial-gradient(680px 420px at 80% 10%, rgba(0,122,255,.28), rgba(0,0,0,0) 55%),
-        #0b1b3c;
-    }
-    .t2{
-      background:
-        radial-gradient(900px 540px at 75% 55%, rgba(0,210,255,.20), rgba(0,0,0,0) 60%),
-        radial-gradient(680px 420px at 35% 20%, rgba(255,255,255,.14), rgba(0,0,0,0) 55%),
-        #0a53cf;
-    }
-    .t3{
-      background:
-        radial-gradient(900px 540px at 75% 50%, rgba(255,0,128,.10), rgba(0,0,0,0) 58%),
-        radial-gradient(720px 420px at 20% 30%, rgba(0,122,255,.12), rgba(0,0,0,0) 58%),
-        #fff;
-      color: #111;
-    }
+    /* Backgrounds (JU-ish gradients) */
+    .t1{ background: radial-gradient(900px 500px at 60% 40%, rgba(124,92,255,.32), rgba(0,0,0,0) 60%),
+                   radial-gradient(680px 420px at 80% 10%, rgba(0,122,255,.30), rgba(0,0,0,0) 55%),
+                   #061f4a; }
+    .t2{ background: radial-gradient(900px 540px at 75% 55%, rgba(0,210,255,.22), rgba(0,0,0,0) 60%),
+                   radial-gradient(680px 420px at 35% 20%, rgba(255,255,255,.16), rgba(0,0,0,0) 55%),
+                   #0558d4; }
+    .t3{ background: radial-gradient(900px 540px at 75% 50%, rgba(255,0,128,.14), rgba(0,0,0,0) 58%),
+                   radial-gradient(720px 420px at 20% 30%, rgba(0,122,255,.12), rgba(0,0,0,0) 58%),
+                   #fff; color:#111; }
     .t3 .tileDesc{ color: rgba(17,17,17,.70); }
     .t3 .cta{
       background: rgba(0,122,255,.92);
       color: #fff;
       border-color: rgba(0,122,255,.35);
     }
-    .t3 .tileEyebrow{ color: rgba(17,17,17,.75); }
 
     /* ==============================
-       Apple dots (carousel)
+       JU dots
        ============================== */
     .railNav{
       display:flex;
@@ -304,7 +299,7 @@
     .dotBtn.isActive{ background: var(--dotOn); transform: scale(1.25); }
 
     /* ==============================
-       MAP (full-bleed)
+       MAP
        ============================== */
     .bleed{
       width: 100vw;
@@ -488,7 +483,7 @@
     }
 
     /* ==============================
-       HOT NEW RELEASES (JU exact feel)
+       HOT NEW RELEASES (EXACT JU sizing)
        ============================== */
     .hotWrap{
       border-radius: 34px;
@@ -504,7 +499,7 @@
       display:flex;
       align-items:center;
       gap: 10px;
-      font-size: 18px;
+      font-size: 18px; /* JU exact */
     }
     .hotTitle svg{ width: 18px; height: 18px; stroke:#fff; stroke-width:2.6; fill:none; }
 
@@ -522,7 +517,7 @@
     .hotCard{
       scroll-snap-align: start;
       flex: 0 0 auto;
-      width: min(320px, calc(100vw - 96px));
+      width: min(320px, calc(100vw - 96px)); /* JU exact */
       border-radius: 22px;
       background: rgba(255,255,255,.96);
       border: 1px solid rgba(0,0,0,.10);
@@ -531,19 +526,17 @@
       transition: transform .22s var(--easeApple), box-shadow .22s var(--easeApple);
     }
     .hotCard:hover{ transform: translateY(-2px); box-shadow: 0 26px 85px rgba(0,0,0,.16); }
-
     .hotImg{
-      height: 170px;
+      height: 170px; /* JU exact */
       background: linear-gradient(135deg, rgba(0,0,0,.08), rgba(0,0,0,.02));
     }
     .hotBody{ padding: 14px 14px 16px; }
-
     .hotBrand{
       display:flex;
       align-items:center;
       gap: 10px;
       color: rgba(17,17,17,.68);
-      font-weight: 900;
+      font-weight: 800;
       font-size: 14px;
       margin-bottom: 6px;
     }
@@ -557,21 +550,28 @@
       font-size: 12px;
       color: rgba(17,17,17,.62);
     }
-
+    .hotBrand .miniLogo svg{
+      width: 14px; height: 14px;
+      fill: none;
+      stroke: rgba(17,17,17,.70);
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
     .hotName{
       margin: 0 0 10px;
       font-weight: 950;
       letter-spacing: -.01em;
       line-height: 1.15;
-      font-size: 18px;
+      font-size: 18px; /* JU exact */
     }
     .hotMeta{
       display:flex;
       align-items:center;
       justify-content:space-between;
       color: rgba(17,17,17,.60);
-      font-weight: 800;
-      font-size: 13px;
+      font-weight: 700;
+      font-size: 13px; /* JU exact */
       margin-top: 6px;
     }
 
@@ -593,7 +593,6 @@
     }
     .toast.show{ opacity: 1; }
 
-    /* Footer */
     .footer{
       padding: 18px 0 44px;
       color: rgba(17,17,17,.55);
@@ -606,7 +605,7 @@
       .tileMedia{ min-height: 240px; }
       .tile{ min-height: unset; }
       .tileBody{ padding: 34px 28px 26px; }
-      .tools{ display:none; } /* keep topbar clean on small screens */
+      .tools{ display:none; }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -623,7 +622,6 @@
       <nav class="tabs" aria-label="Page">
         <a class="tab isActive" href="#"><span><strong>About</strong></span></a>
       </nav>
-
       <div class="tools" aria-label="Pin tools">
         <button class="toolBtn" id="pickerBtn" type="button">Pin Picker: Off</button>
         <button class="toolBtn" id="modeBtn" type="button" disabled>Mode: Mobile</button>
@@ -633,7 +631,7 @@
 
   <main class="wrap">
 
-    <!-- Wide tiles (JU rail) -->
+    <!-- HERO tiles (JU exact) -->
     <section class="section" aria-label="About tiles">
       <div class="sectionTitleRow">
         <div class="kicker">Central Business Intelligence</div>
@@ -653,7 +651,7 @@
             <article class="tile t1" aria-label="How I Work">
               <div class="tileGrid">
                 <div class="tileBody" style="color: rgba(255,255,255,.92);">
-                  <div class="tileEyebrow">About</div>
+                  <div class="tileEyebrow">about</div>
                   <h3 class="tileTitle">How I Work</h3>
                   <p class="tileDesc">
                     I’m deeply passionate about technology, the arts, and humanitarian work because all three shape how people live, express themselves, and move through the world. My work in software has given me a front-row seat to decision-making at scale, and I’ve learned how to translate technical choices into outcomes that people actually feel.
@@ -667,7 +665,7 @@
             <article class="tile t2" aria-label="Trained Worldwide">
               <div class="tileGrid">
                 <div class="tileBody" style="color: rgba(255,255,255,.92);">
-                  <div class="tileEyebrow">Experience</div>
+                  <div class="tileEyebrow">experience</div>
                   <h3 class="tileTitle">Trained Worldwide</h3>
                   <p class="tileDesc">
                     My education spans institutions across the United States, Europe, and Asia. Each experience sharpened how I think about systems, leadership, and execution—shaping a global perspective grounded in real-world application rather than theory alone.
@@ -687,7 +685,7 @@
             <article class="tile t3" aria-label="Portfolio">
               <div class="tileGrid">
                 <div class="tileBody">
-                  <div class="tileEyebrow">Work</div>
+                  <div class="tileEyebrow">work</div>
                   <h3 class="tileTitle">Start Exploring My Portfolio</h3>
                   <p class="tileDesc">
                     From analytics and software to design-forward systems, my work focuses on clarity, scalability, and intention. Every project reflects an obsession with structure, usability, and outcomes that hold up in the real world.
@@ -710,11 +708,10 @@
 
   </main>
 
-  <!-- Education map (full bleed) -->
+  <!-- Education Map -->
   <section class="bleed" id="education-map" aria-label="Education map section">
     <div class="map" id="map" aria-label="World map with location pins">
 
-      <!-- Desktop + Mobile coordinates -->
       <button class="pin" data-i="1"
         data-label="California"
         data-logo="assets/logos/UCR.png"
@@ -768,7 +765,7 @@
     </div>
   </section>
 
-  <!-- Hot New Releases (after map) -->
+  <!-- Hot New Releases (EXACT JU sizing) -->
   <main class="wrap">
     <section class="section" aria-label="Hot new releases">
       <div class="hotWrap">
@@ -777,11 +774,16 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
         </h2>
 
-        <div class="hotRail" id="hotRail">
+        <div class="hotRail">
           <article class="hotCard">
             <div class="hotImg"></div>
             <div class="hotBody">
-              <div class="hotBrand"><span class="miniLogo">S</span> Sales</div>
+              <div class="hotBrand">
+                <span class="miniLogo" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.7 6.2.7-4.6 4 1.3 6-5.5-3.1-5.5 3.1 1.3-6-4.6-4 6.2-.7L12 3Z"/></svg>
+                </span>
+                Sales
+              </div>
               <h3 class="hotName">ROI &amp; Forecast Calculators</h3>
               <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
             </div>
@@ -790,7 +792,12 @@
           <article class="hotCard">
             <div class="hotImg"></div>
             <div class="hotBody">
-              <div class="hotBrand"><span class="miniLogo">S</span> Sales</div>
+              <div class="hotBrand">
+                <span class="miniLogo" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.7 6.2.7-4.6 4 1.3 6-5.5-3.1-5.5 3.1 1.3-6-4.6-4 6.2-.7L12 3Z"/></svg>
+                </span>
+                Sales
+              </div>
               <h3 class="hotName">Retail Sales Forecast Calculator</h3>
               <div class="hotMeta"><span>FREE</span><span>★ 4.7</span></div>
             </div>
@@ -799,7 +806,12 @@
           <article class="hotCard">
             <div class="hotImg"></div>
             <div class="hotBody">
-              <div class="hotBrand"><span class="miniLogo">O</span> Operations</div>
+              <div class="hotBrand">
+                <span class="miniLogo" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.7 6.2.7-4.6 4 1.3 6-5.5-3.1-5.5 3.1 1.3-6-4.6-4 6.2-.7L12 3Z"/></svg>
+                </span>
+                Operations
+              </div>
               <h3 class="hotName">Time Estimation: Three-Point (PERT)</h3>
               <div class="hotMeta"><span>FREE</span><span>★ 4.9</span></div>
             </div>
@@ -808,7 +820,12 @@
           <article class="hotCard">
             <div class="hotImg"></div>
             <div class="hotBody">
-              <div class="hotBrand"><span class="miniLogo">M</span> Marketing</div>
+              <div class="hotBrand">
+                <span class="miniLogo" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.7 6.2.7-4.6 4 1.3 6-5.5-3.1-5.5 3.1 1.3-6-4.6-4 6.2-.7L12 3Z"/></svg>
+                </span>
+                Marketing
+              </div>
               <h3 class="hotName">Marketing Impact Calculator</h3>
               <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
             </div>
@@ -817,7 +834,6 @@
       </div>
     </section>
 
-    <!-- Portfolio placeholder (next build) -->
     <section class="section" id="portfolio" aria-label="Portfolio placeholder">
       <div class="kicker">Portfolio</div>
       <p style="margin:10px 0 0; color: rgba(17,17,17,.65); font-weight:700;">
@@ -856,7 +872,7 @@
 
   <script>
     // ==============================
-    // HERO RAIL: dots + drag (JU)
+    // HERO RAIL: dots + drag (JU exact)
     // ==============================
     const rail = document.getElementById('rail');
     const dotsWrap = document.getElementById('dots');
@@ -894,7 +910,6 @@
       btns.forEach((b, i) => b.classList.toggle('isActive', i === Math.max(0, Math.min(idx, btns.length-1))));
     }
 
-    // drag-to-scroll
     let isDown = false;
     let startX = 0;
     let scrollStart = 0;
@@ -972,7 +987,6 @@
     mqMobile.addEventListener?.('change', applyPinPositions);
     window.addEventListener('resize', applyPinPositions);
 
-    // map parallax (hover only)
     if (matchMedia('(hover:hover)').matches){
       map.addEventListener('mousemove', (e)=>{
         const r = map.getBoundingClientRect();
@@ -1002,7 +1016,6 @@
     modalBack.addEventListener('click', (e)=>{ if (e.target === modalBack) closeModal(); });
     window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
 
-    // Proximity helper
     function setProximity(clientX, clientY){
       pins.forEach(p => p.classList.remove('isNear','isClosest'));
 
@@ -1039,7 +1052,6 @@
       }, { passive:true });
     }
 
-    // Pins -> modal (disabled while picking)
     pins.forEach(pin=>{
       pin.addEventListener('click', (e)=>{
         e.stopPropagation();
@@ -1048,7 +1060,6 @@
       });
     });
 
-    // Pin picker UI
     function updatePickerUI(){
       pickerBtn.textContent = `Pin Picker: ${picking ? 'On' : 'Off'}`;
       modeBtn.disabled = !picking;
