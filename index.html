@@ -25,10 +25,14 @@
 
       --dot: rgba(17,17,17,.28);
       --dotOn: rgba(17,17,17,.85);
+
+      --green: #0FA958;
     }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
+    html{ scroll-behavior:smooth; }
+
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
@@ -524,11 +528,12 @@
       margin-top: 6px;
     }
 
+    /* ✅ keeps anchor targets from hiding under sticky topbar */
+    #education-map, #hot-new-releases, #credentials { scroll-margin-top: 70px; }
+
     /* ==============================
        ✅ CREDENTIALS — GUARANTEED NO CUT-OFF FLOATING CARDS
        ============================== */
-
-    /* Make absolutely sure no parent clips this section */
     #credentials{ overflow: visible; }
     #credentials .credRailShell{ overflow: visible; position: relative; }
     #credentials .credViewport{ overflow: visible; border-radius: 0; }
@@ -536,16 +541,11 @@
     #credentials .credRail{
       display:flex;
       gap: 18px;
-
-      /* base safe padding (mobile/tablet) */
       padding: 12px 14px 18px;
-
       overflow-x:auto;
       -webkit-overflow-scrolling: touch;
       scroll-snap-type: x mandatory;
       scrollbar-width:none;
-
-      /* snap must respect padding so cards never tuck under */
       scroll-padding-left: 14px;
       scroll-padding-right: 14px;
     }
@@ -554,10 +554,7 @@
     #credentials .credCard{
       scroll-snap-align: start;
       flex: 0 0 auto;
-
-      /* mobile-friendly width */
       width: min(520px, calc(100vw - 84px));
-
       border-radius: var(--tileRadius);
       background: rgba(255,255,255,.94);
       border: 1px solid rgba(17,17,17,.10);
@@ -568,7 +565,6 @@
       flex-direction:column;
     }
 
-    /* Desktop: stronger “floating” safe area */
     @media (min-width: 861px){
       #credentials .credRail{
         padding-left: 32px;
@@ -576,7 +572,6 @@
         scroll-padding-left: 32px;
         scroll-padding-right: 32px;
       }
-      /* Also make the card a bit narrower so it never kisses the edge */
       #credentials .credCard{
         width: min(520px, calc(100vw - 220px));
       }
@@ -772,6 +767,94 @@
       font-size: 13px;
     }
 
+    /* ===============================
+       Jet fly-by (assets/jet.png)
+       =============================== */
+    .planeFly{
+      position: fixed;
+      left: -320px;
+      top: 18%;
+      z-index: 99999;
+      pointer-events: none;
+      transform: translateZ(0);
+    }
+    .planeFly img{
+      width: 160px;
+      height: auto;
+      display:block;
+      filter:none;            /* ✅ prevents fading */
+      opacity: 1;
+      user-select:none;
+      -webkit-user-drag:none;
+      transform: rotate(-6deg);
+    }
+    @keyframes flyAcross{
+      0%   { transform: translateX(0) translateY(0); opacity: 0; }
+      10%  { opacity: 1; }
+      55%  { transform: translateX(calc(55vw + 140px)) translateY(-12px); }
+      100% { transform: translateX(calc(100vw + 520px)) translateY(4px); opacity: 0; }
+    }
+    .planeFly.isFlying{
+      animation: flyAcross 1.9s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+
+    /* ===============================
+       Popup: Coded by Mia Lavana
+       =============================== */
+    .popup {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 260px;
+      background: rgba(255,255,255,0.92);
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 14px;
+      z-index: 99998;
+
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    .popup.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .popupHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .popupText {
+      font-size: 14px;
+      font-weight: 650;
+      color: rgba(17,17,17,.90);
+    }
+    .popupPercent {
+      font-size: 13px;
+      color: rgba(0,0,0,0.6);
+      font-weight: 800;
+    }
+    .barWrap {
+      height: 8px;
+      width: 100%;
+      background: rgba(0,0,0,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: var(--green);
+      border-radius: 999px;
+    }
+
     @media (prefers-reduced-motion: reduce){
       *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     }
@@ -835,7 +918,8 @@
                   Built to work globally. Educated across the U.S., Europe, and Asia.
                 </p>
                 <div class="tileCtaRow">
-                  <a class="cta" href="#education-map">
+                  <!-- ✅ trip button (jet + scroll to map) -->
+                  <a class="cta" href="#education-map" id="tripBtn">
                     Let’s Take a Trip
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
                   </a>
@@ -854,7 +938,6 @@
                   From analytics and software to design-forward systems, my work focuses on clarity, scalability, and intention. Every project reflects an obsession with structure, usability, and outcomes that hold up in the real world.
                 </p>
                 <div class="tileCtaRow">
-                  <!-- ✅ UPDATED: button text + anchor -->
                   <a class="cta" href="#hot-new-releases">
                     Hot New Releases
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
@@ -922,7 +1005,6 @@
       </div>
     </section>
 
-    <!-- ✅ UPDATED: add id so the hero button can jump here -->
     <section class="section" id="hot-new-releases" aria-label="Hot new releases">
       <div class="hotWrap">
         <h2 class="hotTitle">
@@ -1043,9 +1125,21 @@
 
   <div class="toast" id="toast">Copied</div>
 
+  <!-- ✅ Popup markup -->
+  <div class="popup" id="popup" aria-live="polite" aria-atomic="true">
+    <div class="popupHeader">
+      <div class="popupText">Coded by Mia Lavana</div>
+      <div class="popupPercent" id="popupPercent">0%</div>
+    </div>
+    <div class="barWrap">
+      <div class="bar" id="bar"></div>
+    </div>
+  </div>
+
   <script>
     // =========================================================
     // Reusable rail init (dots + drag) — used for hero + credentials
+    // ✅ Updated so links/buttons inside the rail still click + jump.
     // =========================================================
     function initSnapRail({ railEl, dotsEl, itemSelector }){
       if(!railEl || !dotsEl) return;
@@ -1077,25 +1171,32 @@
       }
 
       let isDown=false, startX=0, scrollStart=0;
+
       railEl.addEventListener('pointerdown', (e)=>{
+        // ✅ If the user clicked a link/button in a tile, do NOT start drag capture.
+        if (e.target.closest('a, button, input, textarea, select, label')) return;
+
         isDown = true;
         railEl.setPointerCapture(e.pointerId);
         startX = e.clientX;
         scrollStart = railEl.scrollLeft;
         railEl.style.scrollBehavior = 'auto';
       });
+
       railEl.addEventListener('pointermove', (e)=>{
         if(!isDown) return;
         const dx = (e.clientX - startX);
         railEl.scrollLeft = scrollStart - dx;
         setActive();
       });
+
       function endDrag(){
         if(!isDown) return;
         isDown = false;
         railEl.style.scrollBehavior = '';
         setActive();
       }
+
       railEl.addEventListener('pointerup', endDrag);
       railEl.addEventListener('pointercancel', endDrag);
       railEl.addEventListener('mouseleave', endDrag);
@@ -1121,7 +1222,45 @@
       itemSelector: '.credCard'
     });
 
+    // =========================================================
+    // Trip button → jet fly-by (assets/jet.png) + smooth anchor remains
+    // =========================================================
+    (function(){
+      const tripBtn = document.getElementById('tripBtn');
+      if(!tripBtn) return;
+
+      const JET_IMG_URL = "assets/jet.png";
+
+      function launchJet(){
+        const jet = document.createElement('div');
+        jet.className = 'planeFly';
+
+        // slight height variation each click
+        const top = 10 + Math.random() * 35; // 10%–45%
+        jet.style.top = top + '%';
+
+        const img = document.createElement('img');
+        img.src = JET_IMG_URL;
+        img.alt = '';
+        img.decoding = 'async';
+        img.loading = 'eager';
+
+        jet.appendChild(img);
+        document.body.appendChild(jet);
+
+        requestAnimationFrame(() => jet.classList.add('isFlying'));
+        jet.addEventListener('animationend', () => jet.remove(), { once:true });
+      }
+
+      tripBtn.addEventListener('click', () => {
+        launchJet();
+        // no preventDefault → still jumps to #education-map
+      });
+    })();
+
+    // =========================================================
     // MAP pins + modal + picker
+    // =========================================================
     const map = document.getElementById('map');
     const pins = Array.from(document.querySelectorAll('.pin'));
     const readout = document.getElementById('readout');
@@ -1285,6 +1424,47 @@
         showToast(`Use: ${snippet}`);
       }
     });
+
+    // =========================================================
+    // Popup: "Coded by Mia Lavana" progress 0–100, hold, fade out
+    // =========================================================
+    (function () {
+      const popup = document.getElementById('popup');
+      const bar = document.getElementById('bar');
+      const percentEl = document.getElementById('popupPercent');
+
+      const loadDuration = 2000; // ms to reach 100%
+      const holdDuration = 2500; // ms hold at 100%
+      let startTime = null;
+
+      function showPopup() {
+        popup.classList.add('show');
+
+        function animate(timestamp) {
+          if (!startTime) startTime = timestamp;
+          const elapsed = timestamp - startTime;
+          const progress = Math.min(elapsed / loadDuration, 1);
+          const percent = Math.round(progress * 100);
+
+          bar.style.width = percent + '%';
+          percentEl.textContent = percent + '%';
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            bar.style.width = '100%';
+            percentEl.textContent = '100%';
+            setTimeout(() => popup.classList.remove('show'), holdDuration);
+          }
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('load', () => {
+        setTimeout(showPopup, 500);
+      });
+    })();
   </script>
 </body>
 </html>
