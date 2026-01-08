@@ -186,16 +186,18 @@
       gap: 16px;
     }
 
+    /* ✅ FIX #1: Eyebrows ALL CAPS */
     .tileEyebrow{
       display:flex;
       align-items:center;
       gap: 10px;
-      font-weight: 800;
-      letter-spacing:.25px;
-      text-transform: lowercase;
-      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-size: 12px;
       opacity: .95;
     }
+
     .tileTitle{
       font-size: clamp(28px, 3.2vw, 44px);
       letter-spacing: -.02em;
@@ -208,7 +210,7 @@
       color: rgba(255,255,255,.86);
       font-size: 15px;
       line-height: 1.45;
-      max-width: 46ch;
+      max-width: 52ch;
     }
 
     .tileCtaRow{
@@ -296,22 +298,27 @@
     .dotBtn.isActive{ background: var(--dotOn); transform: scale(1.25); }
 
     /* ==============================
-       FIX: keep tiles WIDE on mobile
+       ✅ FIX #2: Mobile tiles stay WIDE (not tall)
+       - Make tile a single wide column
+       - Hide media column
+       - Clamp paragraph so it doesn't create skyscraper tiles
        ============================== */
-    @media (max-width: 980px){
-      /* Keep the rail wide carousel; do NOT collapse tileGrid into 1 column */
-      .tileGrid{ grid-template-columns: 1.05fr .95fr; }
-
-      /* Reduce height so it feels “wide”, not tall */
-      .tile{ min-height: 260px; }
-      .tileGrid{ min-height: 260px; }
-      .tileMedia{ min-height: 260px; }
-
-      /* Tighten padding like JU on small screens */
-      .tileBody{ padding: 28px 22px 22px; }
-
-      /* Hide tools (already) */
+    @media (max-width: 860px){
       .tools{ display:none; }
+
+      .tile{ min-height: unset; }
+      .tileGrid{ grid-template-columns: 1fr; min-height: unset; }
+      .tileMedia{ display:none; }
+
+      .tileBody{ padding: 30px 22px 24px; }
+
+      .tileDesc{
+        max-width: none;
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
     }
 
     /* ==============================
@@ -410,6 +417,7 @@
       z-index: 120;
     }
     .modalBack.isOpen{ display:flex; }
+
     .modal{
       width: min(900px, 100%);
       border-radius: 30px;
@@ -644,7 +652,7 @@
             <article class="tile t1" aria-label="How I Work">
               <div class="tileGrid">
                 <div class="tileBody" style="color: rgba(255,255,255,.92);">
-                  <div class="tileEyebrow">about</div>
+                  <div class="tileEyebrow">ABOUT</div>
                   <h3 class="tileTitle">How I Work</h3>
                   <p class="tileDesc">
                     I’m deeply passionate about technology, the arts, and humanitarian work because all three shape how people live, express themselves, and move through the world. My work in software has given me a front-row seat to decision-making at scale, and I’ve learned how to translate technical choices into outcomes that people actually feel.
@@ -657,7 +665,7 @@
             <article class="tile t2" aria-label="Trained Worldwide">
               <div class="tileGrid">
                 <div class="tileBody" style="color: rgba(255,255,255,.92);">
-                  <div class="tileEyebrow">experience</div>
+                  <div class="tileEyebrow">EXPERIENCE</div>
                   <h3 class="tileTitle">Trained Worldwide</h3>
                   <p class="tileDesc">
                     My education spans institutions across the United States, Europe, and Asia. Each experience sharpened how I think about systems, leadership, and execution—shaping a global perspective grounded in real-world application rather than theory alone.
@@ -676,7 +684,7 @@
             <article class="tile t3" aria-label="Portfolio">
               <div class="tileGrid">
                 <div class="tileBody">
-                  <div class="tileEyebrow">work</div>
+                  <div class="tileEyebrow">WORK</div>
                   <h3 class="tileTitle">Start Exploring My Portfolio</h3>
                   <p class="tileDesc">
                     From analytics and software to design-forward systems, my work focuses on clarity, scalability, and intention. Every project reflects an obsession with structure, usability, and outcomes that hold up in the real world.
@@ -804,7 +812,7 @@
   <div class="toast" id="toast">Copied</div>
 
   <script>
-    // HERO RAIL dots + drag
+    // HERO RAIL dots + drag (JU)
     const rail = document.getElementById('rail');
     const dotsWrap = document.getElementById('dots');
 
