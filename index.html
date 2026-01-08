@@ -43,6 +43,14 @@
     a{ color:inherit; text-decoration:none; }
     .wrap{ max-width: 1180px; margin: 0 auto; padding: 0 20px; }
 
+    /* ===== Full-bleed container (same trick as the map) ===== */
+    .bleedHero{
+      width: 100vw;
+      margin-left: 50%;
+      transform: translateX(-50%);
+      padding: 0;
+    }
+
     /* ==============================
        TOP BAR (JU style)
        ============================== */
@@ -186,7 +194,6 @@
       gap: 16px;
     }
 
-    /* ✅ FIX #1: Eyebrows ALL CAPS */
     .tileEyebrow{
       display:flex;
       align-items:center;
@@ -288,20 +295,17 @@
       width: 6px;
       height: 6px;
       border-radius: 99px;
-      background: var(--dot);
+      background: rgba(17,17,17,.28);
       border: 0;
       padding:0;
       cursor:pointer;
       transition: transform .18s var(--easeOut), background .18s var(--easeOut), opacity .18s var(--easeOut);
     }
     .dotBtn:hover{ transform: scale(1.2); }
-    .dotBtn.isActive{ background: var(--dotOn); transform: scale(1.25); }
+    .dotBtn.isActive{ background: rgba(17,17,17,.85); transform: scale(1.25); }
 
     /* ==============================
-       ✅ FIX #2: Mobile tiles stay WIDE (not tall)
-       - Make tile a single wide column
-       - Hide media column
-       - Clamp paragraph so it doesn't create skyscraper tiles
+       Mobile: keep tiles wide, show full text (no clamp)
        ============================== */
     @media (max-width: 860px){
       .tools{ display:none; }
@@ -312,17 +316,16 @@
 
       .tileBody{ padding: 30px 22px 24px; }
 
+      /* ✅ full verbiage on mobile */
       .tileDesc{
         max-width: none;
-        display: -webkit-box;
-        -webkit-line-clamp: 6;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        display:block;
+        overflow: visible;
       }
     }
 
     /* ==============================
-       MAP
+       MAP (full bleed)
        ============================== */
     .bleed{
       width: 100vw;
@@ -633,6 +636,7 @@
     </div>
   </div>
 
+  <!-- Title row stays in wrap (nice alignment) -->
   <main class="wrap">
     <section class="section" aria-label="About tiles">
       <div class="sectionTitleRow">
@@ -641,71 +645,75 @@
           <div class="dots" id="dots"></div>
         </div>
       </div>
-
-      <div class="heroRail">
-        <div class="railFade left"></div>
-        <div class="railFade right"></div>
-
-        <div class="railViewport">
-          <div class="rail" id="rail">
-
-            <article class="tile t1" aria-label="How I Work">
-              <div class="tileGrid">
-                <div class="tileBody" style="color: rgba(255,255,255,.92);">
-                  <div class="tileEyebrow">ABOUT</div>
-                  <h3 class="tileTitle">How I Work</h3>
-                  <p class="tileDesc">
-                    I’m passionate about technology, the arts, and humanitarian work because they shape how people experience the world. My work in software helps people feel seen and supported, often without noticing the system behind it.
-                  </p>
-                </div>
-                <div class="tileMedia"></div>
-              </div>
-            </article>
-
-            <article class="tile t2" aria-label="Trained Worldwide">
-              <div class="tileGrid">
-                <div class="tileBody" style="color: rgba(255,255,255,.92);">
-                  <div class="tileEyebrow">EXPERIENCE</div>
-                  <h3 class="tileTitle">Trained Worldwide</h3>
-                  <p class="tileDesc">
-                    I studied across the United States, Europe, and Asia. Being immersed in different cultures shaped how I lead, listen, and build alongside others.
-                  </p>
-                  <div class="tileCtaRow">
-                    <a class="cta" href="#education-map">
-                      Let’s Take a Trip
-                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
-                    </a>
-                  </div>
-                </div>
-                <div class="tileMedia"></div>
-              </div>
-            </article>
-
-            <article class="tile t3" aria-label="Portfolio">
-              <div class="tileGrid">
-                <div class="tileBody">
-                  <div class="tileEyebrow">WORK</div>
-                  <h3 class="tileTitle">Start Exploring My Portfolio</h3>
-                  <p class="tileDesc">
-                    From analytics and software to design-forward systems, my work focuses on clarity, scalability, and intention. Every project reflects an obsession with structure, usability, and outcomes that hold up in the real world.
-                  </p>
-                  <div class="tileCtaRow">
-                    <a class="cta" href="#portfolio">
-                      Explore Portfolio
-                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
-                    </a>
-                  </div>
-                </div>
-                <div class="tileMedia"></div>
-              </div>
-            </article>
-
-          </div>
-        </div>
-      </div>
     </section>
   </main>
 
+  <!-- ✅ HERO RAIL is now full-bleed like the map -->
+  <section class="bleedHero" aria-label="Hero card rail (full bleed)">
+    <div class="heroRail">
+      <div class="railFade left"></div>
+      <div class="railFade right"></div>
+
+      <div class="railViewport">
+        <div class="rail" id="rail">
+
+          <article class="tile t1" aria-label="How I Work">
+            <div class="tileGrid">
+              <div class="tileBody" style="color: rgba(255,255,255,.92);">
+                <div class="tileEyebrow">ABOUT</div>
+                <h3 class="tileTitle">How I Work</h3>
+                <p class="tileDesc">
+                  I’m deeply passionate about technology, the arts, and humanitarian work because all three shape how people live, express themselves, and move through the world. My work in software has given me a front-row seat to decision-making at scale, and I’ve learned how to translate technical choices into outcomes that people actually feel.
+                </p>
+              </div>
+              <div class="tileMedia"></div>
+            </div>
+          </article>
+
+          <article class="tile t2" aria-label="Trained Worldwide">
+            <div class="tileGrid">
+              <div class="tileBody" style="color: rgba(255,255,255,.92);">
+                <div class="tileEyebrow">EXPERIENCE</div>
+                <h3 class="tileTitle">Trained<br>Worldwide</h3>
+                <p class="tileDesc">
+                  My education spans institutions across the United States, Europe, and Asia. Each experience sharpened how I think about systems, leadership, and execution—shaping a global perspective grounded in real-world application rather than theory alone.
+                </p>
+                <div class="tileCtaRow">
+                  <a class="cta" href="#education-map">
+                    Let’s Take a Trip
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
+                  </a>
+                </div>
+              </div>
+              <div class="tileMedia"></div>
+            </div>
+          </article>
+
+          <article class="tile t3" aria-label="Portfolio">
+            <div class="tileGrid">
+              <div class="tileBody">
+                <div class="tileEyebrow">WORK</div>
+                <h3 class="tileTitle">Start Exploring My Portfolio</h3>
+                <p class="tileDesc">
+                  From analytics and software to design-forward systems, my work focuses on clarity, scalability, and intention. Every project reflects an obsession with structure, usability, and outcomes that hold up in the real world.
+                </p>
+                <div class="tileCtaRow">
+                  <a class="cta" href="#portfolio">
+                    Explore Portfolio
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
+                  </a>
+                </div>
+              </div>
+              <div class="tileMedia"></div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education map (already full bleed) -->
   <section class="bleed" id="education-map" aria-label="Education map section">
     <div class="map" id="map" aria-label="World map with location pins">
       <button class="pin" data-i="1" data-label="California" data-logo="assets/logos/UCR.png"
@@ -812,7 +820,7 @@
   <div class="toast" id="toast">Copied</div>
 
   <script>
-    // HERO RAIL dots + drag (JU)
+    // HERO RAIL dots + drag
     const rail = document.getElementById('rail');
     const dotsWrap = document.getElementById('dots');
 
