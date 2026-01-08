@@ -525,62 +525,65 @@
     }
 
     /* ==============================
-       ✅ CREDENTIALS (NO CUT OFF + floating)
+       ✅ CREDENTIALS — GUARANTEED NO CUT-OFF FLOATING CARDS
        ============================== */
-    .credRailShell{
-      position: relative;
-      overflow: visible; /* ✅ allow shadows to float */
-    }
 
-    .credViewport{
-      overflow: visible;  /* ✅ never clip */
-      border-radius: 0;   /* ✅ avoid any masking feel */
-    }
+    /* Make absolutely sure no parent clips this section */
+    #credentials{ overflow: visible; }
+    #credentials .credRailShell{ overflow: visible; position: relative; }
+    #credentials .credViewport{ overflow: visible; border-radius: 0; }
 
-    .credRail{
+    #credentials .credRail{
       display:flex;
       gap: 18px;
-      padding: 10px 16px 16px;
+
+      /* base safe padding (mobile/tablet) */
+      padding: 12px 14px 18px;
+
       overflow-x:auto;
       -webkit-overflow-scrolling: touch;
       scroll-snap-type: x mandatory;
       scrollbar-width:none;
-      scroll-padding-left: 16px;
-      scroll-padding-right: 16px;
-    }
-    .credRail::-webkit-scrollbar{ display:none; }
 
-    /* ✅ Desktop: add breathing room so shadows never touch the edge */
-    @media (min-width: 861px){
-      .credRail{
-        padding-left: 28px;
-        padding-right: 28px;
-        scroll-padding-left: 28px;
-        scroll-padding-right: 28px;
-      }
+      /* snap must respect padding so cards never tuck under */
+      scroll-padding-left: 14px;
+      scroll-padding-right: 14px;
     }
+    #credentials .credRail::-webkit-scrollbar{ display:none; }
 
-    .credCard{
-      scroll-snap-align:start;
+    #credentials .credCard{
+      scroll-snap-align: start;
       flex: 0 0 auto;
 
-      /* ✅ a bit narrower so it always floats */
-      width: min(520px, calc(100vw - 140px));
+      /* mobile-friendly width */
+      width: min(520px, calc(100vw - 84px));
 
       border-radius: var(--tileRadius);
       background: rgba(255,255,255,.94);
       border: 1px solid rgba(17,17,17,.10);
-      box-shadow: 0 18px 55px rgba(0,0,0,.10);
+      box-shadow: 0 18px 55px rgba(0,0,0,.12);
       overflow:hidden;
       min-height: 520px;
       display:flex;
       flex-direction:column;
     }
 
-    .credCardTop{
-      padding: 18px 18px 10px;
+    /* Desktop: stronger “floating” safe area */
+    @media (min-width: 861px){
+      #credentials .credRail{
+        padding-left: 32px;
+        padding-right: 32px;
+        scroll-padding-left: 32px;
+        scroll-padding-right: 32px;
+      }
+      /* Also make the card a bit narrower so it never kisses the edge */
+      #credentials .credCard{
+        width: min(520px, calc(100vw - 220px));
+      }
     }
-    .credCardTop h3{
+
+    #credentials .credCardTop{ padding: 18px 18px 10px; }
+    #credentials .credCardTop h3{
       margin:0;
       font-size: 20px;
       font-weight: 950;
@@ -588,7 +591,7 @@
       color: rgba(17,17,17,.92);
     }
 
-    .credList{
+    #credentials .credList{
       padding: 10px 12px 16px;
       display:flex;
       flex-direction:column;
@@ -596,7 +599,7 @@
       flex: 1;
     }
 
-    .credRow{
+    #credentials .credRow{
       display:grid;
       grid-template-columns: 44px 1fr;
       gap: 12px;
@@ -607,7 +610,7 @@
       background: rgba(255,255,255,.86);
       box-shadow: 0 14px 34px rgba(0,0,0,.04);
     }
-    .credLogo{
+    #credentials .credLogo{
       width: 44px; height: 44px;
       border-radius: 14px;
       border: 1px solid rgba(17,17,17,.10);
@@ -616,15 +619,15 @@
       place-items:center;
       overflow:hidden;
     }
-    .credLogo img{
+    #credentials .credLogo img{
       width: 30px;
       height: 30px;
       object-fit: contain;
       display:block;
     }
 
-    .credMain{ min-width: 0; }
-    .credTitle{
+    #credentials .credMain{ min-width: 0; }
+    #credentials .credTitle{
       font-weight: 900;
       font-size: 14.5px;
       letter-spacing: -.01em;
@@ -632,7 +635,7 @@
       color: rgba(17,17,17,.92);
       margin: 0 0 6px;
     }
-    .credMeta{
+    #credentials .credMeta{
       font-size: 12.5px;
       color: rgba(17,17,17,.62);
       font-weight: 800;
@@ -642,19 +645,7 @@
       align-items:center;
       line-height: 1.25;
     }
-    .credMeta .dot{ opacity:.55; }
-
-    @media (max-width: 860px){
-      .credRail{ padding: 12px 14px 16px; }
-      .credCard{
-        width: min(520px, calc(100vw - 84px)); /* keep your mobile behavior */
-        min-height: 520px;
-      }
-      .credRail{
-        scroll-padding-left: 14px;
-        scroll-padding-right: 14px;
-      }
-    }
+    #credentials .credMeta .dot{ opacity:.55; }
 
     /* ==============================
        MODAL + TOAST
