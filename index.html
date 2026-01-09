@@ -1386,7 +1386,7 @@
   <details class="rtb">
     <summary class="rtb__summary">
       <div class="rtb__left">
-        <div class="rtb__kicker">MY TOOLKIT</div>
+       <div class="hotTitle">My Toolkit</div>
       </div>
 
       <span class="rtb__right" aria-hidden="true">
@@ -1510,16 +1510,16 @@
   }
 
   /* Left */
- .rtb__kicker{
-  font: inherit;
-  font-weight: 800;
-  letter-spacing: .02em;
-  text-transform: uppercase;
-    font-size: 14px;
-    color: rgba(255,255,255,.86);
-    margin: 0;
-    line-height: 1;
-  }
+.rtb__kicker{
+  font: inherit;                 /* inherit site font */
+  font-size: 15px;               /* matches Hot New Releases scale */
+  font-weight: 950;              /* matches section titles */
+  letter-spacing: -.01em;        /* matches Hot New Releases */
+  text-transform: none;          /* ✅ KEY FIX */
+  color: rgba(255,255,255,.92);
+  margin: 0;
+  line-height: 1.15;
+}
 
   .rtb__right{ display:flex; align-items:center; flex: 0 0 auto; }
 
