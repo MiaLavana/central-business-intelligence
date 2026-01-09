@@ -1479,7 +1479,23 @@
     justify-content: space-between;
     gap: 16px;
     color: rgba(255,255,255,.96);
+    min-height: 64px;
   }
+  
+  /* ✅ Fix vertical centering of the left title */
+.rtb__left{
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* ✅ If your "My Toolkit" is using hotTitle, kill any default margins */
+#my-toolkit .hotTitle{
+  margin: 0 !important;
+  line-height: 1.1;
+  display: block;
+}
+  
   .rtb__summary::-webkit-details-marker{ display:none; }
 
   /* lid seam */
