@@ -6,6 +6,9 @@
   <title>Mia Lavana · Central Business Intelligence</title>
   <meta name="description" content="About + Education Map + Calculators — JU-clean design system." />
 
+  <!-- ✅ Tailwind (so your Tool UI renders correctly inside the tool modal) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     :root{
       --pageBg:#fff;
@@ -27,6 +30,7 @@
       --dotOn: rgba(17,17,17,.85);
 
       --green: #0FA958;
+      --ring: rgb(59 130 246 / 0.35);
     }
 
     *{ box-sizing:border-box; }
@@ -476,6 +480,7 @@
     .hotRail::-webkit-scrollbar{ display:none; }
 
     .hotCard{
+      position: relative;
       scroll-snap-align: start;
       flex: 0 0 auto;
       width: min(320px, calc(100vw - 96px));
@@ -485,11 +490,19 @@
       box-shadow: 0 18px 55px rgba(0,0,0,.12);
       overflow:hidden;
       transition: transform .22s var(--easeApple), box-shadow .22s var(--easeApple);
+      cursor: pointer;
+      user-select: none;
+      outline: none;
     }
     .hotCard:hover{ transform: translateY(-2px); box-shadow: 0 26px 85px rgba(0,0,0,.16); }
+    .hotCard:focus-visible{ box-shadow: 0 26px 85px rgba(0,0,0,.16), 0 0 0 4px rgba(255,255,255,.55); }
+
     .hotImg{
       height: 170px;
-      background: linear-gradient(135deg, rgba(0,0,0,.08), rgba(0,0,0,.02));
+      background:
+        radial-gradient(700px 260px at 30% 15%, rgba(0,122,255,.18), rgba(255,255,255,0) 60%),
+        radial-gradient(540px 240px at 70% 70%, rgba(67,215,180,.20), rgba(255,255,255,0) 62%),
+        linear-gradient(135deg, rgba(0,0,0,.08), rgba(0,0,0,.02));
     }
     .hotBody{ padding: 14px 14px 16px; }
     .hotBrand{
@@ -526,6 +539,26 @@
       font-weight: 700;
       font-size: 13px;
       margin-top: 6px;
+    }
+
+    /* ✅ Top Pick badge */
+    .topPickBadge{
+      position:absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 5;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.96);
+      background: rgba(239,68,68,.94);
+      border: 1px solid rgba(255,255,255,.45);
+      box-shadow: 0 12px 30px rgba(239,68,68,.22);
+      backdrop-filter: blur(10px);
+      pointer-events:none;
     }
 
     /* ✅ keeps anchor targets from hiding under sticky topbar */
@@ -643,7 +676,7 @@
     #credentials .credMeta .dot{ opacity:.55; }
 
     /* ==============================
-       MODAL + TOAST
+       MAP MODAL (your existing)
        ============================== */
     .modalBack{
       position: fixed;
@@ -782,7 +815,7 @@
       width: 160px;
       height: auto;
       display:block;
-      filter:none;            /* ✅ prevents fading */
+      filter:none;
       opacity: 1;
       user-select:none;
       -webkit-user-drag:none;
@@ -855,8 +888,242 @@
       border-radius: 999px;
     }
 
+    /* ==============================
+       ✅ TOOL MODAL (new, namespaced so it won’t touch the map modal)
+       ============================== */
+    .toolModalBack{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.42);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      z-index: 10010;
+    }
+    .toolModalBack.isOpen{ display:flex; }
+
+    .toolModal{
+      width: min(1100px, 100%);
+      border-radius: 34px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: 0 40px 140px rgba(0,0,0,.34);
+      overflow:hidden;
+      backdrop-filter: blur(18px);
+      transform: translateY(10px);
+      opacity: 0;
+      transition: transform .22s var(--easeApple), opacity .22s var(--easeApple);
+    }
+    .toolModalBack.isOpen .toolModal{ transform: translateY(0); opacity: 1; }
+
+    .toolModalTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid rgba(11,11,15,.10);
+    }
+    .toolModalTop strong{
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(11,11,15,.55);
+    }
+    .toolClose{
+      border: 0;
+      background: rgba(11,11,15,.06);
+      border-radius: 999px;
+      width: 42px;
+      height: 42px;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      font-size: 22px;
+      transition: transform .18s var(--easeApple), background .18s var(--easeApple);
+    }
+    .toolClose:hover{ background: rgba(11,11,15,.08); }
+    .toolClose:active{ transform: scale(.98); }
+
+    .toolModalBody{
+      padding: 18px;
+      display:flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .toolStage{
+      width: 100%;
+      min-height: 560px;
+      border-radius: 26px;
+      border: 1px solid rgba(11,11,15,.10);
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 18px 55px rgba(0,0,0,.08);
+      overflow: auto;
+      padding: 18px;
+    }
+
+    .toolMeta{
+      text-align:center;
+      padding: 6px 8px 14px;
+    }
+    .toolMeta h2{
+      margin:0;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .toolMeta p{
+      margin: 8px 0 0;
+      color: rgba(11,11,15,.58);
+      font-size: 14px;
+      line-height: 1.55;
+      max-width: 72ch;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    /* ✅ Inputs inside tool stage (nice focus ring even if Tailwind doesn’t) */
+    .toolStage input,.toolStage select,.toolStage button{ font: inherit; }
+    .input{
+      width: 100%;
+      min-height: 46px;
+      border-radius: 0.75rem;
+      border: 1px solid rgb(203 213 225);
+      padding: 0.625rem 0.75rem;
+      background: #fff;
+    }
+    .input:focus{
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+    .label-one-line{
+      line-height: 1.25rem;
+      height: 1.25rem;
+      display:block;
+    }
+
+    /* ==============================
+       ✅ MICRO POP (social proof) — SMALL
+       (bottom-right, above your “Coded by…” popup)
+       ============================== */
+    .microToast{
+      position: fixed;
+      right: 14px;
+      bottom: 92px; /* ✅ clears the Coded-by popup at bottom:20px */
+      z-index: 10060;
+
+      width: min(360px, calc(100vw - 28px));
+      border-radius: 18px;
+      background: rgba(255,255,255,.96);
+      border: 1px solid rgba(11,11,15,.10);
+      box-shadow: 0 18px 60px rgba(0,0,0,.14);
+
+      padding: 12px 12px;
+      display: none;
+
+      transform: translateX(18px);
+      opacity: 0;
+
+      transition: transform .34s var(--easeApple), opacity .50s var(--easeApple);
+    }
+    .microToast.isShow{
+      display:block;
+      transform: translateX(0);
+      opacity: 1;
+    }
+    .microToast.isFading{
+      transform: translateX(10px);
+      opacity: 0;
+    }
+    .microToastMsg{
+      font-size: 13px;
+      font-weight: 750;
+      color: rgba(17,17,17,.86);
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      padding-right: 36px;
+      display:flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: baseline;
+    }
+    .microToastClose{
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 0;
+      background: rgba(11,11,15,.06);
+      border-radius: 999px;
+      width: 28px;
+      height: 28px;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      font-size: 16px;
+      transition: transform .18s var(--easeApple), background .18s var(--easeApple);
+    }
+    .microToastClose:hover{ background: rgba(11,11,15,.08); }
+    .microToastClose:active{ transform: scale(.98); }
+
+    @media (max-width: 520px){
+      .microToast{
+        width: min(320px, calc(100vw - 28px));
+        padding: 11px 11px;
+        border-radius: 16px;
+        right: 12px;
+        bottom: 88px;
+      }
+      .microToastMsg{ font-size: 12.5px; padding-right: 34px; }
+      .microToastClose{ width: 28px; height: 28px; top: 8px; right: 8px; }
+    }
+
+    /* Slot counter inside microToast */
+    .rfSlot{
+      display:inline-flex;
+      align-items:baseline;
+      gap: 1px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+    .rfPlus{ font-weight: 900; }
+    .rfDigit{
+      width: 0.72em;
+      height: 1.05em;
+      overflow: hidden;
+      border-radius: 10px;
+      background: rgba(11,11,15,.06);
+      border: 1px solid rgba(11,11,15,.08);
+      display:inline-flex;
+      align-items:flex-start;
+      justify-content:center;
+      transform: translateY(0.05em);
+    }
+    .rfReel{
+      display:flex;
+      flex-direction:column;
+      will-change: transform;
+      transform: translate3d(0,0,0);
+    }
+    .rfCell{
+      height: 1.05em;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      user-select:none;
+    }
+    .rfComma{
+      display:inline-flex;
+      width: .30em;
+      justify-content:center;
+      opacity:.9;
+    }
+
     @media (prefers-reduced-motion: reduce){
       *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      .microToast{ transition:none !important; }
     }
   </style>
 </head>
@@ -1005,6 +1272,7 @@
       </div>
     </section>
 
+    <!-- ✅ Hot New Releases (now opens tool modal) -->
     <section class="section" id="hot-new-releases" aria-label="Hot new releases">
       <div class="hotWrap">
         <h2 class="hotTitle">
@@ -1012,30 +1280,62 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"></path><path d="M13 6l6 6-6 6"></path></svg>
         </h2>
 
-        <div class="hotRail">
-          <article class="hotCard"><div class="hotImg"></div><div class="hotBody">
-            <div class="hotBrand"><span class="miniLogo">★</span> Sales</div>
-            <h3 class="hotName">ROI &amp; Forecast Calculators</h3>
-            <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
-          </div></article>
+        <div class="hotRail" aria-label="Hot New Releases">
 
-          <article class="hotCard"><div class="hotImg"></div><div class="hotBody">
-            <div class="hotBrand"><span class="miniLogo">★</span> Sales</div>
-            <h3 class="hotName">Retail Sales Forecast Calculator</h3>
-            <div class="hotMeta"><span>FREE</span><span>★ 4.7</span></div>
-          </div></article>
+          <!-- ✅ Top Pick: Retail Forecast -->
+          <article class="hotCard" tabindex="0" role="button"
+            data-tool="forecast"
+            data-title="Retail Sales Forecast Calculator"
+            data-caption="Forecast today’s totals using your current velocity (sales + transactions + hours).">
+            <span class="topPickBadge" aria-hidden="true">Top Pick</span>
+            <div class="hotImg"></div>
+            <div class="hotBody">
+              <div class="hotBrand"><span class="miniLogo">★</span> Sales</div>
+              <h3 class="hotName">Retail Sales Forecast</h3>
+              <div class="hotMeta"><span>FREE</span><span>★ 4.9</span></div>
+            </div>
+          </article>
 
-          <article class="hotCard"><div class="hotImg"></div><div class="hotBody">
-            <div class="hotBrand"><span class="miniLogo">★</span> Operations</div>
-            <h3 class="hotName">Time Estimation: Three-Point (PERT)</h3>
-            <div class="hotMeta"><span>FREE</span><span>★ 4.9</span></div>
-          </div></article>
+          <!-- ROI -->
+          <article class="hotCard" tabindex="0" role="button"
+            data-tool="roi"
+            data-title="ROI Calculator"
+            data-caption="ROI = (G − C) ÷ C × 100. Total cost = upfront + (monthly × months).">
+            <div class="hotImg"></div>
+            <div class="hotBody">
+              <div class="hotBrand"><span class="miniLogo">★</span> Sales</div>
+              <h3 class="hotName">ROI Calculator</h3>
+              <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
+            </div>
+          </article>
 
-          <article class="hotCard"><div class="hotImg"></div><div class="hotBody">
-            <div class="hotBrand"><span class="miniLogo">★</span> Marketing</div>
-            <h3 class="hotName">Marketing Impact Calculator</h3>
-            <div class="hotMeta"><span>FREE</span><span>★ 4.8</span></div>
-          </div></article>
+          <!-- PERT -->
+          <article class="hotCard" tabindex="0" role="button"
+            data-tool="pert"
+            data-title="Time Estimation: Three-Point (PERT)"
+            data-caption="Estimate optimistic/most-likely/worst-case and get expected time + a 90% range.">
+            <div class="hotImg"></div>
+            <div class="hotBody">
+              <div class="hotBrand"><span class="miniLogo">★</span> Operations</div>
+              <h3 class="hotName">PERT Time Estimator</h3>
+              <div class="hotMeta"><span>FREE</span><span>★ 4.7</span></div>
+            </div>
+          </article>
+
+          <!-- ✅ Top Pick: Marketing Decision Engine -->
+          <article class="hotCard" tabindex="0" role="button"
+            data-tool="mde"
+            data-title="Marketing Decision Engine"
+            data-caption="One input set. Three perspectives. Decide what to do next: Scale, Fix, Reallocate, or Pause.">
+            <span class="topPickBadge" aria-hidden="true">Top Pick</span>
+            <div class="hotImg"></div>
+            <div class="hotBody">
+              <div class="hotBrand"><span class="miniLogo">★</span> Marketing</div>
+              <h3 class="hotName">Marketing Decision Engine</h3>
+              <div class="hotMeta"><span>FREE</span><span>★ 4.9</span></div>
+            </div>
+          </article>
+
         </div>
       </div>
     </section>
@@ -1099,7 +1399,9 @@
     <div class="footer">Built clean. Built to scale.</div>
   </main>
 
-  <!-- Modal -->
+  <!-- ===============================
+       MAP Modal (existing)
+       =============================== -->
   <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-label="Location details">
     <div class="modal">
       <div class="modalTop">
@@ -1135,6 +1437,303 @@
       <div class="bar" id="bar"></div>
     </div>
   </div>
+
+  <!-- ===============================
+       ✅ Micro Pop (social proof)
+       =============================== -->
+  <div class="microToast" id="microToast" role="status" aria-live="polite" aria-atomic="true">
+    <button class="microToastClose" id="microToastClose" aria-label="Close">×</button>
+    <div class="microToastMsg">
+      <span>Used in</span>
+      <span id="rfSlot" class="rfSlot" aria-label="Used in calculations"></span><span class="rfPlus">+</span>
+      <span>calculations globally</span>
+    </div>
+  </div>
+
+  <!-- ===============================
+       ✅ TOOL MODAL (new)
+       =============================== -->
+  <div class="toolModalBack" id="toolModalBack" role="dialog" aria-modal="true" aria-label="Tool details">
+    <div class="toolModal">
+      <div class="toolModalTop">
+        <strong>Details</strong>
+        <button class="toolClose" id="toolCloseBtn" aria-label="Close">×</button>
+      </div>
+
+      <div class="toolModalBody">
+        <div class="toolStage" id="toolStage"></div>
+        <div class="toolMeta">
+          <h2 id="toolTitle"></h2>
+          <p id="toolCaption"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===============================
+       TOOL TEMPLATES
+       =============================== -->
+
+  <template id="tpl-roi">
+    <article class="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden" id="roi-card">
+      <div class="p-6 md:p-8">
+        <h3 class="font-semibold text-lg">ROI Calculator</h3>
+        <p class="mt-2 text-sm text-slate-600">ROI = (G − C) ÷ C × 100, where G is expected gain and C is total cost. Total cost = Upfront + (Monthly × Months).</p>
+
+        <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <label class="block"><span class="text-sm font-medium label-one-line">Expected Gain (G)</span><input id="roi_gain" type="number" inputmode="decimal" placeholder="e.g. 10000" class="input"/></label>
+          <label class="block"><span class="text-sm font-medium label-one-line">Upfront Cost</span><input id="roi_upfront" type="number" inputmode="decimal" placeholder="e.g. 6000" class="input"/></label>
+          <label class="block"><span class="text-sm font-medium label-one-line">Monthly Cost</span><input id="roi_monthly" type="number" inputmode="decimal" placeholder="e.g. 25" class="input"/></label>
+          <label class="block"><span class="text-sm font-medium label-one-line">Months</span><input id="roi_months" type="number" inputmode="numeric" placeholder="e.g. 12" class="input"/></label>
+        </div>
+
+        <div class="mt-5">
+          <button type="button" id="roi_calc_btn" class="rounded-2xl bg-blue-600 px-5 py-2.5 text-white font-semibold shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-[var(--ring)]">Calculate ROI</button>
+        </div>
+
+        <div id="roi_output" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Total Cost (C)</div><div id="roi_total_cost" class="mt-1 text-2xl font-extrabold tabular-nums">$0.00</div></div>
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">ROI</div><div id="roi_percent" class="mt-1 text-2xl font-extrabold tabular-nums">0.00%</div></div>
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Signal</div><div id="roi_signal" class="mt-1 inline-flex items-center gap-2 rounded-xl px-3 py-1.5 text-sm font-semibold border border-slate-300 text-slate-700 bg-white">Enter values to evaluate</div></div>
+        </div>
+
+        <details class="mt-6 group">
+          <summary class="cursor-pointer text-sm text-slate-600 group-open:text-slate-800 font-medium">Show calculation steps</summary>
+          <pre id="roi_steps" class="mt-3 bg-slate-50 rounded-xl p-4 text-[13px] overflow-x-auto border border-slate-200"></pre>
+        </details>
+      </div>
+    </article>
+  </template>
+
+  <template id="tpl-forecast">
+    <article class="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden" id="forecast-card">
+      <div class="p-6 md:p-8">
+        <h3 class="font-semibold text-lg">Retail Sales Forecast Calculator</h3>
+        <p class="mt-2 text-sm text-slate-600">Project today’s totals using your current velocity. Enter open time, current time, close time, and today’s sales and transactions.</p>
+
+        <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-4">
+          <label class="block"><span class="text-sm font-medium label-one-line">Open time</span><input id="sf_open" type="time" value="08:00" class="input"/></label>
+          <label class="block"><span class="text-sm font-medium label-one-line">Current time</span><input id="sf_now" type="time" class="input"/></label>
+          <label class="block"><span class="text-sm font-medium label-one-line">Close time</span><input id="sf_close" type="time" value="23:59" class="input"/></label>
+          <label class="block"><span class="text-sm font-medium label-one-line">Current sales ($)</span><input id="sf_sales" type="number" inputmode="decimal" placeholder="e.g. 306446.64" class="input"/></label>
+          <label class="block"><span class="text-sm font-medium label-one-line">Current transactions</span><input id="sf_tx" type="number" inputmode="numeric" placeholder="e.g. 5459" class="input"/></label>
+          <label class="block">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium label-one-line">Daily target ($)</span>
+              <span class="text-xs text-slate-500">(optional)</span>
+            </div>
+            <input id="sf_target" type="number" inputmode="decimal" placeholder="e.g. 40000" class="input"/>
+          </label>
+        </div>
+
+        <div class="mt-5 flex flex-wrap items-center gap-3">
+          <button type="button" id="sf_calc_btn" class="rounded-2xl bg-blue-600 px-5 py-2.5 text-white font-semibold shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-[var(--ring)]">Forecast day</button>
+          <button type="button" id="sf_now_btn" class="rounded-2xl border border-slate-300 px-5 py-2.5 font-semibold hover:border-slate-400">Use current local time</button>
+        </div>
+
+        <div id="sf_output" class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Elapsed hours</div><div id="sf_elapsed" class="mt-1 text-2xl font-extrabold tabular-nums">0.00</div></div>
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Remaining hours</div><div id="sf_remaining" class="mt-1 text-2xl font-extrabold tabular-nums">0.00</div></div>
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Avg ticket</div><div id="sf_avg_ticket" class="mt-1 text-2xl font-extrabold tabular-nums">$0.00</div></div>
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Tx per hour</div><div id="sf_tph" class="mt-1 text-2xl font-extrabold tabular-nums">0.00</div></div>
+        </div>
+
+        <div id="sf_output2" class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Projected transactions</div><div id="sf_proj_tx" class="mt-1 text-2xl font-extrabold tabular-nums">0</div></div>
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Projected sales</div><div id="sf_proj_sales" class="mt-1 text-2xl font-extrabold tabular-nums">$0.00</div></div>
+          <div class="rounded-2xl border border-slate-200 p-4">
+            <div class="text-xs uppercase tracking-wider text-slate-500">Guidance</div>
+            <div id="sf_note_wrap" class="mt-1 rounded-xl px-3 py-2 text-sm font-semibold bg-gray-50 text-gray-700">
+              <span id="sf_note">Enter values to evaluate</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="sf_goal_wrap" class="mt-4 hidden">
+          <div class="flex items-center justify-between text-xs text-slate-600 mb-1">
+            <span>Goal progress</span><span id="sf_goal_pct">0%</span>
+          </div>
+          <div class="h-2 w-full rounded-full bg-slate-100"><div id="sf_goal_bar" class="h-2 rounded-full bg-slate-900" style="width:0%"></div></div>
+          <div class="mt-2 text-xs text-slate-500" id="sf_gap_line">Gap to goal: —</div>
+        </div>
+
+        <details class="mt-6 group">
+          <summary class="cursor-pointer text-sm text-slate-600 group-open:text-slate-800 font-medium">Show calculation steps</summary>
+          <pre id="sf_steps" class="mt-3 bg-slate-50 rounded-xl p-4 text-[13px] overflow-x-auto border border-slate-200"></pre>
+        </details>
+      </div>
+    </article>
+  </template>
+
+  <template id="tpl-pert">
+    <article class="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden" id="tpe-card">
+      <div class="p-6 md:p-8">
+        <h3 class="font-semibold text-lg">Time Estimation: Three-Point (PERT)</h3>
+        <p class="mt-2 text-sm text-slate-700">Estimate optimistic/most-likely/worst-case and get expected time + a 90% range.</p>
+
+        <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+          <label class="block"><span class="text-sm font-medium label-one-line">Optimistic (O)</span><input id="tpe_o" type="number" inputmode="decimal" placeholder="e.g. 3" class="input"></label>
+          <label class="block"><span class="text-sm font-medium label-one-line">Most likely (M)</span><input id="tpe_m" type="number" inputmode="decimal" placeholder="e.g. 5" class="input"></label>
+          <label class="block"><span class="text-sm font-medium label-one-line">Pessimistic (P)</span><input id="tpe_p" type="number" inputmode="decimal" placeholder="e.g. 10" class="input"></label>
+          <label class="block"><span class="text-sm font-medium label-one-line">Units</span><select id="tpe_unit" class="input"><option value="days">Days</option><option value="hours" selected>Hours</option></select></label>
+          <label class="block"><span class="text-sm font-medium label-one-line">Method</span><select id="tpe_method" class="input"><option value="pert" selected>PERT (weighted)</option><option value="triangular">Triangular</option></select></label>
+        </div>
+
+        <div class="mt-3 flex flex-wrap items-center gap-2">
+          <span class="text-xs text-slate-500">Quick risk:</span>
+          <button type="button" class="rounded-xl border border-slate-300 px-3 py-1.5 text-sm" data-risk="low">Low</button>
+          <button type="button" class="rounded-xl border border-slate-300 px-3 py-1.5 text-sm" data-risk="med">Med</button>
+          <button type="button" class="rounded-xl border border-slate-300 px-3 py-1.5 text-sm" data-risk="high">High</button>
+        </div>
+
+        <div class="mt-5"><button type="button" id="tpe_calc_btn" class="rounded-2xl bg-blue-600 px-5 py-2.5 text-white font-semibold shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-[var(--ring)]">Estimate time</button></div>
+
+        <div id="tpe_output" class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Expected (E)</div><div id="tpe_e" class="mt-1 text-2xl font-extrabold tabular-nums">0.00</div></div>
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Std. deviation</div><div id="tpe_sd" class="mt-1 text-2xl font-extrabold tabular-nums">0.00</div></div>
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">90% range</div><div id="tpe_ci" class="mt-1 text-2xl font-extrabold tabular-nums">0.00–0.00</div></div>
+          <div class="rounded-2xl border border-slate-200 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Signal</div><div id="tpe_signal" class="mt-1 text-sm font-semibold text-slate-700">Enter values to evaluate</div></div>
+        </div>
+
+        <div class="mt-2 rounded-xl border border-slate-200 p-3 bg-slate-50 flex items-start justify-between gap-3">
+          <div id="tpe_summary" class="text-sm text-slate-700">Enter O/M/P to see an easy summary.</div>
+          <button id="tpe_copy" type="button" class="shrink-0 rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs">Copy</button>
+        </div>
+
+        <details class="mt-6 group"><summary class="cursor-pointer text-sm text-slate-600 group-open:text-slate-800 font-medium">Show calculation steps</summary><pre id="tpe_steps" class="mt-3 bg-slate-50 rounded-xl p-4 text-[13px] overflow-x-auto border border-slate-200"></pre></details>
+      </div>
+    </article>
+  </template>
+
+  <template id="tpl-mde">
+    <article class="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden" id="mde-card">
+      <div class="p-6 md:p-8">
+        <div class="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <h3 class="font-semibold text-lg">Marketing Decision Engine</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              One input set. Three perspectives. Decide what to do next: <strong>Scale</strong>, <strong>Fix</strong>, <strong>Reallocate</strong>, or <strong>Pause</strong>.
+            </p>
+          </div>
+
+          <div class="w-full sm:w-auto">
+            <label class="block">
+              <span class="text-sm font-medium label-one-line">Tone</span>
+              <select id="mde_tone" class="input">
+                <option value="operator" selected>Operator</option>
+                <option value="cfo">CFO</option>
+                <option value="founder">Founder</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <label class="block">
+            <span class="text-sm font-medium label-one-line">Marketing spend (weekly)</span>
+            <input id="mde_spend" type="number" inputmode="decimal" placeholder="e.g. 2500" class="input">
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium label-one-line">Revenue (weekly)</span>
+            <input id="mde_revenue" type="number" inputmode="decimal" placeholder="e.g. 42000" class="input">
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium label-one-line">New customers (weekly)</span>
+            <input id="mde_new_customers" type="number" inputmode="numeric" placeholder="e.g. 120" class="input">
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium label-one-line">Gross margin (%)</span>
+            <input id="mde_margin" type="number" inputmode="decimal" placeholder="e.g. 55" class="input">
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium label-one-line">Avg order value (AOV)</span>
+            <input id="mde_aov" type="number" inputmode="decimal" placeholder="e.g. 58" class="input">
+          </label>
+
+          <label class="block">
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-sm font-medium label-one-line">Website visits (optional)</span>
+              <span class="text-xs text-slate-500">or Foot traffic</span>
+            </div>
+            <input id="mde_visits" type="number" inputmode="numeric" placeholder="e.g. 18000" class="input">
+          </label>
+
+          <label class="block sm:col-span-2 lg:col-span-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium">Marketing influence (attribution slider)</span>
+              <span class="text-sm font-semibold text-slate-700"><span id="mde_attr_label">40%</span></span>
+            </div>
+            <input id="mde_attr" type="range" min="10" max="80" value="40" step="5" class="w-full">
+            <div class="mt-1 flex items-center justify-between text-xs text-slate-500">
+              <span>Conservative</span><span>Likely</span><span>Aggressive</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <button type="button" id="mde_calc_btn" class="rounded-2xl bg-blue-600 px-5 py-2.5 text-white font-semibold shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-[var(--ring)]">
+            Run decision engine
+          </button>
+          <button type="button" id="mde_seed_btn" class="rounded-2xl border border-slate-300 px-5 py-2.5 font-semibold hover:border-slate-400">
+            Load example
+          </button>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="rounded-2xl border border-slate-200 p-4">
+            <div class="text-xs uppercase tracking-wider text-slate-500">Influenced revenue</div>
+            <div id="mde_inf_rev" class="mt-1 text-2xl font-extrabold tabular-nums">$0.00</div>
+            <div id="mde_inf_rev_rng" class="mt-1 text-xs text-slate-500">Range: —</div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 p-4">
+            <div class="text-xs uppercase tracking-wider text-slate-500">Influenced gross profit</div>
+            <div id="mde_inf_gp" class="mt-1 text-2xl font-extrabold tabular-nums">$0.00</div>
+            <div class="mt-1 text-xs text-slate-500">GP = revenue × margin</div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 p-4">
+            <div class="text-xs uppercase tracking-wider text-slate-500">Net impact (GP − spend)</div>
+            <div id="mde_net" class="mt-1 text-2xl font-extrabold tabular-nums">$0.00</div>
+            <div id="mde_roi" class="mt-1 text-xs text-slate-500">ROI: —</div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 p-4">
+            <div class="text-xs uppercase tracking-wider text-slate-500">CPA vs max CPA</div>
+            <div class="mt-1 flex items-baseline gap-2">
+              <div id="mde_cpa" class="text-2xl font-extrabold tabular-nums">$0.00</div>
+              <div class="text-slate-400">/</div>
+              <div id="mde_cpa_max" class="text-lg font-extrabold tabular-nums text-slate-700">$0.00</div>
+            </div>
+            <div class="mt-1 text-xs text-slate-500">Max CPA = AOV × margin × influence</div>
+          </div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div class="rounded-2xl border border-slate-200 p-5 lg:col-span-2">
+            <div class="text-xs uppercase tracking-wider text-slate-500">Decision</div>
+            <div id="mde_decision" class="mt-2 text-2xl font-extrabold">Enter values to evaluate</div>
+            <div id="mde_reason" class="mt-2 text-sm text-slate-700"></div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 p-5">
+            <div class="text-xs uppercase tracking-wider text-slate-500">Bottleneck</div>
+            <div id="mde_bottleneck" class="mt-2 text-lg font-extrabold">—</div>
+            <div id="mde_action" class="mt-2 text-sm text-slate-700">—</div>
+          </div>
+        </div>
+
+        <details class="mt-6 group">
+          <summary class="cursor-pointer text-sm text-slate-600 group-open:text-slate-800 font-medium">Show calculation steps</summary>
+          <pre id="mde_steps" class="mt-3 bg-slate-50 rounded-xl p-4 text-[13px] overflow-x-auto border border-slate-200"></pre>
+        </details>
+      </div>
+    </article>
+  </template>
 
   <script>
     // =========================================================
@@ -1173,9 +1772,7 @@
       let isDown=false, startX=0, scrollStart=0;
 
       railEl.addEventListener('pointerdown', (e)=>{
-        // ✅ If the user clicked a link/button in a tile, do NOT start drag capture.
         if (e.target.closest('a, button, input, textarea, select, label')) return;
-
         isDown = true;
         railEl.setPointerCapture(e.pointerId);
         startX = e.clientX;
@@ -1234,8 +1831,6 @@
       function launchJet(){
         const jet = document.createElement('div');
         jet.className = 'planeFly';
-
-        // slight height variation each click
         const top = 10 + Math.random() * 35; // 10%–45%
         jet.style.top = top + '%';
 
@@ -1254,12 +1849,11 @@
 
       tripBtn.addEventListener('click', () => {
         launchJet();
-        // no preventDefault → still jumps to #education-map
       });
     })();
 
     // =========================================================
-    // MAP pins + modal + picker
+    // MAP pins + modal + picker (UNCHANGED)
     // =========================================================
     const map = document.getElementById('map');
     const pins = Array.from(document.querySelectorAll('.pin'));
@@ -1433,8 +2027,8 @@
       const bar = document.getElementById('bar');
       const percentEl = document.getElementById('popupPercent');
 
-      const loadDuration = 2000; // ms to reach 100%
-      const holdDuration = 2500; // ms hold at 100%
+      const loadDuration = 2000;
+      const holdDuration = 2500;
       let startTime = null;
 
       function showPopup() {
@@ -1465,6 +2059,774 @@
         setTimeout(showPopup, 500);
       });
     })();
+
+    // =========================================================
+    // ✅ TOOL MODAL helpers (new)
+    // =========================================================
+    const toolModalBack = document.getElementById('toolModalBack');
+    const toolCloseBtn  = document.getElementById('toolCloseBtn');
+    const toolStage     = document.getElementById('toolStage');
+    const toolTitle     = document.getElementById('toolTitle');
+    const toolCaption   = document.getElementById('toolCaption');
+
+    function openToolModal(){
+      toolModalBack.classList.add('isOpen');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeToolModal(){
+      toolModalBack.classList.remove('isOpen');
+      document.body.style.overflow = '';
+      toolStage.innerHTML = '';
+    }
+
+    toolCloseBtn.addEventListener('click', closeToolModal);
+    toolModalBack.addEventListener('click', (e)=>{ if(e.target === toolModalBack) closeToolModal(); });
+    window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeToolModal(); });
+
+    function clicky(el, fn){
+      if(!el) return;
+      el.addEventListener('click', fn);
+      el.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          fn();
+        }
+      });
+    }
+
+    function injectTemplate(tplId){
+      const tpl = document.getElementById(tplId);
+      if(!tpl) return;
+      toolStage.innerHTML = '';
+      toolStage.appendChild(tpl.content.cloneNode(true));
+    }
+
+    // =========================================================
+    // ✅ Micro pop (social proof) — monotonic slot counter
+    // =========================================================
+    const microToast = document.getElementById('microToast');
+    const microToastClose = document.getElementById('microToastClose');
+    const rfSlotWrap = document.getElementById('rfSlot');
+
+    let microTimer = null;
+    let microFadeTimer = null;
+
+    const LAUNCH_DATE = new Date("2026-01-01T00:00:00-08:00");
+    const BASE_START = 10000;
+    const DAILY_GROWTH = 15;
+    const RANDOM_JUMP_MAX = 800;
+    const STORAGE_KEY = "rf_calcs_count_v1";
+
+    const CREEP_INTERVAL_MS = 1700;
+    let creepTimer = null;
+    let currentValue = 0;
+
+    function daysSince(date){
+      const ms = new Date() - date;
+      return Math.max(0, Math.floor(ms / (1000*60*60*24)));
+    }
+    function formatWithCommas(n){
+      return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    function readLast(){
+      const v = Number(localStorage.getItem(STORAGE_KEY));
+      return Number.isFinite(v) && v > 0 ? v : 0;
+    }
+    function writeLast(v){
+      localStorage.setItem(STORAGE_KEY, String(v));
+    }
+    function computeExpected(){
+      const d = daysSince(LAUNCH_DATE);
+      const daily = d * DAILY_GROWTH;
+      const jump = Math.floor(Math.random() * (RANDOM_JUMP_MAX + 1));
+      return BASE_START + daily + jump;
+    }
+    function computeMonotonicTarget(){
+      const expected = computeExpected();
+      const last = readLast();
+      return Math.max(expected, last + 1);
+    }
+
+    let digitNodes = [];
+
+    function buildSlotSkeleton(str){
+      if(!rfSlotWrap) return;
+      rfSlotWrap.innerHTML = "";
+      digitNodes = [];
+
+      for(const ch of str){
+        if(ch === ","){
+          const comma = document.createElement("span");
+          comma.className = "rfComma";
+          comma.textContent = ",";
+          rfSlotWrap.appendChild(comma);
+          digitNodes.push({ type:"comma", el: comma });
+          continue;
+        }
+
+        const digit = document.createElement("span");
+        digit.className = "rfDigit";
+
+        const reel = document.createElement("span");
+        reel.className = "rfReel";
+
+        const cycles = 6;
+        for(let c=0; c<cycles; c++){
+          for(let n=0; n<=9; n++){
+            const cell = document.createElement("span");
+            cell.className = "rfCell";
+            cell.textContent = n;
+            reel.appendChild(cell);
+          }
+        }
+
+        digit.appendChild(reel);
+        rfSlotWrap.appendChild(digit);
+        digitNodes.push({ type:"digit", reelEl: reel, cellH: null, cycles });
+      }
+
+      requestAnimationFrame(() => {
+        digitNodes.forEach(node => {
+          if(node.type === "digit"){
+            const firstCell = node.reelEl.querySelector(".rfCell");
+            node.cellH = firstCell ? firstCell.getBoundingClientRect().height : 16;
+          }
+        });
+      });
+    }
+
+    function spinTo(value){
+      if(!rfSlotWrap) return;
+
+      const str = formatWithCommas(value);
+      const pattern = str.replace(/\d/g, "0");
+
+      if(rfSlotWrap.getAttribute("data-pattern") !== pattern){
+        rfSlotWrap.setAttribute("data-pattern", pattern);
+        buildSlotSkeleton(str);
+      }
+
+      const digitsOnly = str.replace(/,/g,"").split("").map(Number);
+      let di = 0;
+
+      digitNodes.forEach(node => {
+        if(node.type !== "digit") return;
+
+        const finalDigit = digitsOnly[di++];
+        const cellH = node.cellH || 16;
+        const landingIndex = (node.cycles - 1) * 10 + finalDigit;
+
+        const delay = Math.min(60, di * 10);
+        const duration = 440 + di * 28;
+
+        node.reelEl.style.transition = `transform ${duration}ms cubic-bezier(.15,.85,.2,1) ${delay}ms`;
+        node.reelEl.style.transform = `translate3d(0, -${landingIndex * cellH}px, 0)`;
+      });
+
+      currentValue = value;
+      writeLast(currentValue);
+    }
+
+    function stopCreep(){
+      if(creepTimer) clearInterval(creepTimer);
+      creepTimer = null;
+    }
+    function startCreep(){
+      stopCreep();
+      creepTimer = setInterval(() => {
+        if(!microToast.classList.contains('isShow')) return;
+        let inc = 1 + Math.floor(Math.random() * 4);
+        if(Math.random() > 0.95) inc += 8 + Math.floor(Math.random() * 12);
+        spinTo(currentValue + inc);
+      }, CREEP_INTERVAL_MS);
+    }
+
+    function hideMicroToast(){
+      if (!microToast) return;
+      microToast.classList.add('isFading');
+      stopCreep();
+      microFadeTimer = setTimeout(()=>{
+        microToast.classList.remove('isShow','isFading');
+      }, 550);
+    }
+
+    function showMicroToastForecast(){
+      if (!microToast) return;
+
+      if (microTimer) clearTimeout(microTimer);
+      if (microFadeTimer) clearTimeout(microFadeTimer);
+
+      microToast.classList.remove('isFading');
+      microToast.classList.add('isShow');
+
+      const target = computeMonotonicTarget();
+      const last = readLast();
+      const start = Math.max(last, target - (40 + Math.floor(Math.random()*90)));
+
+      spinTo(start);
+      setTimeout(()=> spinTo(target), 120);
+
+      startCreep();
+      microTimer = setTimeout(hideMicroToast, 5200);
+    }
+
+    microToastClose?.addEventListener('click', ()=>{
+      if (microTimer) clearTimeout(microTimer);
+      if (microFadeTimer) clearTimeout(microFadeTimer);
+      hideMicroToast();
+    });
+
+    // =========================================================
+    // ✅ TOOL LOGIC (ROI / Forecast / PERT / MDE)
+    // =========================================================
+    const money = (n)=> {
+      const v = Number(n);
+      if(!Number.isFinite(v)) return "$0.00";
+      return v.toLocaleString(undefined, { style:'currency', currency:'USD' });
+    };
+    const num = (v)=> {
+      const x = Number(v);
+      return Number.isFinite(x) ? x : 0;
+    };
+    const pct = (v)=> {
+      const x = Number(v);
+      return Number.isFinite(x) ? `${x.toFixed(2)}%` : "0.00%";
+    };
+    const clamp = (x, a, b)=> Math.max(a, Math.min(b, x));
+
+    function initROI(){
+      const gainEl = document.getElementById('roi_gain');
+      const upEl = document.getElementById('roi_upfront');
+      const mEl = document.getElementById('roi_monthly');
+      const monthsEl = document.getElementById('roi_months');
+      const btn = document.getElementById('roi_calc_btn');
+
+      const outCost = document.getElementById('roi_total_cost');
+      const outPct = document.getElementById('roi_percent');
+      const outSig = document.getElementById('roi_signal');
+      const steps = document.getElementById('roi_steps');
+
+      function calc(){
+        const G = num(gainEl.value);
+        const upfront = num(upEl.value);
+        const monthly = num(mEl.value);
+        const months = num(monthsEl.value);
+
+        const C = upfront + (monthly * months);
+        const roi = (C > 0) ? ((G - C) / C * 100) : 0;
+
+        outCost.textContent = money(C);
+        outPct.textContent = pct(roi);
+
+        let sig = "Enter values to evaluate";
+        if(C > 0){
+          if(roi >= 50) sig = "Strong — high upside";
+          else if(roi >= 20) sig = "Good — looks worth it";
+          else if(roi >= 0) sig = "Marginal — optimize costs";
+          else sig = "Negative — reconsider";
+        }
+        outSig.textContent = sig;
+
+        steps.textContent =
+`Inputs
+- Gain (G): ${G}
+- Upfront: ${upfront}
+- Monthly: ${monthly}
+- Months: ${months}
+
+Total cost (C)
+C = Upfront + (Monthly × Months)
+C = ${upfront} + (${monthly} × ${months})
+C = ${C}
+
+ROI
+ROI = (G − C) ÷ C × 100
+ROI = (${G} − ${C}) ÷ ${C} × 100
+ROI = ${roi.toFixed(4)}%`;
+      }
+
+      btn?.addEventListener('click', calc);
+    }
+
+    function initForecast(){
+      const openEl = document.getElementById('sf_open');
+      const nowEl = document.getElementById('sf_now');
+      const closeEl = document.getElementById('sf_close');
+      const salesEl = document.getElementById('sf_sales');
+      const txEl = document.getElementById('sf_tx');
+      const targetEl = document.getElementById('sf_target');
+
+      const btn = document.getElementById('sf_calc_btn');
+      const nowBtn = document.getElementById('sf_now_btn');
+
+      const outElapsed = document.getElementById('sf_elapsed');
+      const outRemain = document.getElementById('sf_remaining');
+      const outAOV = document.getElementById('sf_avg_ticket');
+      const outTPH = document.getElementById('sf_tph');
+      const outProjTx = document.getElementById('sf_proj_tx');
+      const outProjSales = document.getElementById('sf_proj_sales');
+      const note = document.getElementById('sf_note');
+      const goalWrap = document.getElementById('sf_goal_wrap');
+      const goalPct = document.getElementById('sf_goal_pct');
+      const goalBar = document.getElementById('sf_goal_bar');
+      const gapLine = document.getElementById('sf_gap_line');
+      const steps = document.getElementById('sf_steps');
+
+      function timeToMin(t){
+        if(!t || typeof t !== 'string' || !t.includes(':')) return null;
+        const [hh, mm] = t.split(':').map(Number);
+        if(!Number.isFinite(hh) || !Number.isFinite(mm)) return null;
+        return hh * 60 + mm;
+      }
+
+      function setNow(){
+        const d = new Date();
+        const hh = String(d.getHours()).padStart(2,'0');
+        const mm = String(d.getMinutes()).padStart(2,'0');
+        nowEl.value = `${hh}:${mm}`;
+      }
+
+      function calc(){
+        const o = timeToMin(openEl.value);
+        const n = timeToMin(nowEl.value);
+        const c = timeToMin(closeEl.value);
+
+        const sales = num(salesEl.value);
+        const tx = num(txEl.value);
+        const target = num(targetEl.value);
+
+        if(o === null || n === null || c === null){
+          note.textContent = "Enter valid times to forecast.";
+          return;
+        }
+
+        // handle close past midnight (rare, but safe)
+        let closeMin = c;
+        let nowMin = n;
+        if(closeMin <= o) closeMin += 24*60;
+        if(nowMin < o) nowMin += 24*60;
+
+        const elapsedMin = Math.max(0, nowMin - o);
+        const totalMin = Math.max(1, closeMin - o);
+        const remainMin = Math.max(0, closeMin - nowMin);
+
+        const elapsedH = elapsedMin / 60;
+        const remainH = remainMin / 60;
+        const totalH = totalMin / 60;
+
+        const avgTicket = (tx > 0) ? (sales / tx) : 0;
+        const txPerHour = (elapsedH > 0) ? (tx / elapsedH) : 0;
+        const salesPerHour = (elapsedH > 0) ? (sales / elapsedH) : 0;
+
+        const projTx = Math.round(txPerHour * totalH);
+        const projSales = salesPerHour * totalH;
+
+        outElapsed.textContent = elapsedH.toFixed(2);
+        outRemain.textContent = remainH.toFixed(2);
+        outAOV.textContent = money(avgTicket);
+        outTPH.textContent = txPerHour.toFixed(2);
+        outProjTx.textContent = projTx.toLocaleString();
+        outProjSales.textContent = money(projSales);
+
+        let msg = "Enter values to evaluate";
+        if(elapsedH <= 0.05) msg = "Not enough time elapsed yet — try again soon.";
+        else if(sales <= 0 && tx <= 0) msg = "Enter current sales + transactions.";
+        else msg = `Projected close: ${money(projSales)} • ${projTx.toLocaleString()} tx`;
+
+        if(target > 0){
+          const pctToGoal = clamp((projSales / target) * 100, 0, 200);
+          goalWrap.classList.remove('hidden');
+          goalPct.textContent = `${Math.round(pctToGoal)}%`;
+          goalBar.style.width = `${clamp(pctToGoal, 0, 100)}%`;
+
+          const gap = target - projSales;
+          if(gap <= 0){
+            gapLine.textContent = `Ahead of goal by ${money(Math.abs(gap))}`;
+            msg = `On track to beat goal • +${money(Math.abs(gap))}`;
+          } else {
+            gapLine.textContent = `Gap to goal: ${money(gap)}`;
+            msg = `Behind goal by ${money(gap)} (projected)`;
+          }
+        } else {
+          goalWrap.classList.add('hidden');
+        }
+
+        note.textContent = msg;
+
+        steps.textContent =
+`Times
+- Open: ${openEl.value} (${o} min)
+- Now:  ${nowEl.value} (${n} min)
+- Close:${closeEl.value} (${c} min)
+
+Elapsed / Remaining
+- Elapsed minutes: ${elapsedMin}
+- Remaining minutes: ${remainMin}
+- Elapsed hours: ${elapsedH.toFixed(4)}
+- Total hours: ${totalH.toFixed(4)}
+
+Velocity
+- Sales/hour: ${salesPerHour.toFixed(4)}
+- Tx/hour:    ${txPerHour.toFixed(4)}
+- Avg ticket: ${avgTicket.toFixed(4)}
+
+Projection
+- Projected tx: ${projTx}
+- Projected sales: ${projSales.toFixed(2)}
+${target > 0 ? `\nGoal
+- Target: ${target}
+- Projected %: ${(projSales/target*100).toFixed(2)}%` : ""}`;
+      }
+
+      nowBtn?.addEventListener('click', ()=> { setNow(); showToast('Set current time'); });
+      btn?.addEventListener('click', calc);
+
+      // helpful: default now to current local time
+      if(!nowEl.value) setNow();
+    }
+
+    function initPERT(){
+      const oEl = document.getElementById('tpe_o');
+      const mEl = document.getElementById('tpe_m');
+      const pEl = document.getElementById('tpe_p');
+      const unitEl = document.getElementById('tpe_unit');
+      const methodEl = document.getElementById('tpe_method');
+      const btn = document.getElementById('tpe_calc_btn');
+
+      const outE = document.getElementById('tpe_e');
+      const outSD = document.getElementById('tpe_sd');
+      const outCI = document.getElementById('tpe_ci');
+      const outSig = document.getElementById('tpe_signal');
+      const summary = document.getElementById('tpe_summary');
+      const steps = document.getElementById('tpe_steps');
+      const copyBtn = document.getElementById('tpe_copy');
+
+      const riskBtns = Array.from(document.querySelectorAll('#tpe-card [data-risk]'));
+
+      function triangularSD(a,b,c){
+        // Var = (a^2 + b^2 + c^2 - ab - ac - bc) / 18
+        const varr = (a*a + b*b + c*c - a*b - a*c - b*c) / 18;
+        return Math.sqrt(Math.max(0, varr));
+      }
+
+      function calc(){
+        const O = num(oEl.value);
+        const M = num(mEl.value);
+        const P = num(pEl.value);
+
+        if(!(O>0) || !(M>0) || !(P>0) || (P < O)){
+          outSig.textContent = "Enter O/M/P (and ensure P ≥ O).";
+          summary.textContent = "Enter O/M/P to see an easy summary.";
+          return;
+        }
+
+        const method = methodEl.value;
+        const units = unitEl.value;
+
+        let E = 0, sd = 0;
+        if(method === 'triangular'){
+          E = (O + M + P) / 3;
+          sd = triangularSD(O, M, P);
+        } else {
+          // PERT weighted
+          E = (O + 4*M + P) / 6;
+          sd = (P - O) / 6;
+        }
+
+        const z90 = 1.645;
+        const lo = Math.max(0, E - z90 * sd);
+        const hi = E + z90 * sd;
+
+        outE.textContent = E.toFixed(2);
+        outSD.textContent = sd.toFixed(2);
+        outCI.textContent = `${lo.toFixed(2)}–${hi.toFixed(2)}`;
+
+        const spread = (E > 0) ? (sd / E) : 0;
+        let sig = "Balanced";
+        if(spread >= 0.35) sig = "High uncertainty — add buffer";
+        else if(spread >= 0.20) sig = "Moderate risk — plan contingencies";
+        else sig = "Low risk — tight estimate";
+        outSig.textContent = sig;
+
+        summary.textContent = `Expected: ${E.toFixed(2)} ${units}. 90% range: ${lo.toFixed(2)}–${hi.toFixed(2)} ${units}. (${sig})`;
+
+        steps.textContent =
+`Inputs
+- O: ${O}
+- M: ${M}
+- P: ${P}
+- Method: ${method}
+- Units: ${units}
+
+Expected
+${method === 'triangular'
+? `E = (O + M + P) / 3 = (${O} + ${M} + ${P}) / 3 = ${E.toFixed(4)}`
+: `E = (O + 4M + P) / 6 = (${O} + 4×${M} + ${P}) / 6 = ${E.toFixed(4)}`}
+
+Std deviation
+${method === 'triangular'
+? `sd = sqrt((O² + M² + P² − OM − OP − MP)/18) = ${sd.toFixed(4)}`
+: `sd = (P − O) / 6 = (${P} − ${O}) / 6 = ${sd.toFixed(4)}`}
+
+90% range
+E ± 1.645×sd
+= ${E.toFixed(4)} ± 1.645×${sd.toFixed(4)}
+= ${lo.toFixed(4)} – ${hi.toFixed(4)} ${units}`;
+      }
+
+      btn?.addEventListener('click', calc);
+
+      riskBtns.forEach(b=>{
+        b.addEventListener('click', ()=>{
+          const M = num(mEl.value);
+          if(!(M>0)) { showToast("Set M first"); return; }
+          const r = b.dataset.risk;
+          const presets = {
+            low:  { o: 0.90, p: 1.20 },
+            med:  { o: 0.80, p: 1.40 },
+            high: { o: 0.70, p: 1.70 }
+          }[r] || { o: 0.85, p: 1.45 };
+          oEl.value = (M * presets.o).toFixed(2);
+          pEl.value = (M * presets.p).toFixed(2);
+          showToast(`Risk: ${r}`);
+        });
+      });
+
+      copyBtn?.addEventListener('click', async ()=>{
+        try{
+          await navigator.clipboard.writeText(summary.textContent || "");
+          showToast("Copied");
+        }catch{
+          showToast("Copy failed");
+        }
+      });
+    }
+
+    function initMDE(){
+      const toneEl = document.getElementById('mde_tone');
+      const spendEl = document.getElementById('mde_spend');
+      const revEl = document.getElementById('mde_revenue');
+      const newEl = document.getElementById('mde_new_customers');
+      const marginEl = document.getElementById('mde_margin');
+      const aovEl = document.getElementById('mde_aov');
+      const visitsEl = document.getElementById('mde_visits');
+
+      const attrEl = document.getElementById('mde_attr');
+      const attrLabel = document.getElementById('mde_attr_label');
+
+      const btn = document.getElementById('mde_calc_btn');
+      const seed = document.getElementById('mde_seed_btn');
+
+      const outInfRev = document.getElementById('mde_inf_rev');
+      const outInfRevRng = document.getElementById('mde_inf_rev_rng');
+      const outInfGP = document.getElementById('mde_inf_gp');
+      const outNet = document.getElementById('mde_net');
+      const outROI = document.getElementById('mde_roi');
+      const outCPA = document.getElementById('mde_cpa');
+      const outCPAMax = document.getElementById('mde_cpa_max');
+
+      const decisionEl = document.getElementById('mde_decision');
+      const reasonEl = document.getElementById('mde_reason');
+      const bottleneckEl = document.getElementById('mde_bottleneck');
+      const actionEl = document.getElementById('mde_action');
+      const stepsEl = document.getElementById('mde_steps');
+
+      function setAttrLabel(){
+        attrLabel.textContent = `${attrEl.value}%`;
+      }
+      setAttrLabel();
+      attrEl?.addEventListener('input', setAttrLabel);
+
+      function toneLine(tone, operator, cfo, founder){
+        if(tone === 'cfo') return cfo;
+        if(tone === 'founder') return founder;
+        return operator;
+      }
+
+      function calc(){
+        const tone = toneEl.value;
+
+        const spend = num(spendEl.value);
+        const revenue = num(revEl.value);
+        const newCust = num(newEl.value);
+        const marginPct = num(marginEl.value);
+        const aov = num(aovEl.value);
+        const visits = num(visitsEl.value);
+
+        const influence = clamp(num(attrEl.value) / 100, 0.10, 0.80);
+        const margin = clamp(marginPct / 100, 0, 1);
+
+        // basic validation
+        if(!(spend>0) || !(revenue>0) || !(newCust>=0) || !(marginPct>0) || !(aov>0)){
+          decisionEl.textContent = "Enter values to evaluate";
+          reasonEl.textContent = "Add spend, revenue, margin, AOV, and new customers.";
+          bottleneckEl.textContent = "—";
+          actionEl.textContent = "—";
+          return;
+        }
+
+        const infRev = revenue * influence;
+
+        // range (±10 points influence, clamped)
+        const infLow = revenue * clamp(influence - 0.10, 0.10, 0.80);
+        const infHigh = revenue * clamp(influence + 0.10, 0.10, 0.80);
+
+        const infGP = infRev * margin;
+        const net = infGP - spend;
+        const roi = (spend > 0) ? (net / spend * 100) : 0;
+
+        const cpa = (newCust > 0) ? (spend / newCust) : Infinity;
+        const maxCPA = aov * margin * influence;
+
+        outInfRev.textContent = money(infRev);
+        outInfRevRng.textContent = `Range: ${money(infLow)}–${money(infHigh)}`;
+        outInfGP.textContent = money(infGP);
+        outNet.textContent = money(net);
+        outROI.textContent = `ROI: ${Number.isFinite(roi) ? roi.toFixed(1) : "—"}%`;
+        outCPA.textContent = Number.isFinite(cpa) ? money(cpa) : "—";
+        outCPAMax.textContent = money(maxCPA);
+
+        // conversion (optional)
+        const conv = (visits > 0) ? (newCust / visits) : null;
+
+        // bottleneck detection (simple + practical)
+        let bottleneck = "—";
+        let action = "—";
+
+        if(newCust <= 0){
+          bottleneck = "Demand";
+          action = "You’re spending without acquiring customers. Pause paid tests and fix offer + targeting.";
+        } else if(conv !== null && conv < 0.006){
+          bottleneck = "Conversion";
+          action = "Traffic isn’t converting. Improve offer/landing, tighten targeting, and test messaging fast.";
+        } else if(cpa > maxCPA){
+          bottleneck = "Unit economics";
+          action = "CPA is above max sustainable CPA. Reduce CPA (creative/targeting) or raise AOV/margin.";
+        } else if(net < 0){
+          bottleneck = "Attribution / mix";
+          action = "Net is negative even with acceptable CPA—reallocate budget to higher-intent channels and retest influence.";
+        } else {
+          bottleneck = "Scaling readiness";
+          action = "Unit economics look workable. Scale gradually and watch CPA + margin weekly.";
+        }
+
+        bottleneckEl.textContent = bottleneck;
+        actionEl.textContent = action;
+
+        // decision logic (Scale / Fix / Reallocate / Pause)
+        let decision = "Fix";
+        let reason = "";
+
+        const healthy = (net > 0) && (roi >= 20) && (cpa <= maxCPA);
+        const borderline = (net >= -0.10 * spend) && (roi >= -10) && (cpa <= maxCPA * 1.10);
+        const bad = (roi <= -25) || (newCust <= 0) || (cpa === Infinity);
+
+        if(bad){
+          decision = "Pause";
+          reason = toneLine(
+            tone,
+            "Stop spend and diagnose. You’re not getting clean returns yet.",
+            "Capital protection: pause until unit economics and attribution are validated.",
+            "Pause, reset, and come back with a tighter offer + message."
+          );
+        } else if(healthy){
+          decision = "Scale";
+          reason = toneLine(
+            tone,
+            "You’ve got positive net impact with sustainable CPA. Scale in controlled steps.",
+            "The model supports expansion: positive net and acceptable CPA. Increase budget with guardrails.",
+            "This is working. Scale carefully and keep learning fast."
+          );
+        } else if(borderline){
+          decision = "Fix";
+          reason = toneLine(
+            tone,
+            "Close the gap first (CPA, conversion, or influence). Then scale.",
+            "Optimize efficiency before increasing budget; returns are close but not robust.",
+            "Tune the engine—then push the gas."
+          );
+        } else {
+          decision = "Reallocate";
+          reason = toneLine(
+            tone,
+            "Shift budget to better-performing channels/segments. Keep testing, cut the weak links.",
+            "Reallocate to higher ROI mixes; current allocation underperforms.",
+            "Move money to what’s already resonating and iterate."
+          );
+        }
+
+        decisionEl.textContent = decision;
+        reasonEl.textContent = reason;
+
+        stepsEl.textContent =
+`Inputs
+- Spend: ${spend}
+- Revenue: ${revenue}
+- New customers: ${newCust}
+- Margin: ${marginPct}%
+- AOV: ${aov}
+- Visits: ${visits || "—"}
+- Influence: ${(influence*100).toFixed(0)}%
+
+Derived
+- Influenced revenue = revenue × influence = ${infRev.toFixed(2)}
+- Influenced GP = influenced revenue × margin = ${infGP.toFixed(2)}
+- Net = GP − spend = ${net.toFixed(2)}
+- ROI = net ÷ spend × 100 = ${roi.toFixed(4)}%
+- CPA = spend ÷ new customers = ${Number.isFinite(cpa) ? cpa.toFixed(4) : "∞"}
+- Max CPA = AOV × margin × influence = ${maxCPA.toFixed(4)}
+${conv !== null ? `- Conversion = new customers ÷ visits = ${(conv*100).toFixed(2)}%` : ""}
+
+Decision rules (simple)
+- Scale: net > 0 AND ROI ≥ 20% AND CPA ≤ maxCPA
+- Pause: ROI ≤ −25% OR new customers = 0
+- Fix: borderline efficiency
+- Reallocate: negative/weak allocation but not a full stop`;
+      }
+
+      btn?.addEventListener('click', calc);
+
+      seed?.addEventListener('click', ()=>{
+        spendEl.value = 2500;
+        revEl.value = 42000;
+        newEl.value = 120;
+        marginEl.value = 55;
+        aovEl.value = 58;
+        visitsEl.value = 18000;
+        attrEl.value = 40;
+        setAttrLabel();
+        showToast("Example loaded");
+        calc();
+      });
+    }
+
+    function initTool(key){
+      if(key === 'roi') initROI();
+      if(key === 'forecast') initForecast();
+      if(key === 'pert') initPERT();
+      if(key === 'mde') initMDE();
+    }
+
+    // =========================================================
+    // ✅ Bind Hot New Releases cards → open tool modal
+    // =========================================================
+    const hotCards = Array.from(document.querySelectorAll('#hot-new-releases .hotCard'));
+    hotCards.forEach(card=>{
+      clicky(card, ()=>{
+        const key = card.dataset.tool;
+
+        // ✅ Social proof micro-pop ONLY for Retail Sales Forecast
+        if (key === 'forecast'){
+          setTimeout(()=> showMicroToastForecast(), 180);
+        }
+
+        toolTitle.textContent = card.dataset.title || 'Tool';
+        toolCaption.textContent = card.dataset.caption || '';
+        injectTemplate(`tpl-${key}`);
+        openToolModal();
+        initTool(key);
+      });
+    });
   </script>
 </body>
 </html>
