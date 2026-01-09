@@ -584,106 +584,48 @@
    (fixed one-row, swipe on mobile)
    ============================== */
 .crIntent{
-  background: #EEF5FF;
-  border-radius: 28px;
-  padding: 26px 22px 20px;
+  background:#EEF5FF;
+  border-radius:28px;
+  padding:26px 22px 20px;
 }
 
 .crIntent__title{
-  margin: 0 0 18px;
-  text-align: center;
-  font-size: clamp(18px, 2vw, 28px);
-  font-weight: 900;
-  letter-spacing: -.02em;
-  color: rgba(11,11,15,.92);
+  margin:0 0 18px;
+  text-align:center;
+  font-weight:950;
+  letter-spacing:-.025em;
+  white-space:nowrap;
+  font-size:clamp(16px,3.2vw,28px);
 }
 
 .crIntent__rail{
   display:flex;
-  gap: 18px;
-  justify-content: center;     /* center when it fits */
-  align-items: center;
-  flex-wrap: nowrap;           /* ✅ keep one row ALWAYS */
-  overflow-x: auto;            /* ✅ swipe on mobile */
-  overflow-y: hidden;
-  padding: 2px 6px 10px;
-
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  gap:18px;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
 }
-.crIntent__rail::-webkit-scrollbar{ height: 0; }
 
 .crIntent__pill{
+  flex:0 0 auto;
   display:flex;
   align-items:center;
-  justify-content:flex-start;  /* ✅ text is LEFT like Coursera */
-  gap: 14px;
-
-  height: 64px;
-  padding: 0 18px;
-
-  width: 278px;
-  min-width: 278px;            /* ✅ keeps pill “fixed-ish” */
-
-  background: rgba(255,255,255,.98);
-  border: 1px solid rgba(11,11,15,.10);
-  border-radius: 18px;
-
-  box-shadow: 0 1px 0 rgba(11,11,15,.04), 0 1px 2px rgba(11,11,15,.06);
-  cursor: pointer;
-
-  scroll-snap-align: start;
-  transition: transform .16s var(--easeOut), box-shadow .16s var(--easeOut), border-color .16s var(--easeOut);
-}
-.crIntent__pill:hover{
-  transform: translateY(-1px);
-  border-color: rgba(11,11,15,.14);
-  box-shadow: 0 1px 0 rgba(11,11,15,.04), 0 10px 22px rgba(11,11,15,.10);
-}
-
-.crIntent__icon{
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: #1D4ED8;
-  display:grid;
-  place-items:center;
-  flex: 0 0 40px;
-}
-.crIntent__icon svg{
-  width: 20px;
-  height: 20px;
-  color:#fff;
+  gap:12px;
+  height:64px;
+  padding:0 18px;
+  width:260px;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.1);
+  border-radius:18px;
+  scroll-snap-align:center;
 }
 
 .crIntent__label{
-  font-size: 15px;
-  font-weight: 800;
-  color: rgba(11,11,15,.92);
-  line-height: 1.15;
-  white-space: nowrap;         /* Coursera keeps it one line */
-}
-
-/* ✅ Mobile behavior: keep one row, start left, swipe */
-@media (max-width: 900px){
-  .crIntent__rail{
-    justify-content: flex-start;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-}
-
-/* ✅ Small mobile: slightly smaller pill so 2+ can peek, like Coursera */
-@media (max-width: 560px){
-  .crIntent{ border-radius: 24px; padding: 22px 14px 16px; }
-  .crIntent__rail{ gap: 14px; }
-  .crIntent__pill{
-    width: 260px;
-    min-width: 260px;
-    height: 62px;
-    padding: 0 16px;
-  }
+  font-weight:850;
+  white-space:nowrap;
 }
     
     /* ✅ keeps anchor targets from hiding under sticky topbar */
