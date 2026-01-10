@@ -580,54 +580,54 @@
     }
 
     /* ==============================
-   ✅ Coursera-style intent rail
-   (fixed one-row, swipe on mobile)
-   ============================== */
-.crIntent{
-  background:#EEF5FF;
-  border-radius:28px;
-  padding:26px 22px 20px;
-}
+       ✅ Coursera-style intent rail
+       (fixed one-row, swipe on mobile)
+       ============================== */
+    .crIntent{
+      background:#EEF5FF;
+      border-radius:28px;
+      padding:26px 22px 20px;
+    }
 
-.crIntent__title{
-  margin:0 0 18px;
-  text-align:center;
-  font-weight:950;
-  letter-spacing:-.025em;
-  white-space:nowrap;
-  font-size:clamp(16px,3.2vw,28px);
-}
+    .crIntent__title{
+      margin:0 0 18px;
+      text-align:center;
+      font-weight:950;
+      letter-spacing:-.025em;
+      white-space:nowrap;
+      font-size:clamp(16px,3.2vw,28px);
+    }
 
-.crIntent__rail{
-  display:flex;
-  gap:18px;
-  justify-content:center;
-  align-items:center;
-  flex-wrap:nowrap;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-  -webkit-overflow-scrolling:touch;
-}
+    .crIntent__rail{
+      display:flex;
+      gap:18px;
+      justify-content:center;
+      align-items:center;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+    }
 
-.crIntent__pill{
-  flex:0 0 auto;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  height:64px;
-  padding:0 18px;
-  width:260px;
-  background:#fff;
-  border:1px solid rgba(0,0,0,.1);
-  border-radius:18px;
-  scroll-snap-align:center;
-}
+    .crIntent__pill{
+      flex:0 0 auto;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      height:64px;
+      padding:0 18px;
+      width:260px;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.1);
+      border-radius:18px;
+      scroll-snap-align:center;
+    }
 
-.crIntent__label{
-  font-weight:850;
-  white-space:nowrap;
-}
-    
+    .crIntent__label{
+      font-weight:850;
+      white-space:nowrap;
+    }
+
     /* ✅ keeps anchor targets from hiding under sticky topbar */
     #education-map, #hot-new-releases, #qualifications-file { scroll-margin-top: 70px; }
 
@@ -993,6 +993,429 @@
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
     }
+
+    /* =================================================================
+       ✅ QUALIFICATIONS FILE (embedded component — no nested HTML/head)
+       FIXES INCLUDED:
+       - No duplicate <!doctype>/<html>/<head> (this was breaking everything)
+       - Namespaced classes to avoid .tab collision with topbar
+       - Title spacing + alignment (room under title)
+       - “Top Secret” click reveals Security tab + IBM Ethical Hacking w/ Kali Linux
+       - Tabs ordered; Personnel File always last
+       ================================================================= */
+
+    .dqWrap{
+      --ease: cubic-bezier(.2,.9,.2,1);
+      --paperA:#e7ddc2;
+      --paperB:#d9cea9;
+      --r: 28px;
+      --tabFont: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --stageBg: rgba(0,0,0,.04);
+      --shadow: 0 40px 140px rgba(0,0,0,.20);
+    }
+    .dqWrap *{ box-sizing:border-box; }
+
+    .dqStage{
+      position:relative;
+      border-radius: calc(var(--r) + 16px);
+      padding: 18px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: var(--stageBg);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .dqStage:before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        repeating-linear-gradient(
+          180deg,
+          rgba(255,255,255,.55) 0px,
+          rgba(255,255,255,.55) 1px,
+          transparent 2px,
+          transparent 7px
+        );
+      opacity:.10;
+      pointer-events:none;
+      mix-blend-mode: overlay;
+    }
+
+    .dqFolderWrap{ position:relative; z-index:1; padding-top: 26px; }
+
+    .dqTabBehind{
+      position:absolute;
+      top:0;
+      left:18px;
+      width:420px;
+      height:62px;
+      transform: rotate(-0.35deg);
+      border-radius: 16px 16px 12px 12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.40), rgba(255,255,255,0) 60%),
+        linear-gradient(180deg, var(--paperB), var(--paperA));
+      border: 1px solid rgba(0,0,0,.14);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.26),
+        0 16px 30px rgba(0,0,0,.12);
+      z-index:0;
+      pointer-events:none;
+    }
+
+    .dqFolder{
+      position:relative;
+      border-radius: var(--r);
+      overflow:hidden;
+      border: 1px solid rgba(0,0,0,.18);
+      background:
+        radial-gradient(900px 420px at 12% 0%, rgba(255,255,255,.34), transparent 56%),
+        linear-gradient(180deg, var(--paperA), var(--paperB));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.26),
+        inset 0 -18px 60px rgba(0,0,0,.08),
+        0 40px 120px rgba(0,0,0,.18);
+      z-index: 3;
+    }
+    .dqFolder:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image:
+        radial-gradient(rgba(0,0,0,.06) 1px, transparent 1px),
+        radial-gradient(rgba(0,0,0,.04) 1px, transparent 1px);
+      background-size: 18px 18px, 26px 26px;
+      background-position: 0 0, 8px 10px;
+      opacity:.14;
+      pointer-events:none;
+      mix-blend-mode: multiply;
+    }
+
+    .dqFolderLip{
+      position:absolute; left:0; right:0; top:0;
+      height:66px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,0) 70%),
+        linear-gradient(180deg, var(--paperB), var(--paperA));
+      border-bottom: 1px solid rgba(0,0,0,.10);
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,.18);
+      z-index:2;
+      pointer-events:none;
+    }
+
+    .dqFolderVignette{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 520px at 50% 0%, rgba(0,0,0,.08), transparent 55%),
+        radial-gradient(900px 520px at 50% 100%, rgba(0,0,0,.12), transparent 60%);
+      opacity:.55;
+      pointer-events:none;
+      z-index:1;
+      mix-blend-mode:multiply;
+    }
+
+    .dqHeader{
+      position:relative;
+      z-index: 3;
+      padding: 18px 18px 10px;
+      display:flex;
+      gap: 14px;
+    }
+    .dqLeft{ flex:1; min-width:0; display:flex; flex-direction:column; gap:8px; }
+
+    .dqTypeLine{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      color: rgba(14,18,22,.76);
+      letter-spacing: .06em;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .dqFileRow{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      min-width:0;
+      padding-bottom: 10px;
+    }
+    .dqFileName{
+      margin:0;
+      font-family: var(--tabFont);
+      color: rgba(10,12,14,.88);
+      font-weight: 900;
+      letter-spacing: -.01em;
+      font-size: 20px;
+      line-height:1.12;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      padding-bottom: 6px;
+    }
+
+    .dqStamp{
+      display:inline-block;
+      transform: rotate(-8deg) scale(.98);
+      transform-origin: 50% 50%;
+      user-select:none;
+      cursor: pointer;
+      flex: 0 0 auto;
+      opacity:.95;
+      transition: transform .22s var(--ease), filter .22s var(--ease);
+      margin-top: 2px;
+    }
+    .dqStamp .dqRing{
+      border: 4px solid rgba(209,32,32,.78);
+      border-radius: 16px;
+      padding: 8px 14px;
+      box-shadow: inset 0 0 0 2px rgba(209,32,32,.22);
+      background: rgba(209,32,32,.06);
+      position:relative;
+    }
+    .dqStamp .dqRing:after{
+      content:"";
+      position:absolute;
+      inset: 7px;
+      border: 2px dashed rgba(209,32,32,.42);
+      border-radius: 12px;
+    }
+    .dqStamp strong{
+      display:block;
+      font-weight: 900;
+      letter-spacing: .18em;
+      font-size: 11px;
+      color: rgba(209,32,32,.86);
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(255,255,255,.22);
+      white-space:nowrap;
+      font-family: var(--tabFont);
+    }
+    .dqStamp.is-armed{
+      transform: rotate(-10deg) scale(1.02);
+      filter: contrast(1.06);
+    }
+    .dqStamp.is-armed strong{
+      animation: dqGlitch .42s steps(2) infinite;
+    }
+    @keyframes dqGlitch{
+      0%{ transform: translate(0,0); }
+      20%{ transform: translate(-1px,1px); }
+      40%{ transform: translate(1px,-1px); }
+      60%{ transform: translate(-1px,0); }
+      80%{ transform: translate(1px,1px); }
+      100%{ transform: translate(0,0); }
+    }
+
+    .dqMicro{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 0px; }
+    .dqMicro span{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size: 11px;
+      color: rgba(10,12,14,.70);
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.24);
+      padding: 6px 10px;
+      border-radius: 999px;
+      letter-spacing:.06em;
+      text-transform: uppercase;
+    }
+
+    #dqAccessLevel{ cursor:pointer; user-select:none; }
+    #dqAccessLevel.is-elevating{
+      background: rgba(0,0,0,.26);
+      color: rgba(183,255,183,.92);
+      border-color: rgba(183,255,183,.28);
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+      letter-spacing: .10em;
+    }
+    #dqAccessLevel.is-granted{
+      background: rgba(0,0,0,.30);
+      color: rgba(183,255,183,1);
+      border-color: rgba(183,255,183,.40);
+    }
+
+    .dqTabsBar{
+      position:relative;
+      z-index:3;
+      display:flex;
+      gap: 10px;
+      padding: 10px 12px 0;
+      overflow:auto;
+      scrollbar-width:none;
+      border-top: 1px solid rgba(0,0,0,.10);
+    }
+    .dqTabsBar::-webkit-scrollbar{ display:none; }
+
+    .dqTabBtn{
+      font-family: var(--tabFont);
+      border: 1px solid rgba(0,0,0,.14);
+      background: rgba(255,255,255,.22);
+      color: rgba(10,12,14,.82);
+      border-radius: 16px;
+      padding: 10px 12px;
+      cursor:pointer;
+      white-space:nowrap;
+      transition: transform .12s var(--ease), background .12s var(--ease), border-color .12s var(--ease);
+      font-weight: 900;
+      letter-spacing:-.01em;
+      font-size: 13px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.08);
+      flex: 0 0 auto;
+    }
+    .dqTabBtn:hover{ transform: translateY(-1px); border-color: rgba(0,0,0,.22); }
+    .dqTabBtn.active{
+      background: rgba(255,255,255,.40);
+      border-color: rgba(0,0,0,.22);
+    }
+    .dqTabBtn.isHidden{ display:none; }
+
+    .dqBody{
+      position:relative;
+      z-index:3;
+      margin: 10px 12px 12px;
+      border-radius: 22px;
+      border: 1px solid rgba(0,0,0,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,.18));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.24);
+      padding: 14px;
+    }
+    .dqToolbar{ display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
+    .dqCount{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size: 11px;
+      color: rgba(10,12,14,.70);
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.28);
+      padding: 7px 10px;
+      border-radius: 999px;
+      letter-spacing:.06em;
+      text-transform: uppercase;
+      white-space:nowrap;
+    }
+    .dqSearch{
+      flex:1;
+      max-width: 520px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.22);
+      padding: 10px 12px;
+      border-radius: 999px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.24);
+      min-width: min(520px, 100%);
+    }
+    .dqSearch input{
+      width:100%;
+      border:0;
+      outline:none;
+      background:transparent;
+      color: rgba(10,12,14,.82);
+      font-size:13px;
+      font-family: var(--tabFont);
+      font-weight: 800;
+    }
+    .dqSearch span{ color: rgba(10,12,14,.45); }
+
+    .dqList{ display:grid; gap:10px; }
+    .dqRow{
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.22);
+      border-radius: 18px;
+      padding: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      cursor: default;
+      transition: border-color .12s var(--ease), background .12s var(--ease);
+    }
+    .dqRow:hover{ border-color: rgba(0,0,0,.16); background: rgba(255,255,255,.28); }
+
+    .dqLeftRow{ display:flex; align-items:center; gap:12px; min-width:0; }
+
+    .dqLogo{
+      width:54px; height:54px;
+      border-radius:16px;
+      background: rgba(255,255,255,.42);
+      border: 1px solid rgba(0,0,0,.10);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.45);
+      display:grid; place-items:center;
+      flex:0 0 auto;
+      overflow:hidden;
+      position: relative;
+    }
+    .dqLogo img{ width: 76%; height: 76%; object-fit:contain; display:block; }
+    .dqLogo .dqFallback{
+      position:absolute;
+      inset:0;
+      display:none;
+      place-items:center;
+      font-family: var(--tabFont);
+      font-weight: 950;
+      color: rgba(10,12,14,.72);
+      font-size: 14px;
+      letter-spacing: -.01em;
+    }
+    .dqLogo.isFallback img{ display:none; }
+    .dqLogo.isFallback .dqFallback{ display:grid; }
+
+    .dqTxt{ min-width:0; }
+    .dqTitle{
+      font-family: var(--tabFont);
+      font-weight: 900;
+      letter-spacing:-.01em;
+      color: rgba(10,12,14,.88);
+      font-size: 18px;
+      line-height:1.12;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .dqMeta{
+      margin-top: 6px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color: rgba(10,12,14,.62);
+      font-weight: 900;
+      font-family: var(--tabFont);
+    }
+    .dqDot{ width:4px; height:4px; border-radius:50%; background: rgba(10,12,14,.40); display:inline-block; }
+    .dqCred{
+      letter-spacing:.12em;
+      font-family: var(--tabFont);
+      font-weight: 900;
+      opacity:.90;
+      white-space: nowrap;
+    }
+
+    .dqRightRow{
+      flex: 0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap: 10px;
+      min-width: 0;
+    }
+    .dqPill{
+      font-size: 11px;
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.24);
+      color: rgba(10,12,14,.72);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      letter-spacing:.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 860px){
+      .dqFileName{ font-size: 18px; }
+      .dqSearch{ max-width: 100%; }
+      .dqRow{ align-items:flex-start; }
+      .dqRightRow{ justify-content:flex-start; }
+    }
   </style>
 </head>
 
@@ -1201,366 +1624,397 @@
     </section>
 
     <!-- ✅ Coursera-style “What brings you…” (fixed one-row rail) -->
-<section class="section crIntent" aria-label="Portfolio intent">
-  <h2 class="crIntent__title">What brings you to my portfolio today?</h2>
+    <section class="section crIntent" aria-label="Portfolio intent">
+      <h2 class="crIntent__title">What brings you to my portfolio today?</h2>
 
-  <div class="crIntent__rail">
-    <button class="crIntent__pill">
-      <span class="crIntent__icon">👤</span>
-      <span class="crIntent__label">Meet Mia</span>
-    </button>
+      <div class="crIntent__rail">
+        <button class="crIntent__pill">
+          <span class="crIntent__icon">👤</span>
+          <span class="crIntent__label">Meet Mia</span>
+        </button>
 
-    <button class="crIntent__pill">
-      <span class="crIntent__icon">🛠️</span>
-      <span class="crIntent__label">Inspect my toolkit</span>
-    </button>
+        <button class="crIntent__pill">
+          <span class="crIntent__icon">🛠️</span>
+          <span class="crIntent__label">Inspect my toolkit</span>
+        </button>
 
-    <button class="crIntent__pill">
-      <span class="crIntent__icon">📈</span>
-      <span class="crIntent__label">Experience live demos</span>
-    </button>
+        <button class="crIntent__pill">
+          <span class="crIntent__icon">📈</span>
+          <span class="crIntent__label">Experience live demos</span>
+        </button>
 
-    <button class="crIntent__pill">
-      <span class="crIntent__icon">🤝</span>
-      <span class="crIntent__label">Build something together</span>
-    </button>
-  </div>
-</section>
-
-<!-- =========================
-     MY TOOLKIT — Red Toolbox (click to open)
-     UPDATE:
-     ✅ Mini-box layout: logo + label fits perfectly
-     ✅ Label typography matches your site (no serif look)
-     ✅ Logos never overflow, always centered
-     ✅ Keeps your keyhole + pulse + 🔑 hover
-========================= -->
-<section class="section" id="my-toolkit" aria-label="My Toolkit">
-  <details class="rtb">
-    <summary class="rtb__summary">
-      <div class="rtb__left">
-       <div class="hotTitle">My Toolkit</div>
+        <button class="crIntent__pill">
+          <span class="crIntent__icon">🤝</span>
+          <span class="crIntent__label">Build something together</span>
+        </button>
       </div>
+    </section>
 
-      <span class="rtb__right" aria-hidden="true">
-        <span class="rtb__keyhole" aria-hidden="true">
-          <span class="rtb__keyEmoji" aria-hidden="true">🔑</span>
-        </span>
-      </span>
-    </summary>
+    <!-- =========================
+         MY TOOLKIT — Red Toolbox (click to open)
+    ========================= -->
+    <section class="section" id="my-toolkit" aria-label="My Toolkit">
+      <details class="rtb">
+        <summary class="rtb__summary">
+          <div class="rtb__left">
+           <div class="hotTitle">My Toolkit</div>
+          </div>
 
-    <div class="rtb__body">
-      <div class="rtbGrid" role="list">
-        <!-- Core Web -->
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="HTML5" src="https://cdn.simpleicons.org/html5"></div><div class="rtbName">HTML</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="CSS3" src="https://cdn.simpleicons.org/css3"></div><div class="rtbName">CSS</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="JavaScript" src="https://cdn.simpleicons.org/javascript"></div><div class="rtbName">JavaScript</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="TypeScript" src="https://cdn.simpleicons.org/typescript"></div><div class="rtbName">TypeScript</div></div>
+          <span class="rtb__right" aria-hidden="true">
+            <span class="rtb__keyhole" aria-hidden="true">
+              <span class="rtb__keyEmoji" aria-hidden="true">🔑</span>
+            </span>
+          </span>
+        </summary>
 
-        <!-- Dev workflow -->
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="GitHub" src="https://cdn.simpleicons.org/github"></div><div class="rtbName">GitHub</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Git" src="https://cdn.simpleicons.org/git"></div><div class="rtbName">Git</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Docker" src="https://cdn.simpleicons.org/docker"></div><div class="rtbName">Docker</div></div>
+        <div class="rtb__body">
+          <div class="rtbGrid" role="list">
+            <!-- Core Web -->
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="HTML5" src="https://cdn.simpleicons.org/html5"></div><div class="rtbName">HTML</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="CSS3" src="https://cdn.simpleicons.org/css3"></div><div class="rtbName">CSS</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="JavaScript" src="https://cdn.simpleicons.org/javascript"></div><div class="rtbName">JavaScript</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="TypeScript" src="https://cdn.simpleicons.org/typescript"></div><div class="rtbName">TypeScript</div></div>
 
-        <!-- Analytics / BI / Modeling -->
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Microsoft Excel" src="https://cdn.simpleicons.org/microsoftexcel"></div><div class="rtbName">Excel</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Power BI" src="https://cdn.simpleicons.org/powerbi"></div><div class="rtbName">Power BI</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Google Sheets" src="https://cdn.simpleicons.org/googlesheets"></div><div class="rtbName">Google Sheets</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Tableau" src="https://cdn.simpleicons.org/tableau"></div><div class="rtbName">Tableau</div></div>
+            <!-- Dev workflow -->
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="GitHub" src="https://cdn.simpleicons.org/github"></div><div class="rtbName">GitHub</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Git" src="https://cdn.simpleicons.org/git"></div><div class="rtbName">Git</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Docker" src="https://cdn.simpleicons.org/docker"></div><div class="rtbName">Docker</div></div>
 
-        <!-- Cloud -->
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Amazon AWS" src="https://cdn.simpleicons.org/amazonaws"></div><div class="rtbName">AWS</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Microsoft Azure" src="https://cdn.simpleicons.org/microsoftazure"></div><div class="rtbName">Azure</div></div>
+            <!-- Analytics / BI / Modeling -->
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Microsoft Excel" src="https://cdn.simpleicons.org/microsoftexcel"></div><div class="rtbName">Excel</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Power BI" src="https://cdn.simpleicons.org/powerbi"></div><div class="rtbName">Power BI</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Google Sheets" src="https://cdn.simpleicons.org/googlesheets"></div><div class="rtbName">Google Sheets</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Tableau" src="https://cdn.simpleicons.org/tableau"></div><div class="rtbName">Tableau</div></div>
 
-        <!-- Databases -->
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="PostgreSQL" src="https://cdn.simpleicons.org/postgresql"></div><div class="rtbName">PostgreSQL</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="MySQL" src="https://cdn.simpleicons.org/mysql"></div><div class="rtbName">MySQL</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="SQLite" src="https://cdn.simpleicons.org/sqlite"></div><div class="rtbName">SQLite</div></div>
+            <!-- Cloud -->
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Amazon AWS" src="https://cdn.simpleicons.org/amazonaws"></div><div class="rtbName">AWS</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Microsoft Azure" src="https://cdn.simpleicons.org/microsoftazure"></div><div class="rtbName">Azure</div></div>
 
-        <!-- Revenue / Ops stack -->
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Salesforce" src="https://cdn.simpleicons.org/salesforce"></div><div class="rtbName">Salesforce</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="HubSpot" src="https://cdn.simpleicons.org/hubspot"></div><div class="rtbName">HubSpot</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Jira" src="https://cdn.simpleicons.org/jira"></div><div class="rtbName">Jira</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Notion" src="https://cdn.simpleicons.org/notion"></div><div class="rtbName">Notion</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Slack" src="https://cdn.simpleicons.org/slack"></div><div class="rtbName">Slack</div></div>
+            <!-- Databases -->
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="PostgreSQL" src="https://cdn.simpleicons.org/postgresql"></div><div class="rtbName">PostgreSQL</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="MySQL" src="https://cdn.simpleicons.org/mysql"></div><div class="rtbName">MySQL</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="SQLite" src="https://cdn.simpleicons.org/sqlite"></div><div class="rtbName">SQLite</div></div>
 
-        <!-- Design -->
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Figma" src="https://cdn.simpleicons.org/figma"></div><div class="rtbName">Figma</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Canva" src="https://cdn.simpleicons.org/canva"></div><div class="rtbName">Canva</div></div>
+            <!-- Revenue / Ops stack -->
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Salesforce" src="https://cdn.simpleicons.org/salesforce"></div><div class="rtbName">Salesforce</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="HubSpot" src="https://cdn.simpleicons.org/hubspot"></div><div class="rtbName">HubSpot</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Jira" src="https://cdn.simpleicons.org/jira"></div><div class="rtbName">Jira</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Notion" src="https://cdn.simpleicons.org/notion"></div><div class="rtbName">Notion</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Slack" src="https://cdn.simpleicons.org/slack"></div><div class="rtbName">Slack</div></div>
 
-        <!-- GIS -->
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="ArcGIS" src="https://cdn.simpleicons.org/arcgis"></div><div class="rtbName">ArcGIS</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Esri" src="https://cdn.simpleicons.org/esri"></div><div class="rtbName">Esri</div></div>
+            <!-- Design -->
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Figma" src="https://cdn.simpleicons.org/figma"></div><div class="rtbName">Figma</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Canva" src="https://cdn.simpleicons.org/canva"></div><div class="rtbName">Canva</div></div>
 
-        <!-- AI / Automation -->
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Python" src="https://cdn.simpleicons.org/python"></div><div class="rtbName">Python</div></div>
-        <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="OpenAI" src="https://cdn.simpleicons.org/openai"></div><div class="rtbName">OpenAI</div></div>
+            <!-- GIS -->
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="ArcGIS" src="https://cdn.simpleicons.org/arcgis"></div><div class="rtbName">ArcGIS</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Esri" src="https://cdn.simpleicons.org/esri"></div><div class="rtbName">Esri</div></div>
+
+            <!-- AI / Automation -->
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="Python" src="https://cdn.simpleicons.org/python"></div><div class="rtbName">Python</div></div>
+            <div class="rtbTile" role="listitem"><div class="rtbBadge"><img alt="OpenAI" src="https://cdn.simpleicons.org/openai"></div><div class="rtbName">OpenAI</div></div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <style>
+      /* =========================
+         Red Toolbox (open/close)
+      ========================= */
+      .rtb{
+        border-radius: 28px;
+        overflow: hidden;
+        border: 1px solid rgba(17,17,17,.10);
+        box-shadow: 0 22px 70px rgba(0,0,0,.10);
+        background:
+          radial-gradient(900px 420px at 10% 10%, rgba(255,255,255,.24), rgba(255,255,255,0) 60%),
+          radial-gradient(720px 420px at 90% 0%, rgba(0,0,0,.10), rgba(0,0,0,0) 55%),
+          rgba(239,68,68,.98);
+      }
+
+      .rtb[open]{
+        box-shadow:
+          0 22px 70px rgba(0,0,0,.10),
+          inset 0 18px 30px rgba(0,0,0,.10);
+      }
+
+      .rtb__summary{
+        position: relative;
+        list-style: none;
+        cursor: pointer;
+        user-select: none;
+        padding: 18px 22px;
+        display:flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        color: rgba(255,255,255,.96);
+        min-height: 64px;
+      }
+
+      .rtb__left{
+        display: flex;
+        align-items: center;
+        height: 100%;
+      }
+      #my-toolkit .hotTitle{
+        margin: 0 !important;
+        line-height: 1.1;
+        display: block;
+      }
+
+      .rtb__summary::-webkit-details-marker{ display:none; }
+
+      .rtb__summary::after{
+        content:"";
+        position:absolute;
+        left:0; right:0; bottom:0;
+        height: 10px;
+        background: linear-gradient(180deg, rgba(255,255,255,0), rgba(0,0,0,.18));
+        pointer-events:none;
+      }
+
+      .rtb__summary::before{
+        content:"";
+        position:absolute;
+        left: 50%;
+        top: 10px;
+        transform: translateX(-50%);
+        width: 118px;
+        height: 22px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.22));
+        border: 1px solid rgba(255,255,255,.22);
+        box-shadow: inset 0 6px 10px rgba(0,0,0,.25), 0 10px 18px rgba(0,0,0,.14);
+        opacity: .95;
+        pointer-events:none;
+      }
+
+      .rtb__right{ display:flex; align-items:center; flex: 0 0 auto; }
+
+      .rtb__keyhole{
+        width: 56px;
+        height: 56px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,.34);
+        background: rgba(255,255,255,.14);
+        box-shadow: 0 10px 22px rgba(0,0,0,.12);
+        position: relative;
+        display: grid;
+        place-items: center;
+        user-select: none;
+      }
+
+      .rtb__keyhole::before{
+        content:"";
+        width: 14px;
+        height: 14px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.95);
+        box-shadow: inset 0 -2px 0 rgba(0,0,0,.10);
+        position: absolute;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .rtb__keyhole::after{
+        content:"";
+        width: 10px;
+        height: 18px;
+        border-radius: 0 0 999px 999px;
+        background: rgba(255,255,255,.95);
+        position: absolute;
+        top: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: inset 0 -2px 0 rgba(0,0,0,.10);
+      }
+
+      .rtb__keyEmoji{
+        opacity: 0;
+        transform: scale(.96);
+        transition: opacity .16s ease, transform .16s ease;
+        font-size: 20px;
+        line-height: 1;
+        filter: drop-shadow(0 6px 14px rgba(0,0,0,.18));
+        pointer-events: none;
+      }
+
+      @keyframes keyPulse{
+        0%   { transform: scale(1);    box-shadow: 0 10px 22px rgba(0,0,0,.12), 0 0 0 0 rgba(255,255,255,.30); }
+        70%  { transform: scale(1.02); box-shadow: 0 10px 22px rgba(0,0,0,.12), 0 0 0 14px rgba(255,255,255,0); }
+        100% { transform: scale(1);    box-shadow: 0 10px 22px rgba(0,0,0,.12), 0 0 0 0 rgba(255,255,255,0); }
+      }
+      .rtb__keyhole{ animation: keyPulse 1.8s cubic-bezier(.2,.8,.2,1) infinite; }
+
+      .rtb__summary:hover .rtb__keyhole{
+        cursor: pointer;
+        border-color: rgba(255,255,255,.45);
+        background: rgba(255,255,255,.18);
+      }
+      .rtb__summary:hover .rtb__keyEmoji{ opacity: 1; transform: scale(1); }
+      .rtb__summary:hover .rtb__keyhole::before,
+      .rtb__summary:hover .rtb__keyhole::after{ opacity: 0; }
+
+      .rtb__body{
+        position: relative;
+        background: rgba(255,255,255,.92);
+        border-top: 1px solid rgba(0,0,0,.08);
+        padding: 18px 22px 22px;
+      }
+      .rtb__body::before{
+        content:"";
+        position:absolute;
+        left:0; right:0; top:0;
+        height: 18px;
+        background: linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,0));
+        opacity: .55;
+        pointer-events:none;
+      }
+
+      .rtbGrid{
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .rtbTile{
+        border-radius: 20px;
+        background: rgba(255,255,255,.96);
+        border: 1px solid rgba(17,17,17,.10);
+        box-shadow: 0 14px 34px rgba(0,0,0,.04);
+        padding: 16px 16px 14px;
+        min-height: 150px;
+        display:flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        transition: transform .18s var(--easeOut), box-shadow .18s var(--easeOut);
+      }
+      .rtbTile:hover{
+        transform: translateY(-2px);
+        box-shadow: 0 26px 85px rgba(0,0,0,.10);
+      }
+
+      .rtbBadge{
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        border: 1px solid rgba(17,17,17,.10);
+        background: rgba(255,255,255,.94);
+        display: grid;
+        place-items: center;
+        margin: 0;
+        flex: 0 0 auto;
+      }
+      .rtbBadge img{
+        width: 26px;
+        height: 26px;
+        display:block;
+        object-fit: contain;
+        opacity: .96;
+        filter: saturate(.98);
+      }
+
+      .rtbName{
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+        font-weight: 900;
+        letter-spacing: -.01em;
+        color: rgba(17,17,17,.92);
+        font-size: 14px;
+        line-height: 1.15;
+        margin: 0;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      @media (max-width: 1100px){ .rtbGrid{ grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+      @media (max-width: 860px){ .rtbGrid{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+      @media (max-width: 640px){
+        .rtb{ border-radius: 24px; }
+        .rtb__summary{ padding: 16px 14px; }
+        .rtb__body{ padding: 14px 14px 18px; }
+        .rtbGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+        .rtb__summary::before{ width: 104px; height: 20px; top: 8px; }
+        .rtb__keyhole{ width: 52px; height: 52px; }
+        .rtbTile{ min-height: 140px; padding: 14px; }
+        .rtbBadge{ width: 50px; height: 50px; }
+      }
+
+      @media (prefers-reduced-motion: reduce){
+        .rtb__keyhole{ animation: none !important; }
+      }
+    </style>
+
+    <!-- =========================
+         ✅ QUALIFICATIONS FILE (embedded here)
+         ========================= -->
+    <section class="section" id="qualifications-file" aria-label="Qualifications file">
+      <div class="dqWrap">
+        <div class="dqStage">
+          <div class="dqFolderWrap">
+            <div class="dqTabBehind" aria-hidden="true"></div>
+
+            <div class="dqFolder">
+              <div class="dqFolderLip" aria-hidden="true"></div>
+              <div class="dqFolderVignette" aria-hidden="true"></div>
+
+              <header class="dqHeader">
+                <div class="dqLeft">
+                  <div class="dqTypeLine">Credentials Dossier</div>
+
+                  <div class="dqFileRow">
+                    <h3 class="dqFileName">MIA LAVANA — QUALIFICATIONS FILE</h3>
+
+                    <div class="dqStamp" id="dqStamp" role="button" tabindex="0" aria-label="Top Secret access">
+                      <div class="dqRing">
+                        <strong>Top Secret</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="dqMicro" aria-label="Micro metadata">
+                    <span id="dqAccessLevel">Access: Restricted</span>
+                    <span>Credential # : ________</span>
+                    <span>Searchable</span>
+                  </div>
+                </div>
+              </header>
+
+              <nav class="dqTabsBar" aria-label="Qualifications tabs">
+                <!-- Ordered: most important → least. Personnel always last -->
+                <button class="dqTabBtn active" data-tab="ops" type="button">Ops</button>
+                <button class="dqTabBtn" data-tab="analytics" type="button">Analytics</button>
+                <button class="dqTabBtn" data-tab="sales" type="button">Sales</button>
+                <button class="dqTabBtn" data-tab="marketing" type="button">Marketing</button>
+                <button class="dqTabBtn" data-tab="product" type="button">Product</button>
+                <button class="dqTabBtn isHidden" id="dqTabSecurity" data-tab="security" type="button">Security</button>
+                <button class="dqTabBtn" data-tab="personnel" type="button">Personnel File</button>
+              </nav>
+
+              <div class="dqBody" role="region" aria-label="Qualifications list">
+                <div class="dqToolbar">
+                  <div class="dqCount" id="dqCount">0 items</div>
+
+                  <div class="dqSearch" role="search">
+                    <span aria-hidden="true">⌕</span>
+                    <input id="dqSearchInput" type="text" placeholder="Search courses, universities, or credential #…" />
+                  </div>
+                </div>
+
+                <div class="dqList" id="dqList" aria-label="Items"></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </details>
-</section>
+    </section>
 
-<style>
-  /* =========================
-     Red Toolbox (open/close)
-  ========================= */
-  .rtb{
-    border-radius: 28px;
-    overflow: hidden;
-    border: 1px solid rgba(17,17,17,.10);
-    box-shadow: 0 22px 70px rgba(0,0,0,.10);
-    background:
-      radial-gradient(900px 420px at 10% 10%, rgba(255,255,255,.24), rgba(255,255,255,0) 60%),
-      radial-gradient(720px 420px at 90% 0%, rgba(0,0,0,.10), rgba(0,0,0,0) 55%),
-      rgba(239,68,68,.98);
-  }
-
-  .rtb[open]{
-    box-shadow:
-      0 22px 70px rgba(0,0,0,.10),
-      inset 0 18px 30px rgba(0,0,0,.10);
-  }
-
-  .rtb__summary{
-    position: relative;
-    list-style: none;
-    cursor: pointer;
-    user-select: none;
-    padding: 18px 22px;
-    display:flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    color: rgba(255,255,255,.96);
-    min-height: 64px;
-  }
-  
-  /* ✅ Fix vertical centering of the left title */
-.rtb__left{
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-/* ✅ If your "My Toolkit" is using hotTitle, kill any default margins */
-#my-toolkit .hotTitle{
-  margin: 0 !important;
-  line-height: 1.1;
-  display: block;
-}
-  
-  .rtb__summary::-webkit-details-marker{ display:none; }
-
-  /* lid seam */
-  .rtb__summary::after{
-    content:"";
-    position:absolute;
-    left:0; right:0; bottom:0;
-    height: 10px;
-    background: linear-gradient(180deg, rgba(255,255,255,0), rgba(0,0,0,.18));
-    pointer-events:none;
-  }
-
-  /* handle */
-  .rtb__summary::before{
-    content:"";
-    position:absolute;
-    left: 50%;
-    top: 10px;
-    transform: translateX(-50%);
-    width: 118px;
-    height: 22px;
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.22));
-    border: 1px solid rgba(255,255,255,.22);
-    box-shadow: inset 0 6px 10px rgba(0,0,0,.25), 0 10px 18px rgba(0,0,0,.14);
-    opacity: .95;
-    pointer-events:none;
-  }
-
-  /* Left */
-.rtb__kicker{
-  font: inherit;                 /* inherit site font */
-  font-size: 15px;               /* matches Hot New Releases scale */
-  font-weight: 950;              /* matches section titles */
-  letter-spacing: -.01em;        /* matches Hot New Releases */
-  text-transform: none;          /* ✅ KEY FIX */
-  color: rgba(255,255,255,.92);
-  margin: 0;
-  line-height: 1.15;
-}
-
-  .rtb__right{ display:flex; align-items:center; flex: 0 0 auto; }
-
-  /* =========================
-     Keyhole CTA
-  ========================= */
-  .rtb__keyhole{
-    width: 56px;
-    height: 56px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.34);
-    background: rgba(255,255,255,.14);
-    box-shadow: 0 10px 22px rgba(0,0,0,.12);
-    position: relative;
-    display: grid;
-    place-items: center;
-    user-select: none;
-  }
-
-  .rtb__keyhole::before{
-    content:"";
-    width: 14px;
-    height: 14px;
-    border-radius: 999px;
-    background: rgba(255,255,255,.95);
-    box-shadow: inset 0 -2px 0 rgba(0,0,0,.10);
-    position: absolute;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .rtb__keyhole::after{
-    content:"";
-    width: 10px;
-    height: 18px;
-    border-radius: 0 0 999px 999px;
-    background: rgba(255,255,255,.95);
-    position: absolute;
-    top: 28px;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: inset 0 -2px 0 rgba(0,0,0,.10);
-  }
-
-  .rtb__keyEmoji{
-    opacity: 0;
-    transform: scale(.96);
-    transition: opacity .16s ease, transform .16s ease;
-    font-size: 20px;
-    line-height: 1;
-    filter: drop-shadow(0 6px 14px rgba(0,0,0,.18));
-    pointer-events: none;
-  }
-
-  @keyframes keyPulse{
-    0%   { transform: scale(1);    box-shadow: 0 10px 22px rgba(0,0,0,.12), 0 0 0 0 rgba(255,255,255,.30); }
-    70%  { transform: scale(1.02); box-shadow: 0 10px 22px rgba(0,0,0,.12), 0 0 0 14px rgba(255,255,255,0); }
-    100% { transform: scale(1);    box-shadow: 0 10px 22px rgba(0,0,0,.12), 0 0 0 0 rgba(255,255,255,0); }
-  }
-  .rtb__keyhole{ animation: keyPulse 1.8s cubic-bezier(.2,.8,.2,1) infinite; }
-
-  .rtb__summary:hover .rtb__keyhole{
-    cursor: pointer;
-    border-color: rgba(255,255,255,.45);
-    background: rgba(255,255,255,.18);
-  }
-  .rtb__summary:hover .rtb__keyEmoji{ opacity: 1; transform: scale(1); }
-  .rtb__summary:hover .rtb__keyhole::before,
-  .rtb__summary:hover .rtb__keyhole::after{ opacity: 0; }
-
-  /* =========================
-     Body + grid
-  ========================= */
-  .rtb__body{
-    position: relative;
-    background: rgba(255,255,255,.92);
-    border-top: 1px solid rgba(0,0,0,.08);
-    padding: 18px 22px 22px;
-  }
-  .rtb__body::before{
-    content:"";
-    position:absolute;
-    left:0; right:0; top:0;
-    height: 18px;
-    background: linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,0));
-    opacity: .55;
-    pointer-events:none;
-  }
-
-  .rtbGrid{
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  /* ✅ Perfect-fit mini boxes */
-  .rtbTile{
-    border-radius: 20px;
-    background: rgba(255,255,255,.96);
-    border: 1px solid rgba(17,17,17,.10);
-    box-shadow: 0 14px 34px rgba(0,0,0,.04);
-    padding: 16px 16px 14px;
-    min-height: 150px;                 /* gives breathing room */
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    transition: transform .18s var(--easeOut), box-shadow .18s var(--easeOut);
-  }
-  .rtbTile:hover{
-    transform: translateY(-2px);
-    box-shadow: 0 26px 85px rgba(0,0,0,.10);
-  }
-
-  /* Logo capsule */
-  .rtbBadge{
-    width: 52px;
-    height: 52px;
-    border-radius: 16px;
-    border: 1px solid rgba(17,17,17,.10);
-    background: rgba(255,255,255,.94);
-    display: grid;
-    place-items: center;
-    margin: 0;
-    flex: 0 0 auto;
-  }
-  .rtbBadge img{
-    width: 26px;        /* bigger + centered */
-    height: 26px;
-    display:block;
-    object-fit: contain;
-    opacity: .96;
-    filter: saturate(.98);
-  }
-
-  /* ✅ Label matches your site (no serif) + never overflows */
-  .rtbName{
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    font-weight: 900;
-    letter-spacing: -.01em;
-    color: rgba(17,17,17,.92);
-    font-size: 14px;
-    line-height: 1.15;
-    margin: 0;
-    max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Responsive */
-  @media (max-width: 1100px){ .rtbGrid{ grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-  @media (max-width: 860px){ .rtbGrid{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media (max-width: 640px){
-    .rtb{ border-radius: 24px; }
-    .rtb__summary{ padding: 16px 14px; }
-    .rtb__body{ padding: 14px 14px 18px; }
-    .rtbGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    .rtb__summary::before{ width: 104px; height: 20px; top: 8px; }
-    .rtb__keyhole{ width: 52px; height: 52px; }
-    .rtbTile{ min-height: 140px; padding: 14px; }
-    .rtbBadge{ width: 50px; height: 50px; }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .rtb__keyhole{ animation: none !important; }
-  }
-</style>
-    
-    <!-- Qualifications File -->
-  
     <!-- Footer -->
     <div class="footer">Built clean. Built to scale.</div>
   </main>
@@ -1635,7 +2089,6 @@
           </span>
         </div>
 
-        <!-- ✅ Mobile-perfect: don’t force 6 columns until large -->
         <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
           <label class="block"><span class="text-sm font-medium">Open time</span><input id="sf_open" type="time" value="08:00" class="mt-2 w-full min-h-[46px] rounded-xl border border-slate-300 px-3 bg-white"/></label>
           <label class="block"><span class="text-sm font-medium">Current time</span><input id="sf_now" type="time" class="mt-2 w-full min-h-[46px] rounded-xl border border-slate-300 px-3 bg-white"/></label>
@@ -1822,7 +2275,6 @@
             <div id="mde_roi" class="mt-1 text-xs text-slate-500">ROI: —</div>
           </div>
 
-          <!-- ✅ FIXED: wrap-safe row so it never clips -->
           <div class="rounded-2xl border border-slate-200 p-4">
             <div class="text-xs uppercase tracking-wider text-slate-500">CPA vs max CPA</div>
             <div class="mt-1 flex flex-wrap items-baseline gap-2 min-w-0">
@@ -2171,9 +2623,6 @@
       return n.toLocaleString(undefined, { maximumFractionDigits:d, minimumFractionDigits:d });
     }
 
-    // -----------------------------
-    // ROI
-    // -----------------------------
     function initROI(){
       const gainEl = document.getElementById('roi_gain');
       const upEl   = document.getElementById('roi_upfront');
@@ -2217,9 +2666,6 @@ ROI% = ${roi}`;
       btn.addEventListener('click', calc);
     }
 
-    // -----------------------------
-    // Forecast
-    // -----------------------------
     function initForecast(){
       const openEl = document.getElementById('sf_open');
       const nowEl  = document.getElementById('sf_now');
@@ -2256,7 +2702,6 @@ ROI% = ${roi}`;
         nowEl.value = `${hh}:${mm}`;
       }
 
-      // set current time on open
       if(!nowEl.value) setNow();
 
       function calc(){
@@ -2273,9 +2718,7 @@ ROI% = ${roi}`;
           return;
         }
 
-        // Handle overnight closes (close earlier than open)
         if(c <= o) c += 24*60;
-        // If current time is before open, treat as next day (rare, but keeps math stable)
         if(n < o) n += 24*60;
 
         const totalMins = Math.max(1, c - o);
@@ -2345,9 +2788,6 @@ Projected Sales = (${avgTicket > 0 ? "AvgTicket × ProjTx" : "Sales/hour × tota
       nowBtn.addEventListener('click', ()=>{ setNow(); calc(); });
     }
 
-    // -----------------------------
-    // PERT
-    // -----------------------------
     function initPERT(){
       const oEl = document.getElementById('tpe_o');
       const mEl = document.getElementById('tpe_m');
@@ -2381,13 +2821,12 @@ Projected Sales = (${avgTicket > 0 ? "AvgTicket × ProjTx" : "Sales/hour × tota
           E = (O + 4*M + P) / 6;
           SD = (P - O) / 6;
         } else {
-          // Triangular distribution
           E = (O + M + P) / 3;
           const variance = (O*O + M*M + P*P - O*M - O*P - M*P) / 18;
           SD = Math.sqrt(Math.max(0, variance));
         }
 
-        const z = 1.645; // ~90%
+        const z = 1.645;
         const lo = Math.max(0, E - z*SD);
         const hi = Math.max(0, E + z*SD);
 
@@ -2422,9 +2861,6 @@ SD = ${SD}
       btn.addEventListener('click', calc);
     }
 
-    // -----------------------------
-    // Marketing Decision Engine
-    // -----------------------------
     function initMDE(){
       const toneEl = document.getElementById('mde_tone');
       const spendEl = document.getElementById('mde_spend');
@@ -2511,7 +2947,6 @@ SD = ${SD}
         cpaEl.textContent = money(cpa);
         cpaMaxEl.textContent = money(maxCpa);
 
-        // Decision logic
         let decision = "Enter values to evaluate";
         let reason = "";
         let bottleneck = "—";
@@ -2538,9 +2973,8 @@ SD = ${SD}
           }
         }
 
-        // Bottleneck logic
         if(Number.isFinite(visits) && visits > 0 && sNew > 0){
-          const conv = sNew / visits; // new customers per visit (rough)
+          const conv = sNew / visits;
           bottleneck = (conv < 0.004) ? "Conversion" : "Volume";
           action = (conv < 0.004)
             ? "Improve offer clarity, landing page speed, and on-site conversion steps."
@@ -2579,9 +3013,6 @@ Max CPA = AOV × Margin × Influence = ${maxCpa}`;
       seedBtn.addEventListener('click', ()=>{ seed(); calc(); });
     }
 
-    // -----------------------------
-    // Tool modal open from cards
-    // -----------------------------
     function openToolFromCard(card){
       const tool = card.dataset.tool;
       const title = card.dataset.title || "Tool";
@@ -2601,6 +3032,192 @@ Max CPA = AOV × Margin × Influence = ${maxCpa}`;
     document.querySelectorAll('.hotCard').forEach(card=>{
       clicky(card, ()=> openToolFromCard(card));
     });
+
+    // =========================================================
+    // ✅ QUALIFICATIONS FILE LOGIC (tabs, search, Top Secret reveal)
+    // =========================================================
+    (function(){
+      const listEl = document.getElementById('dqList');
+      const countEl = document.getElementById('dqCount');
+      const searchEl = document.getElementById('dqSearchInput');
+      const tabs = Array.from(document.querySelectorAll('.dqTabBtn'));
+      const accessEl = document.getElementById('dqAccessLevel');
+      const stampEl = document.getElementById('dqStamp');
+      const securityTabEl = document.getElementById('dqTabSecurity');
+
+      if(!listEl || !countEl || !searchEl || !accessEl || !stampEl) return;
+
+      let accessGranted = false;
+      let activeTab = 'ops';
+      let q = '';
+
+      // You can edit/expand this list anytime.
+      const ITEMS = [
+        // Ops
+        { tab:'ops', title:'Google Project Management Specialization', org:'Google', cred:'', kind:'Specialization', logo:'https://cdn.simpleicons.org/google' },
+        { tab:'ops', title:'Agile with Atlassian Jira', org:'Atlassian', cred:'', kind:'Course', logo:'https://cdn.simpleicons.org/atlassian' },
+
+        // Analytics
+        { tab:'analytics', title:'Power BI / BI Foundations', org:'Microsoft', cred:'', kind:'Course', logo:'https://cdn.simpleicons.org/microsoft' },
+        { tab:'analytics', title:'MySQL for Data Analytics', org:'Duke University', cred:'', kind:'Course', logo:'assets/logos/Duke.png' },
+
+        // Sales
+        { tab:'sales', title:'Sales Enablement / Sales Strategy', org:'Harvard Business Review', cred:'', kind:'Course', logo:'assets/logos/HBR.png' },
+
+        // Marketing
+        { tab:'marketing', title:'Marketing Analytics', org:'NYU', cred:'', kind:'Course', logo:'assets/logos/NYU.png' },
+
+        // Product
+        { tab:'product', title:'Product / UX Systems Thinking', org:'Stanford', cred:'', kind:'Course', logo:'https://cdn.simpleicons.org/stanford' },
+
+        // Personnel
+        { tab:'personnel', title:'Personnel File (Internal)', org:'Confidential', cred:'', kind:'File', logo:'' },
+
+        // Security (hidden until Top Secret)
+        { tab:'security', title:'IBM Ethical Hacking with Kali Linux', org:'IBM', cred:'', kind:'Course', logo:'https://cdn.simpleicons.org/ibm', secret:true }
+      ];
+
+      function initials(org){
+        const s = (org || '').trim();
+        if(!s) return 'ML';
+        const words = s.split(/\s+/).slice(0,2);
+        return words.map(w=>w[0]?.toUpperCase() || '').join('') || 'ML';
+      }
+
+      function setActiveTab(tab){
+        activeTab = tab;
+        tabs.forEach(b=> b.classList.toggle('active', b.dataset.tab === tab));
+        render();
+      }
+
+      function filterItems(){
+        const query = q.trim().toLowerCase();
+        return ITEMS.filter(item=>{
+          if(item.secret && !accessGranted) return false;
+          if(item.tab === 'security' && !accessGranted) return false;
+          if(item.tab !== activeTab) return false;
+          if(!query) return true;
+          return (
+            (item.title || '').toLowerCase().includes(query) ||
+            (item.org || '').toLowerCase().includes(query) ||
+            (item.cred || '').toLowerCase().includes(query)
+          );
+        });
+      }
+
+      function rowHTML(item){
+        const cred = (item.cred && item.cred.trim()) ? item.cred.trim() : '________';
+        const logo = item.logo || '';
+        const org = item.org || '';
+        const kind = item.kind || 'Course';
+        const safeTitle = item.title || 'Credential';
+        const safeOrg = org || 'Organization';
+
+        const hasLogo = Boolean(logo);
+        const fallback = initials(org);
+
+        return `
+          <div class="dqRow" role="listitem">
+            <div class="dqLeftRow">
+              <div class="dqLogo ${hasLogo ? '' : 'isFallback'}">
+                ${hasLogo ? `<img alt="${safeOrg}" src="${logo}">` : ``}
+                <div class="dqFallback">${fallback}</div>
+              </div>
+
+              <div class="dqTxt">
+                <div class="dqTitle" title="${safeTitle}">${safeTitle}</div>
+                <div class="dqMeta">
+                  <span>${safeOrg}</span>
+                  <span class="dqDot" aria-hidden="true"></span>
+                  <span class="dqCred">Credential # ${cred}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="dqRightRow">
+              <span class="dqPill">${kind}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      function render(){
+        const rows = filterItems();
+        listEl.innerHTML = rows.map(rowHTML).join('');
+        countEl.textContent = `${rows.length} item${rows.length === 1 ? '' : 's'}`;
+
+        // convert failed logos to fallback
+        listEl.querySelectorAll('.dqLogo img').forEach(img=>{
+          img.addEventListener('error', ()=>{
+            const wrap = img.closest('.dqLogo');
+            if(wrap) wrap.classList.add('isFallback');
+          }, { once:true });
+        });
+      }
+
+      // Tabs
+      tabs.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          if(btn.classList.contains('isHidden')) return;
+          setActiveTab(btn.dataset.tab);
+        });
+      });
+
+      // Search
+      searchEl.addEventListener('input', ()=>{
+        q = searchEl.value || '';
+        render();
+      });
+
+      // Top Secret / Access
+      function grantAccess(){
+        if(accessGranted) return;
+
+        accessEl.classList.add('is-elevating');
+        accessEl.textContent = 'Access: Elevating…';
+        stampEl.classList.add('is-armed');
+
+        setTimeout(()=>{
+          accessGranted = true;
+          accessEl.classList.remove('is-elevating');
+          accessEl.classList.add('is-granted');
+          accessEl.textContent = 'Access: Granted';
+          if(securityTabEl) securityTabEl.classList.remove('isHidden');
+
+          // If user is currently on a tab with no items, nudge to Security
+          if(activeTab !== 'security'){
+            // do nothing; user can click Security. (keeps your layout stable)
+          }
+          render();
+        }, 900);
+      }
+
+      function toggleAccess(){
+        if(!accessGranted){
+          grantAccess();
+          return;
+        }
+        // Optional: click again to lock back down (keeps Personnel File safe)
+        accessGranted = false;
+        accessEl.classList.remove('is-elevating');
+        accessEl.classList.remove('is-granted');
+        accessEl.textContent = 'Access: Restricted';
+        stampEl.classList.remove('is-armed');
+        if(securityTabEl) securityTabEl.classList.add('isHidden');
+
+        if(activeTab === 'security') setActiveTab('ops');
+        render();
+      }
+
+      accessEl.addEventListener('click', toggleAccess);
+      stampEl.addEventListener('click', toggleAccess);
+      stampEl.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleAccess(); }
+      });
+
+      // Initial render
+      render();
+    })();
   </script>
 </body>
 </html>
