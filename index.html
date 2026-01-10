@@ -1950,70 +1950,1142 @@
       }
     </style>
 
-    <!-- =========================
-         ✅ QUALIFICATIONS FILE (embedded here)
-         ========================= -->
-    <section class="section" id="qualifications-file" aria-label="Qualifications file">
-      <div class="dqWrap">
-        <div class="dqStage">
-          <div class="dqFolderWrap">
-            <div class="dqTabBehind" aria-hidden="true"></div>
+    <section class="dossierWrap dossierLock" id="dossier">
+  <style>
+    /* =========================
+       DOSSIER (component-scoped)
+       + Desktop-locked mobile scaling (no reflow)
+       ========================= */
+    .dossierWrap{
+      --ease: cubic-bezier(.2,.9,.2,1);
+      --paperA:#e7ddc2;
+      --paperB:#d9cea9;
+      --r: 28px;
 
-            <div class="dqFolder">
-              <div class="dqFolderLip" aria-hidden="true"></div>
-              <div class="dqFolderVignette" aria-hidden="true"></div>
+      /* “Tab font” used for: tabs, title, course names, org, credential # */
+      --tabFont: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
 
-              <header class="dqHeader">
-                <div class="dqLeft">
-                  <div class="dqTypeLine">Credentials Dossier</div>
+      --stageBg: rgba(0,0,0,.04);
+      --shadow: 0 40px 140px rgba(0,0,0,.20);
 
-                  <div class="dqFileRow">
-                    <h3 class="dqFileName">MIA LAVANA — QUALIFICATIONS FILE</h3>
+      /* Desktop-lock scale var (set by JS) */
+      --dossierScale: 1;
+    }
+    .dossierWrap *{ box-sizing:border-box; }
 
-                    <div class="dqStamp" id="dqStamp" role="button" tabindex="0" aria-label="Top Secret access">
-                      <div class="dqRing">
-                        <strong>Top Secret</strong>
-                      </div>
+    /* =========================
+       DESKTOP-LOCK WRAPPERS
+       - Keeps the layout "desktop" on mobile
+       - Scales down uniformly (no responsive reflow)
+       ========================= */
+    .dossierLockViewport{
+      width: 100%;
+      overflow: hidden;         /* crop any tiny overflow */
+      position: relative;
+    }
+    .dossierScaler{
+      transform: scale(var(--dossierScale));
+      transform-origin: top left;
+      width: max-content;       /* preserve natural desktop width */
+    }
+
+    /* Stage */
+    .folderStage{
+      position:relative;
+      border-radius: calc(var(--r) + 16px);
+      padding: 18px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: var(--stageBg);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .folderStage:before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        repeating-linear-gradient(
+          180deg,
+          rgba(255,255,255,.55) 0px,
+          rgba(255,255,255,.55) 1px,
+          transparent 2px,
+          transparent 7px
+        );
+      opacity:.10;
+      pointer-events:none;
+      mix-blend-mode: overlay;
+    }
+
+    .folderWrap{ position:relative; z-index:1; padding-top: 26px; }
+
+    .tabBehind{
+      position:absolute;
+      top:0;
+      left:18px;
+      width:420px;
+      height:62px;
+      transform: rotate(-0.35deg);
+      border-radius: 16px 16px 12px 12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.40), rgba(255,255,255,0) 60%),
+        linear-gradient(180deg, var(--paperB), var(--paperA));
+      border: 1px solid rgba(0,0,0,.14);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.26),
+        0 16px 30px rgba(0,0,0,.12);
+      z-index:0;
+      pointer-events:none;
+    }
+
+    .folder{
+      position:relative;
+      border-radius: var(--r);
+      overflow:hidden;
+      border: 1px solid rgba(0,0,0,.18);
+      background:
+        radial-gradient(900px 420px at 12% 0%, rgba(255,255,255,.34), transparent 56%),
+        linear-gradient(180deg, var(--paperA), var(--paperB));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.26),
+        inset 0 -18px 60px rgba(0,0,0,.08),
+        0 40px 120px rgba(0,0,0,.18);
+      z-index: 3;
+    }
+    .folder:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image:
+        radial-gradient(rgba(0,0,0,.06) 1px, transparent 1px),
+        radial-gradient(rgba(0,0,0,.04) 1px, transparent 1px);
+      background-size: 18px 18px, 26px 26px;
+      background-position: 0 0, 8px 10px;
+      opacity:.14;
+      pointer-events:none;
+      mix-blend-mode: multiply;
+    }
+
+    .folderLip{
+      position:absolute; left:0; right:0; top:0;
+      height:66px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,0) 70%),
+        linear-gradient(180deg, var(--paperB), var(--paperA));
+      border-bottom: 1px solid rgba(0,0,0,.10);
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,.18);
+      z-index:2;
+      pointer-events:none;
+    }
+
+    .folderVignette{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 520px at 50% 0%, rgba(0,0,0,.08), transparent 55%),
+        radial-gradient(900px 520px at 50% 100%, rgba(0,0,0,.12), transparent 60%);
+      opacity:.55;
+      pointer-events:none;
+      z-index:1;
+      mix-blend-mode:multiply;
+    }
+
+    /* Header */
+    .dossierHeader{
+      position:relative;
+      z-index: 3;
+      padding: 18px 18px 10px;
+      display:flex;
+      gap: 14px;
+    }
+    .dossierLeft{ flex:1; min-width:0; display:flex; flex-direction:column; gap:8px; }
+
+    .typeLine{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      color: rgba(14,18,22,.76);
+      letter-spacing: .06em;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    /* ✅ alignment + extra room below title */
+    .fileRow{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      min-width:0;
+      padding-bottom: 10px;
+    }
+    .fileName{
+      margin:0;
+      font-family: var(--tabFont);
+      color: rgba(10,12,14,.88);
+      font-weight: 900;
+      letter-spacing: -.01em;
+      font-size: 20px;
+      line-height:1.12;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      padding-bottom: 6px;
+    }
+
+    /* Stamp */
+    .stamp{
+      display:inline-block;
+      transform: rotate(-8deg) scale(.98);
+      transform-origin: 50% 50%;
+      user-select:none;
+      cursor: default;
+      flex: 0 0 auto;
+      opacity:.95;
+      transition: transform .22s var(--ease), filter .22s var(--ease);
+      margin-top: 2px;
+    }
+    .stamp .ring{
+      border: 4px solid rgba(209,32,32,.78);
+      border-radius: 16px;
+      padding: 8px 14px;
+      box-shadow: inset 0 0 0 2px rgba(209,32,32,.22);
+      background: rgba(209,32,32,.06);
+      position:relative;
+    }
+    .stamp .ring:after{
+      content:"";
+      position:absolute;
+      inset: 7px;
+      border: 2px dashed rgba(209,32,32,.42);
+      border-radius: 12px;
+    }
+    .stamp strong{
+      display:block;
+      font-weight: 900;
+      letter-spacing: .18em;
+      font-size: 11px;
+      color: rgba(209,32,32,.86);
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(255,255,255,.22);
+      white-space:nowrap;
+      font-family: var(--tabFont);
+    }
+    .stamp.is-armed{
+      transform: rotate(-10deg) scale(1.02);
+      filter: contrast(1.06);
+    }
+    .stamp.is-armed strong{
+      animation: glitchText .42s steps(2) infinite;
+    }
+    @keyframes glitchText{
+      0%{ transform: translate(0,0); }
+      20%{ transform: translate(-1px,1px); }
+      40%{ transform: translate(1px,-1px); }
+      60%{ transform: translate(-1px,0); }
+      80%{ transform: translate(1px,1px); }
+      100%{ transform: translate(0,0); }
+    }
+
+    /* Micro chips */
+    .micro{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 0px; }
+    .micro span{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size: 11px;
+      color: rgba(10,12,14,.70);
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.24);
+      padding: 6px 10px;
+      border-radius: 999px;
+      letter-spacing:.06em;
+      text-transform: uppercase;
+    }
+
+    #accessLevel{ cursor:pointer; user-select:none; }
+    #accessLevel.is-elevating{
+      background: rgba(0,0,0,.26);
+      color: rgba(183,255,183,.92);
+      border-color: rgba(183,255,183,.28);
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+      letter-spacing: .10em;
+    }
+    #accessLevel.is-granted{
+      background: rgba(0,0,0,.30);
+      color: rgba(183,255,183,1);
+      border-color: rgba(183,255,183,.40);
+    }
+
+    /* Tabs (ordered, non-floating) */
+    .tabsBar{
+      position:relative;
+      z-index:3;
+      display:flex;
+      gap: 10px;
+      padding: 10px 12px 0;
+      overflow:auto;
+      scrollbar-width:none;
+      border-top: 1px solid rgba(0,0,0,.10);
+    }
+    .tabsBar::-webkit-scrollbar{ display:none; }
+
+    .tab{
+      font-family: var(--tabFont);
+      border: 1px solid rgba(0,0,0,.14);
+      background: rgba(255,255,255,.22);
+      color: rgba(10,12,14,.82);
+      border-radius: 16px;
+      padding: 10px 12px;
+      cursor:pointer;
+      white-space:nowrap;
+      transition: transform .12s var(--ease), background .12s var(--ease), border-color .12s var(--ease);
+      font-weight: 900;
+      letter-spacing:-.01em;
+      font-size: 13px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.08);
+    }
+    .tab:hover{ transform: translateY(-1px); border-color: rgba(0,0,0,.22); }
+    .tab.active{
+      background: rgba(255,255,255,.40);
+      border-color: rgba(0,0,0,.22);
+    }
+
+    /* Body */
+    .body{
+      position:relative;
+      z-index:3;
+      margin: 10px 12px 12px;
+      border-radius: 22px;
+      border: 1px solid rgba(0,0,0,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,.18));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.24);
+      padding: 14px;
+    }
+    .toolbar{ display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:12px; }
+    .count{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size: 11px;
+      color: rgba(10,12,14,.70);
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.28);
+      padding: 7px 10px;
+      border-radius: 999px;
+      letter-spacing:.06em;
+      text-transform: uppercase;
+      white-space:nowrap;
+    }
+    .search{
+      flex:1;
+      max-width: 520px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.22);
+      padding: 10px 12px;
+      border-radius: 999px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.24);
+    }
+    .search input{
+      width:100%;
+      border:0;
+      outline:none;
+      background:transparent;
+      color: rgba(10,12,14,.82);
+      font-size:13px;
+      font-family: var(--tabFont);
+      font-weight: 800;
+    }
+    .search span{ color: rgba(10,12,14,.45); }
+
+    /* Rows: same font as tabs for title/org/credential */
+    .list{ display:grid; gap:10px; }
+    .row{
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.22);
+      border-radius: 18px;
+      padding: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      cursor: default;
+      transition: border-color .12s var(--ease), background .12s var(--ease);
+    }
+    .row:hover{ border-color: rgba(0,0,0,.16); background: rgba(255,255,255,.28); }
+
+    .left{ display:flex; align-items:center; gap:12px; min-width:0; }
+
+    .logo{
+      width:54px; height:54px;
+      border-radius:16px;
+      background: rgba(255,255,255,.42);
+      border: 1px solid rgba(0,0,0,.10);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.45);
+      display:grid; place-items:center;
+      flex:0 0 auto;
+      overflow:hidden;
+    }
+    .logo img{ width: 76%; height: 76%; object-fit:contain; display:block; }
+
+    .txt{ min-width:0; }
+    .t{
+      font-family: var(--tabFont);
+      font-weight: 900;
+      letter-spacing:-.01em;
+      color: rgba(10,12,14,.88);
+      font-size: 18px;
+      line-height:1.12;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .meta{
+      margin-top: 6px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color: rgba(10,12,14,.62);
+      font-weight: 900;
+      font-family: var(--tabFont);
+    }
+    .dot{ width:4px; height:4px; border-radius:50%; background: rgba(10,12,14,.40); display:inline-block; }
+    .redact{
+      letter-spacing:.12em;
+      font-family: var(--tabFont);
+      font-weight: 900;
+      opacity:.85;
+    }
+
+    /* Only show Specialization pill */
+    .pill{
+      font-size: 11px;
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.24);
+      color: rgba(10,12,14,.72);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-family: var(--tabFont);
+      letter-spacing:.06em;
+      text-transform: uppercase;
+      display:none;
+      white-space:nowrap;
+      font-weight: 900;
+    }
+    .pill.show{ display:inline-flex; }
+
+    /* Personnel File overlay */
+    .pfBack{ position:fixed; inset:0; z-index: 9998; display:none; }
+    .pfBack.open{ display:block; }
+    .pfDim{ position:absolute; inset:0; background: rgba(0,0,0,.62); backdrop-filter: blur(8px); }
+    .pfSheet{
+      position:absolute; left:50%; bottom:0;
+      width: min(980px, 100%);
+      height: min(90vh, 920px);
+      transform: translateX(-50%);
+      border-radius: 22px 22px 0 0;
+      border: 1px solid rgba(0,0,0,.18);
+      background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(250,249,246,.90));
+      box-shadow: 0 40px 140px rgba(0,0,0,.55);
+      overflow:hidden;
+    }
+    .pfSheetInner{ height:100%; display:flex; flex-direction:column; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+    .pfTop{
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(0,0,0,.12);
+      background: rgba(255,255,255,.35);
+      display:flex; justify-content:space-between; align-items:flex-start; gap:12px;
+      font-family: var(--tabFont);
+    }
+    .pfTitle{ display:flex; align-items:flex-start; gap:12px; min-width:0; }
+    .ucrMark{
+      width:54px; height:54px; border-radius:16px;
+      border: 1px solid rgba(0,0,0,.14);
+      background: rgba(255,255,255,.55);
+      display:grid; place-items:center; overflow:hidden; flex:0 0 auto;
+    }
+    .ucrMark img{ width:92%; height:92%; object-fit:contain; display:block; }
+    .pfTitle h3{
+      margin:0;
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(10,12,14,.74);
+      font-weight: 900;
+      font-family: var(--tabFont);
+    }
+    .pfTitle p{
+      margin:6px 0 0;
+      font-size: 18px;
+      color: rgba(10,12,14,.84);
+      font-weight: 950;
+      letter-spacing:-.01em;
+      font-family: var(--tabFont);
+    }
+    .pfClose{
+      border: 1px solid rgba(0,0,0,.14);
+      background: rgba(255,255,255,.65);
+      color: rgba(10,12,14,.78);
+      border-radius: 16px;
+      padding: 10px 12px;
+      cursor:pointer;
+      font-weight: 950;
+      font-family: var(--tabFont);
+      flex:0 0 auto;
+    }
+    .pfBody{ padding: 14px 16px 18px; overflow:auto; -webkit-overflow-scrolling: touch; font-family: var(--tabFont); }
+    .pfGrid{ display:grid; grid-template-columns: 1.3fr .7fr; gap: 12px; align-items:start; }
+    .pfId{
+      border: 1px solid rgba(0,0,0,.12);
+      background: rgba(255,255,255,.50);
+      border-radius: 18px;
+      padding: 12px;
+      display:flex; flex-direction:column; gap: 10px;
+      position:sticky; top: 8px;
+    }
+    .pfId .frame{
+      width:100%;
+      aspect-ratio: 3 / 4;
+      border-radius: 16px;
+      overflow:hidden;
+      border: 1px solid rgba(0,0,0,.12);
+      background: rgba(0,0,0,.08);
+    }
+    .pfId img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .pfId .cap{
+      font-size: 11px;
+      letter-spacing:.14em;
+      text-transform: uppercase;
+      color: rgba(10,12,14,.68);
+      font-weight: 900;
+      font-family: var(--tabFont);
+    }
+    .kvGrid{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .kv{ border: 1px solid rgba(0,0,0,.12); background: rgba(255,255,255,.40); border-radius: 16px; padding: 12px; }
+    .kv .k{ font-size: 11px; letter-spacing:.14em; text-transform: uppercase; color: rgba(10,12,14,.62); font-weight: 900; font-family: var(--tabFont); }
+    .kv .v{ margin-top: 6px; font-weight: 950; font-size: 14px; color: rgba(10,12,14,.84); font-family: var(--tabFont); }
+    .section{ margin-top: 12px; border: 1px solid rgba(0,0,0,.12); background: rgba(255,255,255,.36); border-radius: 16px; padding: 12px; }
+    .section h4{ margin:0; font-size: 11px; letter-spacing:.14em; text-transform: uppercase; color: rgba(10,12,14,.62); font-weight: 900; font-family: var(--tabFont); }
+    .chips{ margin-top: 10px; display:flex; flex-wrap:wrap; gap:8px; }
+    .chip{ border: 1px solid rgba(0,0,0,.12); background: rgba(255,255,255,.50); border-radius: 999px; padding: 8px 10px; font-size: 12px; font-weight: 900; color: rgba(10,12,14,.78); white-space:nowrap; font-family: var(--tabFont); }
+    .note{ margin-top: 10px; font-size: 12px; color: rgba(10,12,14,.68); line-height:1.45; font-family: var(--tabFont); }
+
+    /* Hacking modal */
+    .hackBack{ position:fixed; inset:0; z-index: 9999; display:none; }
+    .hackBack.open{ display:block; }
+    .hackDim{ position:absolute; inset:0; background: rgba(0,0,0,.62); backdrop-filter: blur(8px); }
+    .hackModal{
+      position:absolute;
+      left:50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(720px, 92vw);
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 60px 180px rgba(0,0,0,.55);
+      overflow:hidden;
+      font-family: var(--tabFont);
+      color: rgba(255,255,255,.92);
+    }
+    .hackTop{
+      padding: 16px 18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+    }
+    .hackTitle{ font-weight: 950; font-size: 18px; letter-spacing:-.01em; }
+    .hackSub{ margin-top: 6px; color: rgba(255,255,255,.72); font-size: 13px; }
+    .hackClose{
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.88);
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor:pointer;
+      font-weight: 900;
+      font-family: var(--tabFont);
+    }
+    .hackBody{ padding: 18px; }
+
+    .topSecret{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.28);
+      padding: 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .topSecret strong{
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+      white-space:nowrap;
+    }
+    .bar{
+      flex:1;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+    .bar i{
+      display:block;
+      height:100%;
+      width: 40%;
+      border-radius: 999px;
+      background: rgba(255,255,255,.22);
+      animation: load 1s var(--ease) infinite;
+    }
+    @keyframes load{
+      0%{ transform: translateX(-60%); }
+      100%{ transform: translateX(220%); }
+    }
+
+    /* ✅ IMPORTANT:
+       Removed the responsive @media changes so the layout stays desktop-locked.
+       Mobile now ONLY scales uniformly (no reflow).
+    */
+  </style>
+
+  <!-- Desktop-lock viewport + scaler -->
+  <div class="dossierLockViewport" id="dossierViewport">
+    <div class="dossierScaler" id="dossierScaler">
+      <div class="folderStage">
+        <div class="folderWrap">
+          <div class="tabBehind" aria-hidden="true"></div>
+
+          <div class="folder" id="folder">
+            <div class="folderLip" aria-hidden="true"></div>
+            <div class="folderVignette" aria-hidden="true"></div>
+
+            <header class="dossierHeader">
+              <div class="dossierLeft">
+                <div class="typeLine">DOSSIER · INTERNAL</div>
+
+                <div class="fileRow">
+                  <h2 class="fileName">MIA LAVANA — QUALIFICATIONS FILE</h2>
+
+                  <div class="stamp" id="stamp" role="button" tabindex="0" aria-label="Qualifications stamp">
+                    <div class="ring">
+                      <strong id="stampText">QUALIFICATIONS</strong>
                     </div>
                   </div>
-
-                  <div class="dqMicro" aria-label="Micro metadata">
-                    <span id="dqAccessLevel">Access: Restricted</span>
-                    <span>Credential # : ________</span>
-                    <span>Searchable</span>
-                  </div>
-                </div>
-              </header>
-
-              <nav class="dqTabsBar" aria-label="Qualifications tabs">
-                <!-- Ordered: most important → least. Personnel always last -->
-                <button class="dqTabBtn active" data-tab="ops" type="button">Ops</button>
-                <button class="dqTabBtn" data-tab="analytics" type="button">Analytics</button>
-                <button class="dqTabBtn" data-tab="sales" type="button">Sales</button>
-                <button class="dqTabBtn" data-tab="marketing" type="button">Marketing</button>
-                <button class="dqTabBtn" data-tab="product" type="button">Product</button>
-                <button class="dqTabBtn isHidden" id="dqTabSecurity" data-tab="security" type="button">Security</button>
-                <button class="dqTabBtn" data-tab="personnel" type="button">Personnel File</button>
-              </nav>
-
-              <div class="dqBody" role="region" aria-label="Qualifications list">
-                <div class="dqToolbar">
-                  <div class="dqCount" id="dqCount">0 items</div>
-
-                  <div class="dqSearch" role="search">
-                    <span aria-hidden="true">⌕</span>
-                    <input id="dqSearchInput" type="text" placeholder="Search courses, universities, or credential #…" />
-                  </div>
                 </div>
 
-                <div class="dqList" id="dqList" aria-label="Items"></div>
+                <div class="micro">
+                  <span>CASE: Q-0001</span>
+                  <span>STATUS: VERIFIED</span>
+                  <span id="accessLevel" role="button" tabindex="0" aria-label="Access level">ACCESS: LEVEL 01</span>
+                </div>
+              </div>
+            </header>
+
+            <nav class="tabsBar" id="tabs" aria-label="Credential folders"></nav>
+
+            <div class="body">
+              <div class="toolbar">
+                <div class="count" id="count">0 credentials</div>
+                <div class="search">
+                  <span>⌕</span>
+                  <input id="q" placeholder="Search credentials..." autocomplete="off" />
+                </div>
               </div>
 
+              <div class="list" id="list"></div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+
+  <!-- =========================
+       PERSONNEL FILE OVERLAY
+       ========================= -->
+  <div class="pfBack" id="pfBack" aria-hidden="true">
+    <div class="pfDim" id="pfDim"></div>
+
+    <div class="pfSheet" role="dialog" aria-modal="true" aria-label="Personnel File">
+      <div class="pfSheetInner">
+        <div class="pfTop">
+          <div class="pfTitle">
+            <div class="ucrMark" title="UCR mark">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/UC%20Riverside%20logo.svg" alt="UCR">
+            </div>
+            <div>
+              <h3>PERSONNEL FILE</h3>
+              <p>Mia Lavana</p>
+            </div>
+          </div>
+
+          <button class="pfClose" id="pfClose" type="button">Close</button>
+        </div>
+
+        <div class="pfBody">
+          <div class="pfGrid">
+            <div>
+              <div class="kvGrid">
+                <div class="kv"><div class="k">Name</div><div class="v">Mia Lavana</div></div>
+                <div class="kv"><div class="k">School</div><div class="v">UCR</div></div>
+                <div class="kv"><div class="k">Graduated</div><div class="v">Magna Cum Laude</div></div>
+                <div class="kv"><div class="k">Grade</div><div class="v">3.8 GPA</div></div>
+              </div>
+
+              <div class="section">
+                <h4>Skills</h4>
+                <div class="chips">
+                  <div class="chip">Skydiving</div>
+                  <div class="chip">Racing cars</div>
+                  <div class="chip">MMA</div>
+                  <div class="chip">Kali / Stick</div>
+                  <div class="chip">Combat fighting</div>
+                  <div class="chip">Weapons training (general)</div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h4>Notes</h4>
+                <div class="note">Enjoys attending Secret Service webinars.</div>
+              </div>
+            </div>
+
+            <aside class="pfId">
+              <div class="frame">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=70" alt="ID Photo">
+              </div>
+              <div class="cap">ID PHOTO</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================
+       TOP SECRET / HACKING MODAL
+       ========================= -->
+  <div class="hackBack" id="hackBack" aria-hidden="true">
+    <div class="hackDim" id="hackDim"></div>
+    <div class="hackModal" role="dialog" aria-modal="true">
+      <div class="hackTop">
+        <div>
+          <div class="hackTitle">TOP SECRET</div>
+          <div class="hackSub">Restricted access · verifying…</div>
+        </div>
+        <button class="hackClose" id="hackClose" type="button">Close</button>
+      </div>
+      <div class="hackBody" id="hackBody"></div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================
+    // DESKTOP-LOCK SCALE (no reflow): scales the dossier as one unit
+    // =========================================================
+    (function(){
+      const root = document.getElementById('dossier');
+      const viewport = document.getElementById('dossierViewport');
+      const scaler = document.getElementById('dossierScaler');
+
+      if(!root || !viewport || !scaler) return;
+
+      function computeScale(){
+        // available width inside the section/viewport
+        const vw = viewport.clientWidth || root.clientWidth || window.innerWidth;
+        if(!vw) return;
+
+        // Temporarily ensure scale=1 to measure natural size accurately
+        root.style.setProperty('--dossierScale', 1);
+
+        // Natural size of the desktop layout
+        const naturalW = scaler.scrollWidth;
+        const naturalH = scaler.scrollHeight;
+
+        // A little safety padding so it doesn't kiss the edges
+        const pad = 0; // set to 12 if you want breathing room
+        const available = Math.max(1, vw - pad);
+
+        // Scale down only (never upscale above 1)
+        const s = Math.min(1, available / naturalW);
+
+        root.style.setProperty('--dossierScale', String(s));
+
+        // Lock the viewport height to the scaled height so the page flow is correct
+        viewport.style.height = (naturalH * s) + 'px';
+      }
+
+      // Run now and on resize/orientation changes
+      const ro = new ResizeObserver(computeScale);
+      ro.observe(viewport);
+
+      window.addEventListener('resize', computeScale, { passive:true });
+      window.addEventListener('orientationchange', computeScale, { passive:true });
+
+      // initial
+      computeScale();
+    })();
+
+    // ----------------------------
+    // Public logo URLs
+    // ----------------------------
+    const LOGOS = {
+      "Google": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+      "IBM": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
+      "Microsoft": "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+      "Amazon Web Services": "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg",
+      "Duke University": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Duke_University_logo.svg",
+      "Johns Hopkins University": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Johns_Hopkins_University_logo.svg",
+      "New York University": "https://upload.wikimedia.org/wikipedia/commons/5/5a/New_York_University_logo.svg",
+      "Yonsei University": "https://upload.wikimedia.org/wikipedia/commons/8/85/Yonsei_University_logo.svg",
+      "Università Bocconi": "https://upload.wikimedia.org/wikipedia/commons/6/66/Universit%C3%A0_Bocconi_logo.svg",
+      "University of London": "https://upload.wikimedia.org/wikipedia/commons/7/76/University_of_London_logo.svg",
+      "University of Colorado Boulder": "https://upload.wikimedia.org/wikipedia/commons/4/48/University_of_Colorado_Boulder_logo.svg",
+      "The Hong Kong University of Science and Technology": "https://upload.wikimedia.org/wikipedia/commons/7/74/HKUST_logo.svg",
+      "Harvard Business Review": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Harvard_Business_Review_logo.svg",
+      "Atlassian": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Atlassian-logo.svg",
+      "Board Infinity": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Board_Infinity_logo.png"
+    };
+
+    // Tabs reordered (most important → least). Personnel File last.
+    const CATS = [
+      "Cybersecurity",
+      "AI & ML",
+      "Data Engineering",
+      "Operations & Leadership",
+      "Finance",
+      "Marketing",
+      "Global Affairs",
+      "Physics",
+      "Personnel File"
+    ];
+
+    // Data
+    const DATA = [
+      // Cybersecurity
+      { cat:"Cybersecurity", org:"Johns Hopkins University", title:"AI for Cybersecurity Specialization", id:"Credential # ________", level:"Specialization" },
+      { cat:"Cybersecurity", org:"New York University", title:"Enterprise and Infrastructure Security", id:"Credential # ________", level:"Course" },
+      { cat:"Cybersecurity", org:"New York University", title:"Cyber Attack Countermeasures", id:"Credential # ________", level:"Course" },
+      { cat:"Cybersecurity", org:"Johns Hopkins University", title:"Securing AI and Advanced Topics", id:"Credential # ________", level:"Course" },
+      { cat:"Cybersecurity", org:"Johns Hopkins University", title:"Advanced Malware and Network Anomaly Detection", id:"Credential # ________", level:"Course" },
+      { cat:"Cybersecurity", org:"Johns Hopkins University", title:"Introduction to AI for Cybersecurity", id:"Credential # ________", level:"Course" },
+      { cat:"Cybersecurity", org:"IBM", title:"Ethical Hacking with Kali Linux", id:"Credential # ________", level:"Course" },
+
+      // AI & ML
+      { cat:"AI & ML", org:"IBM", title:"Agentic AI with LangChain and LangGraph", id:"Grade Achieved: 95.23%", level:"Course" },
+      { cat:"AI & ML", org:"IBM", title:"Agentic AI with LangGraph, CrewAI, AutoGen and BeeAI", id:"Grade Achieved: 100%", level:"Course" },
+      { cat:"AI & ML", org:"Microsoft", title:"Create Machine Learning Models in Microsoft Azure", id:"Grade Achieved: 95.28%", level:"Course" },
+      { cat:"AI & ML", org:"IBM", title:"Python for Data Science, AI & Development", id:"Credential # ________", level:"Course" },
+
+      // Data Engineering
+      { cat:"Data Engineering", org:"Duke University", title:"Spark, Hadoop, and Snowflake for Data Engineering", id:"Credential # ________", level:"Course" },
+      { cat:"Data Engineering", org:"Duke University", title:"Managing Big Data with MySQL", id:"Credential # ________", level:"Course" },
+
+      // Operations & Leadership
+      { cat:"Operations & Leadership", org:"Harvard Business Review", title:"Build High-Performing Teams Specialization", id:"Credential # ________", level:"Specialization" },
+      { cat:"Operations & Leadership", org:"Atlassian", title:"Agile with Atlassian Jira", id:"Credential # ________", level:"Course" },
+      { cat:"Operations & Leadership", org:"Università Bocconi", title:"International Leadership and Organizational Behavior", id:"Credential # ________", level:"Course" },
+      { cat:"Operations & Leadership", org:"Google", title:"Google Project Management Specialization", id:"Credential # ________", level:"Specialization" },
+
+      // Finance
+      { cat:"Finance", org:"Amazon Web Services", title:"AWS FinOps — Creating Cloud Business KPIs (Unit Economics)", id:"Credential # ________", level:"Course" },
+      { cat:"Finance", org:"Board Infinity", title:"Mastering Cloud FinOps", id:"Credential # ________", level:"Course" },
+      { cat:"Finance", org:"Duke University", title:"Raising Impact Investment Capital", id:"Credential # ________", level:"Course" },
+
+      // Marketing
+      { cat:"Marketing", org:"Yonsei University", title:"International Marketing & Cross Industry Growth Specialization", id:"Credential # ________", level:"Specialization" },
+      { cat:"Marketing", org:"Yonsei University", title:"International Marketing & Cross Industry Growth Capstone Project", id:"Credential # ________", level:"Capstone" },
+      { cat:"Marketing", org:"Yonsei University", title:"International Entertainment and Sports Marketing", id:"Credential # ________", level:"Course" },
+      { cat:"Marketing", org:"Yonsei University", title:"International Hospitality & Healthcare Services Marketing", id:"Credential # ________", level:"Course" },
+
+      // Global Affairs
+      { cat:"Global Affairs", org:"University of London", title:"Global Diplomacy: the United Nations in the World", id:"Credential # ________", level:"Course" },
+
+      // Physics
+      { cat:"Physics", org:"University of Colorado Boulder", title:"Quantum Mechanics for Engineers Specialization", id:"Credential # ________", level:"Specialization" },
+      { cat:"Physics", org:"The Hong Kong University of Science and Technology", title:"Understanding Modern Physics II: Quantum Mechanics and Atoms", id:"Grade Achieved: 90.45%", level:"Course" },
+    ];
+
+    // Top Secret reveal: MUST show IBM Ethical Hacking with Kali Linux
+    const TOP_SECRET_REVEAL = {
+      org: "IBM",
+      title: "Ethical Hacking with Kali Linux",
+      id: "Credential # ________",
+      level: "CLASSIFIED"
+    };
+
+    // Elements
+    const folder = document.getElementById('folder');
+    const tabs = document.getElementById('tabs');
+    const list = document.getElementById('list');
+    const q = document.getElementById('q');
+    const count = document.getElementById('count');
+
+    const stamp = document.getElementById('stamp');
+    const stampText = document.getElementById('stampText');
+    const access = document.getElementById('accessLevel');
+
+    const pfBack = document.getElementById('pfBack');
+    const pfDim  = document.getElementById('pfDim');
+    const pfClose = document.getElementById('pfClose');
+
+    const hackBack = document.getElementById('hackBack');
+    const hackDim  = document.getElementById('hackDim');
+    const hackClose = document.getElementById('hackClose');
+    const hackBody = document.getElementById('hackBody');
+
+    let activeCat = "Cybersecurity";
+    let stampTimer = null;
+    let accessBusy = false;
+
+    // Render tabs
+    function renderTabs(){
+      tabs.innerHTML = "";
+      CATS.forEach((c)=>{
+        const b = document.createElement('button');
+        b.className = "tab" + (c === activeCat ? " active" : "");
+        b.textContent = c;
+
+        b.addEventListener('click', ()=>{
+          if(c === "Personnel File"){
+            openPF();
+            return;
+          }
+          closePF();
+          activeCat = c;
+          renderTabs();
+          renderList();
+        });
+
+        tabs.appendChild(b);
+      });
+    }
+
+    // Render list (only show Specialization pill)
+    function renderList(){
+      const query = q.value.trim().toLowerCase();
+      const filtered = DATA.filter(d =>
+        d.cat === activeCat &&
+        (!query || (d.title + " " + d.org + " " + d.id + " " + d.level).toLowerCase().includes(query))
+      );
+
+      count.textContent = `${filtered.length} credential${filtered.length === 1 ? "" : "s"}`;
+
+      list.innerHTML = "";
+      filtered.forEach((d)=>{
+        const row = document.createElement('div');
+        row.className = "row";
+
+        const logoUrl = LOGOS[d.org];
+        const showSpecialization = (d.level || "").toLowerCase() === "specialization";
+
+        row.innerHTML = `
+          <div class="left">
+            <div class="logo">
+              ${logoUrl ? `<img src="${logoUrl}" alt="${d.org} logo">` : ``}
+            </div>
+            <div class="txt">
+              <div class="t">${d.title}</div>
+              <div class="meta">
+                <span>${d.org}</span>
+                <span class="dot"></span>
+                <span class="redact">${d.id}</span>
+              </div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="pill ${showSpecialization ? "show" : ""}">Specialization</div>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    q.addEventListener('input', renderList);
+
+    // Personnel file
+    function openPF(){
+      pfBack.classList.add('open');
+      pfBack.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePF(){
+      pfBack.classList.remove('open');
+      pfBack.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+    pfClose.addEventListener('click', closePF);
+    pfDim.addEventListener('click', closePF);
+
+    // Top Secret modal: reveals IBM Ethical Hacking with Kali Linux
+    function openTopSecret(){
+      hackBack.classList.add('open');
+      hackBack.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+
+      hackBody.innerHTML = `
+        <div class="topSecret">
+          <strong>TOP SECRET</strong>
+          <div class="bar"><i></i></div>
+          <strong>HOLD</strong>
+        </div>
+      `;
+
+      setTimeout(()=>{
+        const logoUrl = LOGOS[TOP_SECRET_REVEAL.org] || "";
+
+        hackBody.innerHTML = `
+          <div class="topSecret">
+            <strong>CLASSIFIED</strong>
+            <div style="flex:1"></div>
+            <strong>OPEN</strong>
+          </div>
+
+          <div style="
+            margin-top:14px;
+            display:flex;
+            gap:12px;
+            align-items:center;
+            padding:14px;
+            border-radius:18px;
+            border:1px solid rgba(255,255,255,.16);
+            background: rgba(0,0,0,.22);
+          ">
+            <div style="
+              width:56px;height:56px;
+              border-radius:16px;
+              border:1px solid rgba(255,255,255,.14);
+              background: rgba(255,255,255,.10);
+              display:grid;
+              place-items:center;
+              overflow:hidden;
+              flex:0 0 auto;
+            ">
+              ${logoUrl ? `<img src="${logoUrl}" alt="${TOP_SECRET_REVEAL.org} logo" style="width:78%;height:78%;object-fit:contain;display:block;">` : `<span style="font-weight:900;">IBM</span>`}
+            </div>
+
+            <div style="min-width:0;">
+              <div style="
+                font-weight:950;
+                font-size:16px;
+                color: rgba(255,255,255,.92);
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+              ">${TOP_SECRET_REVEAL.title}</div>
+
+              <div style="
+                margin-top:6px;
+                display:flex;
+                gap:10px;
+                flex-wrap:wrap;
+                align-items:center;
+                color: rgba(255,255,255,.72);
+                font-weight:800;
+                font-size:13px;
+              ">
+                <span>${TOP_SECRET_REVEAL.org}</span>
+                <span style="width:4px;height:4px;border-radius:50%;background: rgba(255,255,255,.35);display:inline-block;"></span>
+                <span style="letter-spacing:.14em; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono','Courier New', monospace;">
+                  ${TOP_SECRET_REVEAL.id}
+                </span>
+              </div>
+            </div>
+
+            <div style="margin-left:auto; display:flex; align-items:center; gap:10px;">
+              <div style="
+                padding:8px 10px;
+                border-radius:999px;
+                border:1px solid rgba(255,255,255,.16);
+                background: rgba(255,255,255,.06);
+                color: rgba(255,255,255,.86);
+                font-size:11px;
+                letter-spacing:.14em;
+                text-transform:uppercase;
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono','Courier New', monospace;
+                white-space:nowrap;
+              ">${TOP_SECRET_REVEAL.level}</div>
+            </div>
+          </div>
+        `;
+      }, 1000);
+    }
+
+    function closeTopSecret(){
+      hackBack.classList.remove('open');
+      hackBack.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+    hackClose.addEventListener('click', closeTopSecret);
+    hackDim.addEventListener('click', closeTopSecret);
+
+    // Stamp timer via folder hover (700ms)
+    function armStamp(){
+      stamp.classList.add('is-armed');
+      stampText.textContent = 'CLASSIFIED';
+    }
+    function disarmStamp(){
+      stamp.classList.remove('is-armed');
+      stampText.textContent = 'QUALIFICATIONS';
+    }
+    function startStampTimer(){
+      clearTimeout(stampTimer);
+      stampTimer = setTimeout(armStamp, 700);
+    }
+    function stopStampTimer(){
+      clearTimeout(stampTimer);
+      disarmStamp();
+    }
+    folder.addEventListener('mouseenter', startStampTimer);
+    folder.addEventListener('mouseleave', stopStampTimer);
+
+    stamp.addEventListener('click', ()=>{
+      if(stamp.classList.contains('is-armed')) openTopSecret();
+    });
+
+    // Access escalation triggers Top Secret as well
+    function runAccessEscalation(){
+      if(accessBusy) return;
+      accessBusy = true;
+
+      access.classList.add('is-elevating');
+      access.textContent = 'ACCESS: VERIFYING…';
+
+      setTimeout(()=>{ access.textContent = 'ACCESS: LEVEL 02'; }, 500);
+      setTimeout(()=>{ access.textContent = 'ACCESS: LEVEL 03'; }, 900);
+
+      setTimeout(()=>{
+        access.textContent = 'ACCESS: GRANTED';
+        access.classList.add('is-granted');
+        openTopSecret();
+      }, 1300);
+
+      setTimeout(()=>{
+        accessBusy = false;
+        access.classList.remove('is-elevating','is-granted');
+        access.textContent = 'ACCESS: LEVEL 01';
+      }, 5200);
+    }
+    access.addEventListener('click', runAccessEscalation);
+
+    // ESC closes overlays
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){
+        closeTopSecret();
+        closePF();
+      }
+    });
+
+    // Init
+    renderTabs();
+    renderList();
+  </script>
+</section>
 
     <!-- Footer -->
     <div class="footer">Built clean. Built to scale.</div>
