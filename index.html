@@ -1979,10 +1979,12 @@
        - Scales down uniformly (no responsive reflow)
        ========================= */
     .dossierLockViewport{
-      width: 100%;
-      overflow: hidden;         /* crop any tiny overflow */
-      position: relative;
-    }
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+
+  background: transparent;
+}
     .dossierScaler{
       transform: scale(var(--dossierScale));
       transform-origin: top left;
